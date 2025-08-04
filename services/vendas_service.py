@@ -1,0 +1,1 @@
+from scanntech.services.processors.vendas_processor import processar_envio_vendas

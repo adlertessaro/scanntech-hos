@@ -1,0 +1,135 @@
+from yaml import dump
+
+# Estrutura básica do arquivo openapi.yaml para a integração HOS Farma x Scanntech
+openapi_spec = {
+    "openapi": "3.0.0",
+    "info": {
+        "title": "Integração HOS Farma x Scanntech",
+        "version": "1.0.0",
+        "description": "Documentação dos endpoints utilizados na integração com a Scanntech."
+    },
+    "paths": {
+        "/api-minoristas/api/v2/minoristas/{idEmpresa}/locales/{idLocal}/cajas/{idCaja}/movimientos/lotes": {
+            "post": {
+                "summary": "Envio de vendas em lote",
+                "parameters": [
+                    {"name": "idEmpresa", "in": "path", "required": True, "schema": {"type": "string"}},
+                    {"name": "idLocal", "in": "path", "required": True, "schema": {"type": "string"}},
+                    {"name": "idCaja", "in": "path", "required": True, "schema": {"type": "string"}}
+                ],
+                "requestBody": {
+                    "required": True,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "$ref": "#/components/schemas/VendaLote"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "OK"
+                    }
+                }
+            }
+        },
+        "/api-minoristas/api/v2/minoristas/{idEmpresa}/locales/{idLocal}/cajas/{idCaja}/cierresDiarios/lotes": {
+            "post": {
+                "summary": "Envio de fechamentos diários em lote",
+                "parameters": [
+                    {"name": "idEmpresa", "in": "path", "required": True, "schema": {"type": "string"}},
+                    {"name": "idLocal", "in": "path", "required": True, "schema": {"type": "string"}},
+                    {"name": "idCaja", "in": "path", "required": True, "schema": {"type": "string"}}
+                ],
+                "requestBody": {
+                    "required": True,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "type": "object",
+                                "properties": {
+                                    "fechaVentas": {"type": "string", "format": "date-time"},
+                                    "montoVentaLiquida": {"type": "number"},
+                                    "montoCancelaciones": {"type": "number"},
+                                    "cantidadMovimientos": {"type": "integer"},
+                                    "cantidadCancelaciones": {"type": "integer"}
+                                }
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "OK"
+                    }
+                }
+            }
+        }
+    },
+    "components": {
+        "schemas": {
+            "VendaLote": {
+                "type": "object",
+                "properties": {
+                    "fecha": {"type": "string", "format": "date-time"},
+                    "numero": {"type": "string"},
+                    "descuentoTotal": {"type": "number"},
+                    "recargoTotal": {"type": "number"},
+                    "codigoMoneda": {"type": "string"},
+                    "cotizacion": {"type": "number"},
+                    "total": {"type": "number"},
+                    "cancelacion": {"type": "boolean"},
+                    "idCliente": {"type": "string"},
+                    "documentoCliente": {"type": "string"},
+                    "codigoCanalVenta": {"type": "integer"},
+                    "descripcionCanalVenta": {"type": "string"},
+                    "detalles": {
+                        "type": "array",
+                        "items": {
+                            "type": "object",
+                            "properties": {
+                                "codigoArticulo": {"type": "string"},
+                                "codigoBarras": {"type": "string"},
+                                "descripcionArticulo": {"type": "string"},
+                                "cantidad": {"type": "number"},
+                                "importeUnitario": {"type": "number"},
+                                "importe": {"type": "number"},
+                                "descuento": {"type": "number"},
+                                "recargo": {"type": "number"}
+                            }
+                        }
+                    },
+                    "pagos": {
+                        "type": "array",
+                        "items": {
+                            "type": "object",
+                            "properties": {
+                                "codigoTipoPago": {"type": "integer"},
+                                "codigoMoneda": {"type": "string"},
+                                "importe": {"type": "number"},
+                                "cotizacion": {"type": "number"},
+                                "codigoProveedorQR": {"type": "integer"},
+                                "codigoBanco": {"type": "string"},
+                                "descripcionBanco": {"type": "string"},
+                                "documentoCliente": {"type": "string"},
+                                "bin": {"type": "string"},
+                                "ultimosDigitosTarjeta": {"type": "string"},
+                                "numeroAutorizacion": {"type": "string"},
+                                "codigoTarjeta": {"type": "string"}
+                            }
+                        }
+                    }
+                }
+            }
+        }
+    }
+}
+
+# Gerar o conteúdo YAML
+yaml_content = dump(openapi_spec, sort_keys=False)
+yaml_path = "/mnt/data/openapi-scanntech.yaml"
+with open(yaml_path, "w") as f:
+    f.write(yaml_content)
+
+yaml_path

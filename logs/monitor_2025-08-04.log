@@ -1,0 +1,3141 @@
+🔄 Iniciando integrador. Intervalo definido: 10 segundos.
+
+🧪 Verificando configuração inicial...
+
+🚀 Verificando fechamentos pendentes dos últimos 7 dias ao iniciar...
+🔍 Chaves carregadas do config (debug real): dict_keys(['integração scanntech', 'usuário', 'senha', 'url 1', 'url 2', 'url 3', 'empresa', 'local', 'crm', 'código da empresa', 'intervalo (s)', 'data de início', 'data início envio de vendas', 'data início envio de fechamentos'])
+🔁 Já existe fechamento para 2025-07-28 (Empresa 99)
+🔁 Já existe fechamento para 2025-07-29 (Empresa 99)
+🔁 Já existe fechamento para 2025-07-30 (Empresa 99)
+🔁 Já existe fechamento para 2025-07-31 (Empresa 99)
+🔁 Já existe fechamento para 2025-08-01 (Empresa 99)
+🔁 Já existe fechamento para 2025-08-02 (Empresa 99)
+🔁 Já existe fechamento para 2025-08-03 (Empresa 99)
+✅ Geração de fechamentos pendentes finalizada para empresa 99 (últimos 7 dias).
+
+🚀 Processando promoções...
+🔗 URL final montada: http://br.homo.apipdv.scanntech.com/pmkt-rest-api/v2/minoristas/200398/locales/2/promociones
+DEBUG: 📋 Cabeçalhos que serão enviados: {'pdv-version': '8.0.2.267', 'backEnd-version': '8.0.3.81'}
+🔍 Status code: 200
+📦 Resposta: {"total":1,"results":[{"id":311868,"titulo":"HOMOLOGACION LLEVA PAGA 2025","descripcion":"HOMOLOGACION LLEVA PAGA 2025","tipo":"LLEVA_PAGA","autor":{"descripcion":"Scanntech"},"detalles":{"condiciones":{"items":[{"cantidad":6,"articulos":[{"nombre":"LEITE UHT BOM GOSTO DESN TP 1LT","codigoBarras":"7897511400244"},{"nombre":"LEITE UHT ELEGE SEMI DESN S/VERSAO TP 1L","codigoBarras":"7896079500168"},{"nombre":"LEITE UHT BOM GOSTO INTEG S/VERSAO TP 1LT","codigoBarras":"7897511400237"},{"nombre":"LEITE UHT ELEGE DESN S/VERSAO TP 1L","codigoBarras":"7896079500175"}]}],"formasPago":null},"beneficios":null,"precio":null,"descuento":null,"paga":5},"vigenciaDesde":"2025-01-01T00:00:00.000-0300","vigenciaHasta":"2025-12-31T23:59:59.000-0300","limitePromocionesPorTicket":0}]}
+
+🔍 Processando promoção: 311868 - HOMOLOGACION LLEVA PAGA 2025
+❌ Erro fatal ao processar a promoção 311868: ERRO:  o valor nulo na coluna "desconto" da relação "promocao_prd" viola a restrição de não-nulo
+DETAIL:  Registro que falhou contém (1272211306, 1b77215c324a296fe275ff5deaff7dda    , b074bd6201f8b64859dde411632844cf    , -530, 2025-08-04 15:13:28.413493, 2025-08-04 15:13:28.413493, null, null, 6, 5, null, 0).
+
+   -> Desfazendo alterações para esta promoção.
+
+💾 Transação finalizada.
+✅ 1 promoções salvas com sucesso.
+🔄 Iniciando reprocessamento de produtos pendentes...
+🔁 Nenhuma promoção ou produto pendente para processar.
+🔁 Reprocessando produtos pendentes...
+🔁 Nenhuma promoção ou produto pendente para processar.
+🚀 Processando envios de vendas...
+🛠️  Iniciando processamento para empresa configurada: 99
+✅ Nenhuma transação pendente encontrada para a empresa.
+
+🔌 Conexão com o banco de dados fechada.
+🚀 Processando envios de fechamentos...
+⏳ Aguardando próximo ciclo (10 segundos)...
+🚀 Processando envios de vendas...
+🛠️  Iniciando processamento para empresa configurada: 99
+✅ Nenhuma transação pendente encontrada para a empresa.
+
+🔌 Conexão com o banco de dados fechada.
+🚀 Processando envios de fechamentos...
+⏳ Aguardando próximo ciclo (10 segundos)...
+🚀 Processando envios de vendas...
+🛠️  Iniciando processamento para empresa configurada: 99
+✅ Nenhuma transação pendente encontrada para a empresa.
+
+🔌 Conexão com o banco de dados fechada.
+🚀 Processando envios de fechamentos...
+⏳ Aguardando próximo ciclo (10 segundos)...
+🚀 Processando envios de vendas...
+🛠️  Iniciando processamento para empresa configurada: 99
+✅ Nenhuma transação pendente encontrada para a empresa.
+
+🔌 Conexão com o banco de dados fechada.
+🚀 Processando envios de fechamentos...
+⏳ Aguardando próximo ciclo (10 segundos)...
+🚀 Processando envios de vendas...
+🛠️  Iniciando processamento para empresa configurada: 99
+✅ Nenhuma transação pendente encontrada para a empresa.
+
+🔌 Conexão com o banco de dados fechada.
+🚀 Processando envios de fechamentos...
+⏳ Aguardando próximo ciclo (10 segundos)...
+🚀 Processando envios de vendas...
+🛠️  Iniciando processamento para empresa configurada: 99
+✅ Nenhuma transação pendente encontrada para a empresa.
+
+🔌 Conexão com o banco de dados fechada.
+🚀 Processando envios de fechamentos...
+⏳ Aguardando próximo ciclo (10 segundos)...
+🚀 Processando envios de vendas...
+🛠️  Iniciando processamento para empresa configurada: 99
+✅ Nenhuma transação pendente encontrada para a empresa.
+
+🔌 Conexão com o banco de dados fechada.
+🚀 Processando envios de fechamentos...
+⏳ Aguardando próximo ciclo (10 segundos)...
+🚀 Processando envios de vendas...
+🛠️  Iniciando processamento para empresa configurada: 99
+✅ Nenhuma transação pendente encontrada para a empresa.
+
+🔌 Conexão com o banco de dados fechada.
+🚀 Processando envios de fechamentos...
+⏳ Aguardando próximo ciclo (10 segundos)...
+🚀 Processando envios de vendas...
+🛠️  Iniciando processamento para empresa configurada: 99
+✅ Nenhuma transação pendente encontrada para a empresa.
+
+🔌 Conexão com o banco de dados fechada.
+🚀 Processando envios de fechamentos...
+⏳ Aguardando próximo ciclo (10 segundos)...
+🚀 Processando envios de vendas...
+🛠️  Iniciando processamento para empresa configurada: 99
+✅ Nenhuma transação pendente encontrada para a empresa.
+
+🔌 Conexão com o banco de dados fechada.
+🚀 Processando envios de fechamentos...
+⏳ Aguardando próximo ciclo (10 segundos)...
+🚀 Processando envios de vendas...
+🛠️  Iniciando processamento para empresa configurada: 99
+🧪 Grupos de trabalho encontrados: [(99.0, 1168141.0)]
+
+🔄 Processando grupo: Empresa 99, Caixa 68141
+🧾 Lote selecionado com 1 transações.
+➡️ Empresa 99 | Caixa 68141
+   • Montando lote da VENDA referente à venda 990021322
+   • Tratando como Venda padrão. Buscando em 'vendidos'.
+   • Payload final montado para VENDA 990021322:
+{
+  "fecha": "2025-08-04T15:14:45.000-0300",
+  "numero": "00000010",
+  "total": 38.55,
+  "codigoMoneda": "986",
+  "cotizacion": 1.0,
+  "descuentoTotal": 0.0,
+  "recargoTotal": 0.0,
+  "cancelacion": false,
+  "codigoCanalVenta": 1,
+  "descripcionCanalVenta": "VENDA NA LOJA-DINHEIRO",
+  "detalles": [
+    {
+      "codigoArticulo": "296798",
+      "codigoBarras": "7891000010860",
+      "descripcionArticulo": "CAFE NESCAFE TRADICIONAL 50GR",
+      "cantidad": 3.0,
+      "importeUnitario": 11.9,
+      "importe": 35.7,
+      "descuento": 0.0,
+      "recargo": 0.0
+    },
+    {
+      "codigoArticulo": "1272211303",
+      "codigoBarras": "7894904573387",
+      "descripcionArticulo": "PATE SEARA PRESUNTO 100G",
+      "cantidad": 1.0,
+      "importeUnitario": 2.85,
+      "importe": 2.85,
+      "descuento": 0.0,
+      "recargo": 0.0
+    }
+  ],
+  "pagos": [
+    {
+      "codigoTipoPago": 9,
+      "importe": 38.55,
+      "codigoMoneda": "986",
+      "cotizacion": 1.0
+    }
+  ]
+}
+   • Conexão com o banco de dados fechada para transação da venda 990021322.
+🚀 Enviando lote de 1 transações...
+📤 Payload que será enviado:
+[
+  {
+    "fecha": "2025-08-04T15:14:45.000-0300",
+    "numero": "00000010",
+    "total": 38.55,
+    "codigoMoneda": "986",
+    "cotizacion": 1.0,
+    "descuentoTotal": 0.0,
+    "recargoTotal": 0.0,
+    "cancelacion": false,
+    "codigoCanalVenta": 1,
+    "descripcionCanalVenta": "VENDA NA LOJA-DINHEIRO",
+    "detalles": [
+      {
+        "codigoArticulo": "296798",
+        "codigoBarras": "7891000010860",
+        "descripcionArticulo": "CAFE NESCAFE TRADICIONAL 50GR",
+        "cantidad": 3.0,
+        "importeUnitario": 11.9,
+        "importe": 35.7,
+        "descuento": 0.0,
+        "recargo": 0.0
+      },
+      {
+        "codigoArticulo": "1272211303",
+        "codigoBarras": "7894904573387",
+        "descripcionArticulo": "PATE SEARA PRESUNTO 100G",
+        "cantidad": 1.0,
+        "importeUnitario": 2.85,
+        "importe": 2.85,
+        "descuento": 0.0,
+        "recargo": 0.0
+      }
+    ],
+    "pagos": [
+      {
+        "codigoTipoPago": 9,
+        "importe": 38.55,
+        "codigoMoneda": "986",
+        "cotizacion": 1.0
+      }
+    ]
+  }
+]
+🔗 URL final montada: http://br.homo.apipdv.scanntech.com/api-minoristas/api/v2/minoristas/200398/locales/2/cajas/68141/movimientos/lotes
+DEBUG: 📋 Cabeçalhos que serão enviados: {'pdv-version': '8.0.2.267', 'backEnd-version': '8.0.3.81', 'Content-Type': 'application/json'}
+🔍 Status code: 200
+📦 Resposta: {"idLote":"250804623688dcf5f841ffa63dded0af9cc46d47"}
+✅ Lote enviado (ID: 250804623688dcf5f841ffa63dded0af9cc46d47). 0 erro(s) reportado(s) pela API.
+Database atualizado atomicamente.
+✅ Fim do processamento para o grupo Empresa 99, Caixa 68141.
+
+🔌 Conexão com o banco de dados fechada.
+🚀 Processando envios de fechamentos...
+⏳ Aguardando próximo ciclo (10 segundos)...
+🚀 Processando envios de vendas...
+🛠️  Iniciando processamento para empresa configurada: 99
+✅ Nenhuma transação pendente encontrada para a empresa.
+
+🔌 Conexão com o banco de dados fechada.
+🚀 Processando envios de fechamentos...
+⏳ Aguardando próximo ciclo (10 segundos)...
+🚀 Processando envios de vendas...
+🛠️  Iniciando processamento para empresa configurada: 99
+✅ Nenhuma transação pendente encontrada para a empresa.
+
+🔌 Conexão com o banco de dados fechada.
+🚀 Processando envios de fechamentos...
+⏳ Aguardando próximo ciclo (10 segundos)...
+🚀 Processando envios de vendas...
+🛠️  Iniciando processamento para empresa configurada: 99
+✅ Nenhuma transação pendente encontrada para a empresa.
+
+🔌 Conexão com o banco de dados fechada.
+🚀 Processando envios de fechamentos...
+⏳ Aguardando próximo ciclo (10 segundos)...
+🚀 Processando envios de vendas...
+🛠️  Iniciando processamento para empresa configurada: 99
+✅ Nenhuma transação pendente encontrada para a empresa.
+
+🔌 Conexão com o banco de dados fechada.
+🚀 Processando envios de fechamentos...
+⏳ Aguardando próximo ciclo (10 segundos)...
+🚀 Processando envios de vendas...
+🛠️  Iniciando processamento para empresa configurada: 99
+✅ Nenhuma transação pendente encontrada para a empresa.
+
+🔌 Conexão com o banco de dados fechada.
+🚀 Processando envios de fechamentos...
+⏳ Aguardando próximo ciclo (10 segundos)...
+🚀 Processando envios de vendas...
+🛠️  Iniciando processamento para empresa configurada: 99
+✅ Nenhuma transação pendente encontrada para a empresa.
+
+🔌 Conexão com o banco de dados fechada.
+🚀 Processando envios de fechamentos...
+⏳ Aguardando próximo ciclo (10 segundos)...
+🚀 Processando envios de vendas...
+🛠️  Iniciando processamento para empresa configurada: 99
+✅ Nenhuma transação pendente encontrada para a empresa.
+
+🔌 Conexão com o banco de dados fechada.
+🚀 Processando envios de fechamentos...
+⏳ Aguardando próximo ciclo (10 segundos)...
+🚀 Processando envios de vendas...
+🛠️  Iniciando processamento para empresa configurada: 99
+✅ Nenhuma transação pendente encontrada para a empresa.
+
+🔌 Conexão com o banco de dados fechada.
+🚀 Processando envios de fechamentos...
+⏳ Aguardando próximo ciclo (10 segundos)...
+🚀 Processando envios de vendas...
+🛠️  Iniciando processamento para empresa configurada: 99
+✅ Nenhuma transação pendente encontrada para a empresa.
+
+🔌 Conexão com o banco de dados fechada.
+🚀 Processando envios de fechamentos...
+⏳ Aguardando próximo ciclo (10 segundos)...
+🚀 Processando envios de vendas...
+🛠️  Iniciando processamento para empresa configurada: 99
+✅ Nenhuma transação pendente encontrada para a empresa.
+
+🔌 Conexão com o banco de dados fechada.
+🚀 Processando envios de fechamentos...
+⏳ Aguardando próximo ciclo (10 segundos)...
+🚀 Processando envios de vendas...
+🛠️  Iniciando processamento para empresa configurada: 99
+✅ Nenhuma transação pendente encontrada para a empresa.
+
+🔌 Conexão com o banco de dados fechada.
+🚀 Processando envios de fechamentos...
+⏳ Aguardando próximo ciclo (10 segundos)...
+🚀 Processando envios de vendas...
+🛠️  Iniciando processamento para empresa configurada: 99
+✅ Nenhuma transação pendente encontrada para a empresa.
+
+🔌 Conexão com o banco de dados fechada.
+🚀 Processando envios de fechamentos...
+⏳ Aguardando próximo ciclo (10 segundos)...
+🚀 Processando envios de vendas...
+🛠️  Iniciando processamento para empresa configurada: 99
+✅ Nenhuma transação pendente encontrada para a empresa.
+
+🔌 Conexão com o banco de dados fechada.
+🚀 Processando envios de fechamentos...
+⏳ Aguardando próximo ciclo (10 segundos)...
+🚀 Processando envios de vendas...
+🛠️  Iniciando processamento para empresa configurada: 99
+🧪 Grupos de trabalho encontrados: [(99.0, 1168141.0)]
+
+🔄 Processando grupo: Empresa 99, Caixa 68141
+🧾 Lote selecionado com 1 transações.
+➡️ Empresa 99 | Caixa 68141
+   • Montando lote da VENDA referente à venda 990021323
+   • Tratando como Venda padrão. Buscando em 'vendidos'.
+   • Payload final montado para VENDA 990021323:
+{
+  "fecha": "2025-08-04T15:17:44.000-0300",
+  "numero": "00000011",
+  "total": 16.17,
+  "codigoMoneda": "986",
+  "cotizacion": 1.0,
+  "descuentoTotal": 0.0,
+  "recargoTotal": 0.0,
+  "cancelacion": false,
+  "codigoCanalVenta": 1,
+  "descripcionCanalVenta": "VENDA NA LOJA-DINHEIRO",
+  "detalles": [
+    {
+      "codigoArticulo": "1272211296",
+      "codigoBarras": "7894904500383",
+      "descripcionArticulo": "HAMBURGUER BOVINO/AVES TEXAS BURGER 56G",
+      "cantidad": 5.0,
+      "importeUnitario": 1.37,
+      "importe": 6.85,
+      "descuento": 0.0,
+      "recargo": 0.0
+    },
+    {
+      "codigoArticulo": "1272211297",
+      "codigoBarras": "7894904578207",
+      "descripcionArticulo": "HAMBURGUER FRANGO TEXAS BURGER 56G",
+      "cantidad": 4.0,
+      "importeUnitario": 1.37,
+      "importe": 5.48,
+      "descuento": 0.0,
+      "recargo": 0.0
+    },
+    {
+      "codigoArticulo": "1272211298",
+      "codigoBarras": "7894904003495",
+      "descripcionArticulo": "STEAK SEARA EMP FRANGO 100G",
+      "cantidad": 2.0,
+      "importeUnitario": 1.92,
+      "importe": 3.84,
+      "descuento": 0.0,
+      "recargo": 0.0
+    }
+  ],
+  "pagos": [
+    {
+      "codigoTipoPago": 9,
+      "importe": 16.17,
+      "codigoMoneda": "986",
+      "cotizacion": 1.0
+    }
+  ]
+}
+   • Conexão com o banco de dados fechada para transação da venda 990021323.
+🚀 Enviando lote de 1 transações...
+📤 Payload que será enviado:
+[
+  {
+    "fecha": "2025-08-04T15:17:44.000-0300",
+    "numero": "00000011",
+    "total": 16.17,
+    "codigoMoneda": "986",
+    "cotizacion": 1.0,
+    "descuentoTotal": 0.0,
+    "recargoTotal": 0.0,
+    "cancelacion": false,
+    "codigoCanalVenta": 1,
+    "descripcionCanalVenta": "VENDA NA LOJA-DINHEIRO",
+    "detalles": [
+      {
+        "codigoArticulo": "1272211296",
+        "codigoBarras": "7894904500383",
+        "descripcionArticulo": "HAMBURGUER BOVINO/AVES TEXAS BURGER 56G",
+        "cantidad": 5.0,
+        "importeUnitario": 1.37,
+        "importe": 6.85,
+        "descuento": 0.0,
+        "recargo": 0.0
+      },
+      {
+        "codigoArticulo": "1272211297",
+        "codigoBarras": "7894904578207",
+        "descripcionArticulo": "HAMBURGUER FRANGO TEXAS BURGER 56G",
+        "cantidad": 4.0,
+        "importeUnitario": 1.37,
+        "importe": 5.48,
+        "descuento": 0.0,
+        "recargo": 0.0
+      },
+      {
+        "codigoArticulo": "1272211298",
+        "codigoBarras": "7894904003495",
+        "descripcionArticulo": "STEAK SEARA EMP FRANGO 100G",
+        "cantidad": 2.0,
+        "importeUnitario": 1.92,
+        "importe": 3.84,
+        "descuento": 0.0,
+        "recargo": 0.0
+      }
+    ],
+    "pagos": [
+      {
+        "codigoTipoPago": 9,
+        "importe": 16.17,
+        "codigoMoneda": "986",
+        "cotizacion": 1.0
+      }
+    ]
+  }
+]
+🔗 URL final montada: http://br.homo.apipdv.scanntech.com/api-minoristas/api/v2/minoristas/200398/locales/2/cajas/68141/movimientos/lotes
+DEBUG: 📋 Cabeçalhos que serão enviados: {'pdv-version': '8.0.2.267', 'backEnd-version': '8.0.3.81', 'Content-Type': 'application/json'}
+🔍 Status code: 200
+📦 Resposta: {"idLote":"2508040fa36398d8bb4722a03c8a38dbd5b30280"}
+✅ Lote enviado (ID: 2508040fa36398d8bb4722a03c8a38dbd5b30280). 0 erro(s) reportado(s) pela API.
+Database atualizado atomicamente.
+✅ Fim do processamento para o grupo Empresa 99, Caixa 68141.
+
+🔌 Conexão com o banco de dados fechada.
+🚀 Processando envios de fechamentos...
+⏳ Aguardando próximo ciclo (10 segundos)...
+🚀 Processando envios de vendas...
+🛠️  Iniciando processamento para empresa configurada: 99
+✅ Nenhuma transação pendente encontrada para a empresa.
+
+🔌 Conexão com o banco de dados fechada.
+🚀 Processando envios de fechamentos...
+⏳ Aguardando próximo ciclo (10 segundos)...
+🚀 Processando envios de vendas...
+🛠️  Iniciando processamento para empresa configurada: 99
+✅ Nenhuma transação pendente encontrada para a empresa.
+
+🔌 Conexão com o banco de dados fechada.
+🚀 Processando envios de fechamentos...
+⏳ Aguardando próximo ciclo (10 segundos)...
+🚀 Processando envios de vendas...
+🛠️  Iniciando processamento para empresa configurada: 99
+✅ Nenhuma transação pendente encontrada para a empresa.
+
+🔌 Conexão com o banco de dados fechada.
+🚀 Processando envios de fechamentos...
+⏳ Aguardando próximo ciclo (10 segundos)...
+🚀 Processando envios de vendas...
+🛠️  Iniciando processamento para empresa configurada: 99
+✅ Nenhuma transação pendente encontrada para a empresa.
+
+🔌 Conexão com o banco de dados fechada.
+🚀 Processando envios de fechamentos...
+⏳ Aguardando próximo ciclo (10 segundos)...
+🚀 Processando envios de vendas...
+🛠️  Iniciando processamento para empresa configurada: 99
+✅ Nenhuma transação pendente encontrada para a empresa.
+
+🔌 Conexão com o banco de dados fechada.
+🚀 Processando envios de fechamentos...
+⏳ Aguardando próximo ciclo (10 segundos)...
+🚀 Processando envios de vendas...
+🛠️  Iniciando processamento para empresa configurada: 99
+🧪 Grupos de trabalho encontrados: [(99.0, 1168141.0)]
+
+🔄 Processando grupo: Empresa 99, Caixa 68141
+🧾 Lote selecionado com 1 transações.
+➡️ Empresa 99 | Caixa 68141
+   • Montando lote da VENDA referente à venda 990021324
+   • Tratando como Venda padrão. Buscando em 'vendidos'.
+   • Payload final montado para VENDA 990021324:
+{
+  "fecha": "2025-08-04T15:18:54.000-0300",
+  "numero": "00000012",
+  "total": 17.28,
+  "codigoMoneda": "986",
+  "cotizacion": 1.0,
+  "descuentoTotal": 0.0,
+  "recargoTotal": 0.0,
+  "cancelacion": false,
+  "codigoCanalVenta": 1,
+  "descripcionCanalVenta": "VENDA NA LOJA-CARTÃO CREDITO",
+  "detalles": [
+    {
+      "codigoArticulo": "1272211298",
+      "codigoBarras": "7894904003495",
+      "descripcionArticulo": "STEAK SEARA EMP FRANGO 100G",
+      "cantidad": 9.0,
+      "importeUnitario": 1.92,
+      "importe": 17.28,
+      "descuento": 0.0,
+      "recargo": 0.0
+    }
+  ],
+  "pagos": [
+    {
+      "codigoTipoPago": 10,
+      "importe": 17.28,
+      "codigoMoneda": "986",
+      "cotizacion": 1.0
+    }
+  ]
+}
+   • Conexão com o banco de dados fechada para transação da venda 990021324.
+🚀 Enviando lote de 1 transações...
+📤 Payload que será enviado:
+[
+  {
+    "fecha": "2025-08-04T15:18:54.000-0300",
+    "numero": "00000012",
+    "total": 17.28,
+    "codigoMoneda": "986",
+    "cotizacion": 1.0,
+    "descuentoTotal": 0.0,
+    "recargoTotal": 0.0,
+    "cancelacion": false,
+    "codigoCanalVenta": 1,
+    "descripcionCanalVenta": "VENDA NA LOJA-CARTÃO CREDITO",
+    "detalles": [
+      {
+        "codigoArticulo": "1272211298",
+        "codigoBarras": "7894904003495",
+        "descripcionArticulo": "STEAK SEARA EMP FRANGO 100G",
+        "cantidad": 9.0,
+        "importeUnitario": 1.92,
+        "importe": 17.28,
+        "descuento": 0.0,
+        "recargo": 0.0
+      }
+    ],
+    "pagos": [
+      {
+        "codigoTipoPago": 10,
+        "importe": 17.28,
+        "codigoMoneda": "986",
+        "cotizacion": 1.0
+      }
+    ]
+  }
+]
+🔗 URL final montada: http://br.homo.apipdv.scanntech.com/api-minoristas/api/v2/minoristas/200398/locales/2/cajas/68141/movimientos/lotes
+DEBUG: 📋 Cabeçalhos que serão enviados: {'pdv-version': '8.0.2.267', 'backEnd-version': '8.0.3.81', 'Content-Type': 'application/json'}
+🔍 Status code: 200
+📦 Resposta: {"idLote":"25080493a6ed4190474b13bce7e3a3db66866991"}
+✅ Lote enviado (ID: 25080493a6ed4190474b13bce7e3a3db66866991). 0 erro(s) reportado(s) pela API.
+Database atualizado atomicamente.
+✅ Fim do processamento para o grupo Empresa 99, Caixa 68141.
+
+🔌 Conexão com o banco de dados fechada.
+🚀 Processando envios de fechamentos...
+⏳ Aguardando próximo ciclo (10 segundos)...
+Traceback (most recent call last):
+  File "C:\Users\AdyFera\Documents\Scanntech\scanntech\core\loop.py", line 94, in <module>
+    iniciar_loop()
+  File "C:\Users\AdyFera\Documents\Scanntech\scanntech\core\loop.py", line 87, in iniciar_loop
+    time.sleep(intervalo)
+KeyboardInterrupt
+🔄 Iniciando integrador. Intervalo definido: 10 segundos.
+
+🧪 Verificando configuração inicial...
+
+🚀 Verificando fechamentos pendentes dos últimos 7 dias ao iniciar...
+🔍 Chaves carregadas do config (debug real): dict_keys(['integração scanntech', 'usuário', 'senha', 'url 1', 'url 2', 'url 3', 'empresa', 'local', 'crm', 'código da empresa', 'intervalo (s)', 'data de início', 'data início envio de vendas', 'data início envio de fechamentos'])
+🔁 Já existe fechamento para 2025-07-28 (Empresa 99)
+🔁 Já existe fechamento para 2025-07-29 (Empresa 99)
+🔁 Já existe fechamento para 2025-07-30 (Empresa 99)
+🔁 Já existe fechamento para 2025-07-31 (Empresa 99)
+🔁 Já existe fechamento para 2025-08-01 (Empresa 99)
+🔁 Já existe fechamento para 2025-08-02 (Empresa 99)
+🔁 Já existe fechamento para 2025-08-03 (Empresa 99)
+✅ Geração de fechamentos pendentes finalizada para empresa 99 (últimos 7 dias).
+
+🚀 Processando promoções...
+🔗 URL final montada: http://br.homo.apipdv.scanntech.com/pmkt-rest-api/v2/minoristas/200398/locales/1/promociones
+DEBUG: 📋 Cabeçalhos que serão enviados: {'pdv-version': '8.0.2.267', 'backEnd-version': '8.0.3.81'}
+🔍 Status code: 200
+📦 Resposta: {"total":1,"results":[{"id":311868,"titulo":"HOMOLOGACION LLEVA PAGA 2025","descripcion":"HOMOLOGACION LLEVA PAGA 2025","tipo":"LLEVA_PAGA","autor":{"descripcion":"Scanntech"},"detalles":{"condiciones":{"items":[{"cantidad":6,"articulos":[{"nombre":"LEITE UHT BOM GOSTO DESN TP 1LT","codigoBarras":"7897511400244"},{"nombre":"LEITE UHT ELEGE SEMI DESN S/VERSAO TP 1L","codigoBarras":"7896079500168"},{"nombre":"LEITE UHT BOM GOSTO INTEG S/VERSAO TP 1LT","codigoBarras":"7897511400237"},{"nombre":"LEITE UHT ELEGE DESN S/VERSAO TP 1L","codigoBarras":"7896079500175"}]}],"formasPago":null},"beneficios":null,"precio":null,"descuento":null,"paga":5},"vigenciaDesde":"2025-01-01T00:00:00.000-0300","vigenciaHasta":"2025-12-31T23:59:59.000-0300","limitePromocionesPorTicket":0}]}
+
+🔍 Processando promoção: 311868 - HOMOLOGACION LLEVA PAGA 2025
+❌ Erro fatal ao processar a promoção 311868: ERRO:  o valor nulo na coluna "desconto" da relação "promocao_prd" viola a restrição de não-nulo
+DETAIL:  Registro que falhou contém (1272211306, 1b77215c324a296fe275ff5deaff7dda    , b074bd6201f8b64859dde411632844cf    , -530, 2025-08-04 15:19:24.760241, 2025-08-04 15:19:24.760241, null, null, 6, 5, null, 0).
+
+   -> Desfazendo alterações para esta promoção.
+
+💾 Transação finalizada.
+✅ 1 promoções salvas com sucesso.
+🔄 Iniciando reprocessamento de produtos pendentes...
+🔁 Nenhuma promoção ou produto pendente para processar.
+🔁 Reprocessando produtos pendentes...
+🔁 Nenhuma promoção ou produto pendente para processar.
+🚀 Processando envios de vendas...
+🛠️  Iniciando processamento para empresa configurada: 99
+✅ Nenhuma transação pendente encontrada para a empresa.
+
+🔌 Conexão com o banco de dados fechada.
+🚀 Processando envios de fechamentos...
+⏳ Aguardando próximo ciclo (10 segundos)...
+🚀 Processando envios de vendas...
+🛠️  Iniciando processamento para empresa configurada: 99
+✅ Nenhuma transação pendente encontrada para a empresa.
+
+🔌 Conexão com o banco de dados fechada.
+🚀 Processando envios de fechamentos...
+⏳ Aguardando próximo ciclo (10 segundos)...
+🚀 Processando envios de vendas...
+🛠️  Iniciando processamento para empresa configurada: 99
+✅ Nenhuma transação pendente encontrada para a empresa.
+
+🔌 Conexão com o banco de dados fechada.
+🚀 Processando envios de fechamentos...
+⏳ Aguardando próximo ciclo (10 segundos)...
+🚀 Processando envios de vendas...
+🛠️  Iniciando processamento para empresa configurada: 99
+✅ Nenhuma transação pendente encontrada para a empresa.
+
+🔌 Conexão com o banco de dados fechada.
+🚀 Processando envios de fechamentos...
+⏳ Aguardando próximo ciclo (10 segundos)...
+🚀 Processando envios de vendas...
+🛠️  Iniciando processamento para empresa configurada: 99
+✅ Nenhuma transação pendente encontrada para a empresa.
+
+🔌 Conexão com o banco de dados fechada.
+🚀 Processando envios de fechamentos...
+⏳ Aguardando próximo ciclo (10 segundos)...
+🚀 Processando envios de vendas...
+🛠️  Iniciando processamento para empresa configurada: 99
+✅ Nenhuma transação pendente encontrada para a empresa.
+
+🔌 Conexão com o banco de dados fechada.
+🚀 Processando envios de fechamentos...
+⏳ Aguardando próximo ciclo (10 segundos)...
+🚀 Processando envios de vendas...
+🛠️  Iniciando processamento para empresa configurada: 99
+🧪 Grupos de trabalho encontrados: [(99.0, 1168141.0)]
+
+🔄 Processando grupo: Empresa 99, Caixa 68141
+🧾 Lote selecionado com 1 transações.
+➡️ Empresa 99 | Caixa 68141
+   • Montando lote da VENDA referente à venda 990021325
+   • Tratando como Venda padrão. Buscando em 'vendidos'.
+   • Payload final montado para VENDA 990021325:
+{
+  "fecha": "2025-08-04T15:20:17.000-0300",
+  "numero": "00000013",
+  "total": 38.55,
+  "codigoMoneda": "986",
+  "cotizacion": 1.0,
+  "descuentoTotal": 0.0,
+  "recargoTotal": 0.0,
+  "cancelacion": false,
+  "codigoCanalVenta": 1,
+  "descripcionCanalVenta": "VENDA NA LOJA-DINHEIRO",
+  "detalles": [
+    {
+      "codigoArticulo": "296798",
+      "codigoBarras": "7891000010860",
+      "descripcionArticulo": "CAFE NESCAFE TRADICIONAL 50GR",
+      "cantidad": 3.0,
+      "importeUnitario": 11.9,
+      "importe": 35.7,
+      "descuento": 0.0,
+      "recargo": 0.0
+    },
+    {
+      "codigoArticulo": "1272211303",
+      "codigoBarras": "7894904573387",
+      "descripcionArticulo": "PATE SEARA PRESUNTO 100G",
+      "cantidad": 1.0,
+      "importeUnitario": 2.85,
+      "importe": 2.85,
+      "descuento": 0.0,
+      "recargo": 0.0
+    }
+  ],
+  "pagos": [
+    {
+      "codigoTipoPago": 9,
+      "importe": 38.55,
+      "codigoMoneda": "986",
+      "cotizacion": 1.0
+    }
+  ]
+}
+   • Conexão com o banco de dados fechada para transação da venda 990021325.
+🚀 Enviando lote de 1 transações...
+📤 Payload que será enviado:
+[
+  {
+    "fecha": "2025-08-04T15:20:17.000-0300",
+    "numero": "00000013",
+    "total": 38.55,
+    "codigoMoneda": "986",
+    "cotizacion": 1.0,
+    "descuentoTotal": 0.0,
+    "recargoTotal": 0.0,
+    "cancelacion": false,
+    "codigoCanalVenta": 1,
+    "descripcionCanalVenta": "VENDA NA LOJA-DINHEIRO",
+    "detalles": [
+      {
+        "codigoArticulo": "296798",
+        "codigoBarras": "7891000010860",
+        "descripcionArticulo": "CAFE NESCAFE TRADICIONAL 50GR",
+        "cantidad": 3.0,
+        "importeUnitario": 11.9,
+        "importe": 35.7,
+        "descuento": 0.0,
+        "recargo": 0.0
+      },
+      {
+        "codigoArticulo": "1272211303",
+        "codigoBarras": "7894904573387",
+        "descripcionArticulo": "PATE SEARA PRESUNTO 100G",
+        "cantidad": 1.0,
+        "importeUnitario": 2.85,
+        "importe": 2.85,
+        "descuento": 0.0,
+        "recargo": 0.0
+      }
+    ],
+    "pagos": [
+      {
+        "codigoTipoPago": 9,
+        "importe": 38.55,
+        "codigoMoneda": "986",
+        "cotizacion": 1.0
+      }
+    ]
+  }
+]
+🔗 URL final montada: http://br.homo.apipdv.scanntech.com/api-minoristas/api/v2/minoristas/200398/locales/1/cajas/68141/movimientos/lotes
+DEBUG: 📋 Cabeçalhos que serão enviados: {'pdv-version': '8.0.2.267', 'backEnd-version': '8.0.3.81', 'Content-Type': 'application/json'}
+🔍 Status code: 200
+📦 Resposta: {"idLote":"25080436de5ef2681b4c14be7eee85d627c0fe44"}
+✅ Lote enviado (ID: 25080436de5ef2681b4c14be7eee85d627c0fe44). 0 erro(s) reportado(s) pela API.
+Database atualizado atomicamente.
+✅ Fim do processamento para o grupo Empresa 99, Caixa 68141.
+
+🔌 Conexão com o banco de dados fechada.
+🚀 Processando envios de fechamentos...
+⏳ Aguardando próximo ciclo (10 segundos)...
+🚀 Processando envios de vendas...
+🛠️  Iniciando processamento para empresa configurada: 99
+✅ Nenhuma transação pendente encontrada para a empresa.
+
+🔌 Conexão com o banco de dados fechada.
+🚀 Processando envios de fechamentos...
+⏳ Aguardando próximo ciclo (10 segundos)...
+🚀 Processando envios de vendas...
+🛠️  Iniciando processamento para empresa configurada: 99
+✅ Nenhuma transação pendente encontrada para a empresa.
+
+🔌 Conexão com o banco de dados fechada.
+🚀 Processando envios de fechamentos...
+⏳ Aguardando próximo ciclo (10 segundos)...
+🚀 Processando envios de vendas...
+🛠️  Iniciando processamento para empresa configurada: 99
+✅ Nenhuma transação pendente encontrada para a empresa.
+
+🔌 Conexão com o banco de dados fechada.
+🚀 Processando envios de fechamentos...
+⏳ Aguardando próximo ciclo (10 segundos)...
+🚀 Processando envios de vendas...
+🛠️  Iniciando processamento para empresa configurada: 99
+✅ Nenhuma transação pendente encontrada para a empresa.
+
+🔌 Conexão com o banco de dados fechada.
+🚀 Processando envios de fechamentos...
+⏳ Aguardando próximo ciclo (10 segundos)...
+🚀 Processando envios de vendas...
+🛠️  Iniciando processamento para empresa configurada: 99
+🧪 Grupos de trabalho encontrados: [(99.0, 1168141.0)]
+
+🔄 Processando grupo: Empresa 99, Caixa 68141
+🧾 Lote selecionado com 1 transações.
+➡️ Empresa 99 | Caixa 68141
+   • Montando lote da VENDA referente à venda 990021326
+   • Tratando como Venda padrão. Buscando em 'vendidos'.
+   • Payload final montado para VENDA 990021326:
+{
+  "fecha": "2025-08-04T15:21:13.000-0300",
+  "numero": "00000014",
+  "total": 16.17,
+  "codigoMoneda": "986",
+  "cotizacion": 1.0,
+  "descuentoTotal": 0.0,
+  "recargoTotal": 0.0,
+  "cancelacion": false,
+  "codigoCanalVenta": 1,
+  "descripcionCanalVenta": "VENDA NA LOJA-DINHEIRO",
+  "detalles": [
+    {
+      "codigoArticulo": "1272211296",
+      "codigoBarras": "7894904500383",
+      "descripcionArticulo": "HAMBURGUER BOVINO/AVES TEXAS BURGER 56G",
+      "cantidad": 5.0,
+      "importeUnitario": 1.37,
+      "importe": 6.85,
+      "descuento": 0.0,
+      "recargo": 0.0
+    },
+    {
+      "codigoArticulo": "1272211297",
+      "codigoBarras": "7894904578207",
+      "descripcionArticulo": "HAMBURGUER FRANGO TEXAS BURGER 56G",
+      "cantidad": 4.0,
+      "importeUnitario": 1.37,
+      "importe": 5.48,
+      "descuento": 0.0,
+      "recargo": 0.0
+    },
+    {
+      "codigoArticulo": "1272211298",
+      "codigoBarras": "7894904003495",
+      "descripcionArticulo": "STEAK SEARA EMP FRANGO 100G",
+      "cantidad": 2.0,
+      "importeUnitario": 1.92,
+      "importe": 3.84,
+      "descuento": 0.0,
+      "recargo": 0.0
+    }
+  ],
+  "pagos": [
+    {
+      "codigoTipoPago": 9,
+      "importe": 16.17,
+      "codigoMoneda": "986",
+      "cotizacion": 1.0
+    }
+  ]
+}
+   • Conexão com o banco de dados fechada para transação da venda 990021326.
+🚀 Enviando lote de 1 transações...
+📤 Payload que será enviado:
+[
+  {
+    "fecha": "2025-08-04T15:21:13.000-0300",
+    "numero": "00000014",
+    "total": 16.17,
+    "codigoMoneda": "986",
+    "cotizacion": 1.0,
+    "descuentoTotal": 0.0,
+    "recargoTotal": 0.0,
+    "cancelacion": false,
+    "codigoCanalVenta": 1,
+    "descripcionCanalVenta": "VENDA NA LOJA-DINHEIRO",
+    "detalles": [
+      {
+        "codigoArticulo": "1272211296",
+        "codigoBarras": "7894904500383",
+        "descripcionArticulo": "HAMBURGUER BOVINO/AVES TEXAS BURGER 56G",
+        "cantidad": 5.0,
+        "importeUnitario": 1.37,
+        "importe": 6.85,
+        "descuento": 0.0,
+        "recargo": 0.0
+      },
+      {
+        "codigoArticulo": "1272211297",
+        "codigoBarras": "7894904578207",
+        "descripcionArticulo": "HAMBURGUER FRANGO TEXAS BURGER 56G",
+        "cantidad": 4.0,
+        "importeUnitario": 1.37,
+        "importe": 5.48,
+        "descuento": 0.0,
+        "recargo": 0.0
+      },
+      {
+        "codigoArticulo": "1272211298",
+        "codigoBarras": "7894904003495",
+        "descripcionArticulo": "STEAK SEARA EMP FRANGO 100G",
+        "cantidad": 2.0,
+        "importeUnitario": 1.92,
+        "importe": 3.84,
+        "descuento": 0.0,
+        "recargo": 0.0
+      }
+    ],
+    "pagos": [
+      {
+        "codigoTipoPago": 9,
+        "importe": 16.17,
+        "codigoMoneda": "986",
+        "cotizacion": 1.0
+      }
+    ]
+  }
+]
+🔗 URL final montada: http://br.homo.apipdv.scanntech.com/api-minoristas/api/v2/minoristas/200398/locales/1/cajas/68141/movimientos/lotes
+DEBUG: 📋 Cabeçalhos que serão enviados: {'pdv-version': '8.0.2.267', 'backEnd-version': '8.0.3.81', 'Content-Type': 'application/json'}
+🔍 Status code: 200
+📦 Resposta: {"idLote":"25080466d08051204f4814b3b6cf2ddd6874bf0e"}
+✅ Lote enviado (ID: 25080466d08051204f4814b3b6cf2ddd6874bf0e). 0 erro(s) reportado(s) pela API.
+Database atualizado atomicamente.
+✅ Fim do processamento para o grupo Empresa 99, Caixa 68141.
+
+🔌 Conexão com o banco de dados fechada.
+🚀 Processando envios de fechamentos...
+⏳ Aguardando próximo ciclo (10 segundos)...
+🚀 Processando envios de vendas...
+🛠️  Iniciando processamento para empresa configurada: 99
+✅ Nenhuma transação pendente encontrada para a empresa.
+
+🔌 Conexão com o banco de dados fechada.
+🚀 Processando envios de fechamentos...
+⏳ Aguardando próximo ciclo (10 segundos)...
+🚀 Processando envios de vendas...
+🛠️  Iniciando processamento para empresa configurada: 99
+✅ Nenhuma transação pendente encontrada para a empresa.
+
+🔌 Conexão com o banco de dados fechada.
+🚀 Processando envios de fechamentos...
+⏳ Aguardando próximo ciclo (10 segundos)...
+🚀 Processando envios de vendas...
+🛠️  Iniciando processamento para empresa configurada: 99
+✅ Nenhuma transação pendente encontrada para a empresa.
+
+🔌 Conexão com o banco de dados fechada.
+🚀 Processando envios de fechamentos...
+⏳ Aguardando próximo ciclo (10 segundos)...
+🚀 Processando envios de vendas...
+🛠️  Iniciando processamento para empresa configurada: 99
+🧪 Grupos de trabalho encontrados: [(99.0, 1168141.0)]
+
+🔄 Processando grupo: Empresa 99, Caixa 68141
+🧾 Lote selecionado com 1 transações.
+➡️ Empresa 99 | Caixa 68141
+   • Montando lote da VENDA referente à venda 990021327
+   • Tratando como Venda padrão. Buscando em 'vendidos'.
+   • Payload final montado para VENDA 990021327:
+{
+  "fecha": "2025-08-04T15:22:02.000-0300",
+  "numero": "00000015",
+  "total": 17.28,
+  "codigoMoneda": "986",
+  "cotizacion": 1.0,
+  "descuentoTotal": 0.0,
+  "recargoTotal": 0.0,
+  "cancelacion": false,
+  "codigoCanalVenta": 1,
+  "descripcionCanalVenta": "VENDA NA LOJA-CARTÃO CREDITO",
+  "detalles": [
+    {
+      "codigoArticulo": "1272211298",
+      "codigoBarras": "7894904003495",
+      "descripcionArticulo": "STEAK SEARA EMP FRANGO 100G",
+      "cantidad": 9.0,
+      "importeUnitario": 1.92,
+      "importe": 17.28,
+      "descuento": 0.0,
+      "recargo": 0.0
+    }
+  ],
+  "pagos": [
+    {
+      "codigoTipoPago": 10,
+      "importe": 17.28,
+      "codigoMoneda": "986",
+      "cotizacion": 1.0
+    }
+  ]
+}
+   • Conexão com o banco de dados fechada para transação da venda 990021327.
+🚀 Enviando lote de 1 transações...
+📤 Payload que será enviado:
+[
+  {
+    "fecha": "2025-08-04T15:22:02.000-0300",
+    "numero": "00000015",
+    "total": 17.28,
+    "codigoMoneda": "986",
+    "cotizacion": 1.0,
+    "descuentoTotal": 0.0,
+    "recargoTotal": 0.0,
+    "cancelacion": false,
+    "codigoCanalVenta": 1,
+    "descripcionCanalVenta": "VENDA NA LOJA-CARTÃO CREDITO",
+    "detalles": [
+      {
+        "codigoArticulo": "1272211298",
+        "codigoBarras": "7894904003495",
+        "descripcionArticulo": "STEAK SEARA EMP FRANGO 100G",
+        "cantidad": 9.0,
+        "importeUnitario": 1.92,
+        "importe": 17.28,
+        "descuento": 0.0,
+        "recargo": 0.0
+      }
+    ],
+    "pagos": [
+      {
+        "codigoTipoPago": 10,
+        "importe": 17.28,
+        "codigoMoneda": "986",
+        "cotizacion": 1.0
+      }
+    ]
+  }
+]
+🔗 URL final montada: http://br.homo.apipdv.scanntech.com/api-minoristas/api/v2/minoristas/200398/locales/1/cajas/68141/movimientos/lotes
+DEBUG: 📋 Cabeçalhos que serão enviados: {'pdv-version': '8.0.2.267', 'backEnd-version': '8.0.3.81', 'Content-Type': 'application/json'}
+🔍 Status code: 200
+📦 Resposta: {"idLote":"250804699a53dcfa5c44f0912f972ceec150c09a"}
+✅ Lote enviado (ID: 250804699a53dcfa5c44f0912f972ceec150c09a). 0 erro(s) reportado(s) pela API.
+Database atualizado atomicamente.
+✅ Fim do processamento para o grupo Empresa 99, Caixa 68141.
+
+🔌 Conexão com o banco de dados fechada.
+🚀 Processando envios de fechamentos...
+⏳ Aguardando próximo ciclo (10 segundos)...
+🚀 Processando envios de vendas...
+🛠️  Iniciando processamento para empresa configurada: 99
+✅ Nenhuma transação pendente encontrada para a empresa.
+
+🔌 Conexão com o banco de dados fechada.
+🚀 Processando envios de fechamentos...
+⏳ Aguardando próximo ciclo (10 segundos)...
+🚀 Processando envios de vendas...
+🛠️  Iniciando processamento para empresa configurada: 99
+✅ Nenhuma transação pendente encontrada para a empresa.
+
+🔌 Conexão com o banco de dados fechada.
+🚀 Processando envios de fechamentos...
+⏳ Aguardando próximo ciclo (10 segundos)...
+🚀 Processando envios de vendas...
+🛠️  Iniciando processamento para empresa configurada: 99
+✅ Nenhuma transação pendente encontrada para a empresa.
+
+🔌 Conexão com o banco de dados fechada.
+🚀 Processando envios de fechamentos...
+⏳ Aguardando próximo ciclo (10 segundos)...
+🚀 Processando envios de vendas...
+🛠️  Iniciando processamento para empresa configurada: 99
+✅ Nenhuma transação pendente encontrada para a empresa.
+
+🔌 Conexão com o banco de dados fechada.
+🚀 Processando envios de fechamentos...
+⏳ Aguardando próximo ciclo (10 segundos)...
+🚀 Processando envios de vendas...
+🛠️  Iniciando processamento para empresa configurada: 99
+✅ Nenhuma transação pendente encontrada para a empresa.
+
+🔌 Conexão com o banco de dados fechada.
+🚀 Processando envios de fechamentos...
+⏳ Aguardando próximo ciclo (10 segundos)...
+🚀 Processando envios de vendas...
+🛠️  Iniciando processamento para empresa configurada: 99
+🧪 Grupos de trabalho encontrados: [(99.0, 1168141.0)]
+
+🔄 Processando grupo: Empresa 99, Caixa 68141
+🧾 Lote selecionado com 1 transações.
+➡️ Empresa 99 | Caixa 68141
+   • Montando lote da VENDA referente à venda 990021328
+   • Tratando como Venda padrão. Buscando em 'vendidos'.
+   • Payload final montado para VENDA 990021328:
+{
+  "fecha": "2025-08-04T15:23:02.000-0300",
+  "numero": "00000016",
+  "total": 27.39,
+  "codigoMoneda": "986",
+  "cotizacion": 1.0,
+  "descuentoTotal": 0.0,
+  "recargoTotal": 0.0,
+  "cancelacion": false,
+  "codigoCanalVenta": 1,
+  "descripcionCanalVenta": "VENDA NA LOJA-CARTÃO CREDITO",
+  "detalles": [
+    {
+      "codigoArticulo": "1272211300",
+      "codigoBarras": "7891149440801",
+      "descripcionArticulo": "REFRIGERANTE SUKITA LARANJA PET 2L",
+      "cantidad": 2.0,
+      "importeUnitario": 5.02,
+      "importe": 10.04,
+      "descuento": 0.0,
+      "recargo": 0.0
+    },
+    {
+      "codigoArticulo": "1272211301",
+      "codigoBarras": "7891149102808",
+      "descripcionArticulo": "REFRIG SUKITA UVA PET 2L",
+      "cantidad": 1.0,
+      "importeUnitario": 5.09,
+      "importe": 5.09,
+      "descuento": 0.0,
+      "recargo": 0.0
+    },
+    {
+      "codigoArticulo": "174098",
+      "codigoBarras": "7891991001359",
+      "descripcionArticulo": "REFRIG ANTARCTICA SODA LIMONADA PET 2L",
+      "cantidad": 2.0,
+      "importeUnitario": 6.13,
+      "importe": 12.26,
+      "descuento": 0.0,
+      "recargo": 0.0
+    }
+  ],
+  "pagos": [
+    {
+      "codigoTipoPago": 10,
+      "importe": 27.39,
+      "codigoMoneda": "986",
+      "cotizacion": 1.0
+    }
+  ]
+}
+   • Conexão com o banco de dados fechada para transação da venda 990021328.
+🚀 Enviando lote de 1 transações...
+📤 Payload que será enviado:
+[
+  {
+    "fecha": "2025-08-04T15:23:02.000-0300",
+    "numero": "00000016",
+    "total": 27.39,
+    "codigoMoneda": "986",
+    "cotizacion": 1.0,
+    "descuentoTotal": 0.0,
+    "recargoTotal": 0.0,
+    "cancelacion": false,
+    "codigoCanalVenta": 1,
+    "descripcionCanalVenta": "VENDA NA LOJA-CARTÃO CREDITO",
+    "detalles": [
+      {
+        "codigoArticulo": "1272211300",
+        "codigoBarras": "7891149440801",
+        "descripcionArticulo": "REFRIGERANTE SUKITA LARANJA PET 2L",
+        "cantidad": 2.0,
+        "importeUnitario": 5.02,
+        "importe": 10.04,
+        "descuento": 0.0,
+        "recargo": 0.0
+      },
+      {
+        "codigoArticulo": "1272211301",
+        "codigoBarras": "7891149102808",
+        "descripcionArticulo": "REFRIG SUKITA UVA PET 2L",
+        "cantidad": 1.0,
+        "importeUnitario": 5.09,
+        "importe": 5.09,
+        "descuento": 0.0,
+        "recargo": 0.0
+      },
+      {
+        "codigoArticulo": "174098",
+        "codigoBarras": "7891991001359",
+        "descripcionArticulo": "REFRIG ANTARCTICA SODA LIMONADA PET 2L",
+        "cantidad": 2.0,
+        "importeUnitario": 6.13,
+        "importe": 12.26,
+        "descuento": 0.0,
+        "recargo": 0.0
+      }
+    ],
+    "pagos": [
+      {
+        "codigoTipoPago": 10,
+        "importe": 27.39,
+        "codigoMoneda": "986",
+        "cotizacion": 1.0
+      }
+    ]
+  }
+]
+🔗 URL final montada: http://br.homo.apipdv.scanntech.com/api-minoristas/api/v2/minoristas/200398/locales/1/cajas/68141/movimientos/lotes
+DEBUG: 📋 Cabeçalhos que serão enviados: {'pdv-version': '8.0.2.267', 'backEnd-version': '8.0.3.81', 'Content-Type': 'application/json'}
+🔍 Status code: 200
+📦 Resposta: {"idLote":"250804728bc08773784e07ab23c5202d50c2ac74"}
+✅ Lote enviado (ID: 250804728bc08773784e07ab23c5202d50c2ac74). 0 erro(s) reportado(s) pela API.
+Database atualizado atomicamente.
+✅ Fim do processamento para o grupo Empresa 99, Caixa 68141.
+
+🔌 Conexão com o banco de dados fechada.
+🚀 Processando envios de fechamentos...
+⏳ Aguardando próximo ciclo (10 segundos)...
+🚀 Processando envios de vendas...
+🛠️  Iniciando processamento para empresa configurada: 99
+✅ Nenhuma transação pendente encontrada para a empresa.
+
+🔌 Conexão com o banco de dados fechada.
+🚀 Processando envios de fechamentos...
+⏳ Aguardando próximo ciclo (10 segundos)...
+🚀 Processando envios de vendas...
+🛠️  Iniciando processamento para empresa configurada: 99
+✅ Nenhuma transação pendente encontrada para a empresa.
+
+🔌 Conexão com o banco de dados fechada.
+🚀 Processando envios de fechamentos...
+⏳ Aguardando próximo ciclo (10 segundos)...
+🚀 Processando envios de vendas...
+🛠️  Iniciando processamento para empresa configurada: 99
+✅ Nenhuma transação pendente encontrada para a empresa.
+
+🔌 Conexão com o banco de dados fechada.
+🚀 Processando envios de fechamentos...
+⏳ Aguardando próximo ciclo (10 segundos)...
+🚀 Processando envios de vendas...
+🛠️  Iniciando processamento para empresa configurada: 99
+✅ Nenhuma transação pendente encontrada para a empresa.
+
+🔌 Conexão com o banco de dados fechada.
+🚀 Processando envios de fechamentos...
+⏳ Aguardando próximo ciclo (10 segundos)...
+🚀 Processando envios de vendas...
+🛠️  Iniciando processamento para empresa configurada: 99
+✅ Nenhuma transação pendente encontrada para a empresa.
+
+🔌 Conexão com o banco de dados fechada.
+🚀 Processando envios de fechamentos...
+⏳ Aguardando próximo ciclo (10 segundos)...
+🚀 Processando envios de vendas...
+🛠️  Iniciando processamento para empresa configurada: 99
+✅ Nenhuma transação pendente encontrada para a empresa.
+
+🔌 Conexão com o banco de dados fechada.
+🚀 Processando envios de fechamentos...
+⏳ Aguardando próximo ciclo (10 segundos)...
+🚀 Processando envios de vendas...
+🛠️  Iniciando processamento para empresa configurada: 99
+🧪 Grupos de trabalho encontrados: [(99.0, 1168141.0)]
+
+🔄 Processando grupo: Empresa 99, Caixa 68141
+🧾 Lote selecionado com 1 transações.
+➡️ Empresa 99 | Caixa 68141
+   • Montando lote da VENDA referente à venda 990021329
+   • Tratando como Venda padrão. Buscando em 'vendidos'.
+   • Payload final montado para VENDA 990021329:
+{
+  "fecha": "2025-08-04T15:24:16.000-0300",
+  "numero": "00000017",
+  "total": 50.87,
+  "codigoMoneda": "986",
+  "cotizacion": 1.0,
+  "descuentoTotal": 0.0,
+  "recargoTotal": 0.0,
+  "cancelacion": false,
+  "codigoCanalVenta": 1,
+  "descripcionCanalVenta": "VENDA NA LOJA-CARTÃO DEBITO",
+  "detalles": [
+    {
+      "codigoArticulo": "174098",
+      "codigoBarras": "7891991001359",
+      "descripcionArticulo": "REFRIG ANTARCTICA SODA LIMONADA PET 2L",
+      "cantidad": 5.0,
+      "importeUnitario": 6.13,
+      "importe": 30.65,
+      "descuento": 0.0,
+      "recargo": 0.0
+    },
+    {
+      "codigoArticulo": "1272211301",
+      "codigoBarras": "7891149102808",
+      "descripcionArticulo": "REFRIG SUKITA UVA PET 2L",
+      "cantidad": 2.0,
+      "importeUnitario": 5.09,
+      "importe": 10.18,
+      "descuento": 0.0,
+      "recargo": 0.0
+    },
+    {
+      "codigoArticulo": "1272211300",
+      "codigoBarras": "7891149440801",
+      "descripcionArticulo": "REFRIGERANTE SUKITA LARANJA PET 2L",
+      "cantidad": 2.0,
+      "importeUnitario": 5.02,
+      "importe": 10.04,
+      "descuento": 0.0,
+      "recargo": 0.0
+    }
+  ],
+  "pagos": [
+    {
+      "codigoTipoPago": 13,
+      "importe": 50.87,
+      "codigoMoneda": "986",
+      "cotizacion": 1.0
+    }
+  ]
+}
+   • Conexão com o banco de dados fechada para transação da venda 990021329.
+🚀 Enviando lote de 1 transações...
+📤 Payload que será enviado:
+[
+  {
+    "fecha": "2025-08-04T15:24:16.000-0300",
+    "numero": "00000017",
+    "total": 50.87,
+    "codigoMoneda": "986",
+    "cotizacion": 1.0,
+    "descuentoTotal": 0.0,
+    "recargoTotal": 0.0,
+    "cancelacion": false,
+    "codigoCanalVenta": 1,
+    "descripcionCanalVenta": "VENDA NA LOJA-CARTÃO DEBITO",
+    "detalles": [
+      {
+        "codigoArticulo": "174098",
+        "codigoBarras": "7891991001359",
+        "descripcionArticulo": "REFRIG ANTARCTICA SODA LIMONADA PET 2L",
+        "cantidad": 5.0,
+        "importeUnitario": 6.13,
+        "importe": 30.65,
+        "descuento": 0.0,
+        "recargo": 0.0
+      },
+      {
+        "codigoArticulo": "1272211301",
+        "codigoBarras": "7891149102808",
+        "descripcionArticulo": "REFRIG SUKITA UVA PET 2L",
+        "cantidad": 2.0,
+        "importeUnitario": 5.09,
+        "importe": 10.18,
+        "descuento": 0.0,
+        "recargo": 0.0
+      },
+      {
+        "codigoArticulo": "1272211300",
+        "codigoBarras": "7891149440801",
+        "descripcionArticulo": "REFRIGERANTE SUKITA LARANJA PET 2L",
+        "cantidad": 2.0,
+        "importeUnitario": 5.02,
+        "importe": 10.04,
+        "descuento": 0.0,
+        "recargo": 0.0
+      }
+    ],
+    "pagos": [
+      {
+        "codigoTipoPago": 13,
+        "importe": 50.87,
+        "codigoMoneda": "986",
+        "cotizacion": 1.0
+      }
+    ]
+  }
+]
+🔗 URL final montada: http://br.homo.apipdv.scanntech.com/api-minoristas/api/v2/minoristas/200398/locales/1/cajas/68141/movimientos/lotes
+DEBUG: 📋 Cabeçalhos que serão enviados: {'pdv-version': '8.0.2.267', 'backEnd-version': '8.0.3.81', 'Content-Type': 'application/json'}
+🔍 Status code: 200
+📦 Resposta: {"idLote":"250804e613b9f84a4445ac8f5c842874e008c5f2"}
+✅ Lote enviado (ID: 250804e613b9f84a4445ac8f5c842874e008c5f2). 0 erro(s) reportado(s) pela API.
+Database atualizado atomicamente.
+✅ Fim do processamento para o grupo Empresa 99, Caixa 68141.
+
+🔌 Conexão com o banco de dados fechada.
+🚀 Processando envios de fechamentos...
+⏳ Aguardando próximo ciclo (10 segundos)...
+🚀 Processando envios de vendas...
+🛠️  Iniciando processamento para empresa configurada: 99
+✅ Nenhuma transação pendente encontrada para a empresa.
+
+🔌 Conexão com o banco de dados fechada.
+🚀 Processando envios de fechamentos...
+⏳ Aguardando próximo ciclo (10 segundos)...
+🚀 Processando envios de vendas...
+🛠️  Iniciando processamento para empresa configurada: 99
+✅ Nenhuma transação pendente encontrada para a empresa.
+
+🔌 Conexão com o banco de dados fechada.
+🚀 Processando envios de fechamentos...
+⏳ Aguardando próximo ciclo (10 segundos)...
+🚀 Processando envios de vendas...
+🛠️  Iniciando processamento para empresa configurada: 99
+✅ Nenhuma transação pendente encontrada para a empresa.
+
+🔌 Conexão com o banco de dados fechada.
+🚀 Processando envios de fechamentos...
+⏳ Aguardando próximo ciclo (10 segundos)...
+🚀 Processando envios de vendas...
+🛠️  Iniciando processamento para empresa configurada: 99
+✅ Nenhuma transação pendente encontrada para a empresa.
+
+🔌 Conexão com o banco de dados fechada.
+🚀 Processando envios de fechamentos...
+⏳ Aguardando próximo ciclo (10 segundos)...
+🚀 Processando envios de vendas...
+🛠️  Iniciando processamento para empresa configurada: 99
+🧪 Grupos de trabalho encontrados: [(99.0, 1168141.0)]
+
+🔄 Processando grupo: Empresa 99, Caixa 68141
+🧾 Lote selecionado com 1 transações.
+➡️ Empresa 99 | Caixa 68141
+   • Montando lote da VENDA referente à venda 990021330
+   • Tratando como Venda padrão. Buscando em 'vendidos'.
+   • Payload final montado para VENDA 990021330:
+{
+  "fecha": "2025-08-04T15:25:27.000-0300",
+  "numero": "00000018",
+  "total": 30.54,
+  "codigoMoneda": "986",
+  "cotizacion": 1.0,
+  "descuentoTotal": 0.0,
+  "recargoTotal": 0.0,
+  "cancelacion": false,
+  "codigoCanalVenta": 1,
+  "descripcionCanalVenta": "VENDA NA LOJA-CARTÃO DEBITO",
+  "detalles": [
+    {
+      "codigoArticulo": "1272211301",
+      "codigoBarras": "7891149102808",
+      "descripcionArticulo": "REFRIG SUKITA UVA PET 2L",
+      "cantidad": 6.0,
+      "importeUnitario": 5.09,
+      "importe": 30.54,
+      "descuento": 0.0,
+      "recargo": 0.0
+    }
+  ],
+  "pagos": [
+    {
+      "codigoTipoPago": 13,
+      "importe": 30.54,
+      "codigoMoneda": "986",
+      "cotizacion": 1.0
+    }
+  ]
+}
+   • Conexão com o banco de dados fechada para transação da venda 990021330.
+🚀 Enviando lote de 1 transações...
+📤 Payload que será enviado:
+[
+  {
+    "fecha": "2025-08-04T15:25:27.000-0300",
+    "numero": "00000018",
+    "total": 30.54,
+    "codigoMoneda": "986",
+    "cotizacion": 1.0,
+    "descuentoTotal": 0.0,
+    "recargoTotal": 0.0,
+    "cancelacion": false,
+    "codigoCanalVenta": 1,
+    "descripcionCanalVenta": "VENDA NA LOJA-CARTÃO DEBITO",
+    "detalles": [
+      {
+        "codigoArticulo": "1272211301",
+        "codigoBarras": "7891149102808",
+        "descripcionArticulo": "REFRIG SUKITA UVA PET 2L",
+        "cantidad": 6.0,
+        "importeUnitario": 5.09,
+        "importe": 30.54,
+        "descuento": 0.0,
+        "recargo": 0.0
+      }
+    ],
+    "pagos": [
+      {
+        "codigoTipoPago": 13,
+        "importe": 30.54,
+        "codigoMoneda": "986",
+        "cotizacion": 1.0
+      }
+    ]
+  }
+]
+🔗 URL final montada: http://br.homo.apipdv.scanntech.com/api-minoristas/api/v2/minoristas/200398/locales/1/cajas/68141/movimientos/lotes
+DEBUG: 📋 Cabeçalhos que serão enviados: {'pdv-version': '8.0.2.267', 'backEnd-version': '8.0.3.81', 'Content-Type': 'application/json'}
+🔍 Status code: 200
+📦 Resposta: {"idLote":"25080486f69d2e19424ab48d700f04eb176497b1"}
+✅ Lote enviado (ID: 25080486f69d2e19424ab48d700f04eb176497b1). 0 erro(s) reportado(s) pela API.
+Database atualizado atomicamente.
+✅ Fim do processamento para o grupo Empresa 99, Caixa 68141.
+
+🔌 Conexão com o banco de dados fechada.
+🚀 Processando envios de fechamentos...
+⏳ Aguardando próximo ciclo (10 segundos)...
+🚀 Processando envios de vendas...
+🛠️  Iniciando processamento para empresa configurada: 99
+✅ Nenhuma transação pendente encontrada para a empresa.
+
+🔌 Conexão com o banco de dados fechada.
+🚀 Processando envios de fechamentos...
+⏳ Aguardando próximo ciclo (10 segundos)...
+🚀 Processando envios de vendas...
+🛠️  Iniciando processamento para empresa configurada: 99
+✅ Nenhuma transação pendente encontrada para a empresa.
+
+🔌 Conexão com o banco de dados fechada.
+🚀 Processando envios de fechamentos...
+⏳ Aguardando próximo ciclo (10 segundos)...
+🚀 Processando envios de vendas...
+🛠️  Iniciando processamento para empresa configurada: 99
+✅ Nenhuma transação pendente encontrada para a empresa.
+
+🔌 Conexão com o banco de dados fechada.
+🚀 Processando envios de fechamentos...
+⏳ Aguardando próximo ciclo (10 segundos)...
+🚀 Processando envios de vendas...
+🛠️  Iniciando processamento para empresa configurada: 99
+✅ Nenhuma transação pendente encontrada para a empresa.
+
+🔌 Conexão com o banco de dados fechada.
+🚀 Processando envios de fechamentos...
+⏳ Aguardando próximo ciclo (10 segundos)...
+🚀 Processando envios de vendas...
+🛠️  Iniciando processamento para empresa configurada: 99
+✅ Nenhuma transação pendente encontrada para a empresa.
+
+🔌 Conexão com o banco de dados fechada.
+🚀 Processando envios de fechamentos...
+⏳ Aguardando próximo ciclo (10 segundos)...
+🚀 Processando envios de vendas...
+🛠️  Iniciando processamento para empresa configurada: 99
+✅ Nenhuma transação pendente encontrada para a empresa.
+
+🔌 Conexão com o banco de dados fechada.
+🚀 Processando envios de fechamentos...
+⏳ Aguardando próximo ciclo (10 segundos)...
+🚀 Processando envios de vendas...
+🛠️  Iniciando processamento para empresa configurada: 99
+✅ Nenhuma transação pendente encontrada para a empresa.
+
+🔌 Conexão com o banco de dados fechada.
+🚀 Processando envios de fechamentos...
+⏳ Aguardando próximo ciclo (10 segundos)...
+🚀 Processando envios de vendas...
+🛠️  Iniciando processamento para empresa configurada: 99
+🧪 Grupos de trabalho encontrados: [(99.0, 1168141.0)]
+
+🔄 Processando grupo: Empresa 99, Caixa 68141
+🧾 Lote selecionado com 1 transações.
+➡️ Empresa 99 | Caixa 68141
+   • Montando lote da VENDA referente à venda 990021331
+   • Tratando como Venda padrão. Buscando em 'vendidos'.
+   • Payload final montado para VENDA 990021331:
+{
+  "fecha": "2025-08-04T15:26:41.000-0300",
+  "numero": "00000019",
+  "total": 14.25,
+  "codigoMoneda": "986",
+  "cotizacion": 1.0,
+  "descuentoTotal": 0.0,
+  "recargoTotal": 0.0,
+  "cancelacion": false,
+  "codigoCanalVenta": 1,
+  "descripcionCanalVenta": "VENDA NA LOJA-CARTÃO CREDITO-DINHEIRO",
+  "detalles": [
+    {
+      "codigoArticulo": "1272211302",
+      "codigoBarras": "7894904573394",
+      "descripcionArticulo": "PATE SEARA FRANGO 100G",
+      "cantidad": 2.0,
+      "importeUnitario": 2.85,
+      "importe": 5.7,
+      "descuento": 0.0,
+      "recargo": 0.0
+    },
+    {
+      "codigoArticulo": "1272211303",
+      "codigoBarras": "7894904573387",
+      "descripcionArticulo": "PATE SEARA PRESUNTO 100G",
+      "cantidad": 3.0,
+      "importeUnitario": 2.85,
+      "importe": 8.55,
+      "descuento": 0.0,
+      "recargo": 0.0
+    }
+  ],
+  "pagos": [
+    {
+      "codigoTipoPago": 10,
+      "importe": 10.25,
+      "codigoMoneda": "986",
+      "cotizacion": 1.0
+    },
+    {
+      "codigoTipoPago": 9,
+      "importe": 4.0,
+      "codigoMoneda": "986",
+      "cotizacion": 1.0
+    }
+  ]
+}
+   • Conexão com o banco de dados fechada para transação da venda 990021331.
+🚀 Enviando lote de 1 transações...
+📤 Payload que será enviado:
+[
+  {
+    "fecha": "2025-08-04T15:26:41.000-0300",
+    "numero": "00000019",
+    "total": 14.25,
+    "codigoMoneda": "986",
+    "cotizacion": 1.0,
+    "descuentoTotal": 0.0,
+    "recargoTotal": 0.0,
+    "cancelacion": false,
+    "codigoCanalVenta": 1,
+    "descripcionCanalVenta": "VENDA NA LOJA-CARTÃO CREDITO-DINHEIRO",
+    "detalles": [
+      {
+        "codigoArticulo": "1272211302",
+        "codigoBarras": "7894904573394",
+        "descripcionArticulo": "PATE SEARA FRANGO 100G",
+        "cantidad": 2.0,
+        "importeUnitario": 2.85,
+        "importe": 5.7,
+        "descuento": 0.0,
+        "recargo": 0.0
+      },
+      {
+        "codigoArticulo": "1272211303",
+        "codigoBarras": "7894904573387",
+        "descripcionArticulo": "PATE SEARA PRESUNTO 100G",
+        "cantidad": 3.0,
+        "importeUnitario": 2.85,
+        "importe": 8.55,
+        "descuento": 0.0,
+        "recargo": 0.0
+      }
+    ],
+    "pagos": [
+      {
+        "codigoTipoPago": 10,
+        "importe": 10.25,
+        "codigoMoneda": "986",
+        "cotizacion": 1.0
+      },
+      {
+        "codigoTipoPago": 9,
+        "importe": 4.0,
+        "codigoMoneda": "986",
+        "cotizacion": 1.0
+      }
+    ]
+  }
+]
+🔗 URL final montada: http://br.homo.apipdv.scanntech.com/api-minoristas/api/v2/minoristas/200398/locales/1/cajas/68141/movimientos/lotes
+DEBUG: 📋 Cabeçalhos que serão enviados: {'pdv-version': '8.0.2.267', 'backEnd-version': '8.0.3.81', 'Content-Type': 'application/json'}
+🔍 Status code: 200
+📦 Resposta: {"idLote":"250804d5fbbd8fe13b4ac19d71c0b4d091d6baba"}
+✅ Lote enviado (ID: 250804d5fbbd8fe13b4ac19d71c0b4d091d6baba). 0 erro(s) reportado(s) pela API.
+Database atualizado atomicamente.
+✅ Fim do processamento para o grupo Empresa 99, Caixa 68141.
+
+🔌 Conexão com o banco de dados fechada.
+🚀 Processando envios de fechamentos...
+⏳ Aguardando próximo ciclo (10 segundos)...
+🚀 Processando envios de vendas...
+🛠️  Iniciando processamento para empresa configurada: 99
+✅ Nenhuma transação pendente encontrada para a empresa.
+
+🔌 Conexão com o banco de dados fechada.
+🚀 Processando envios de fechamentos...
+⏳ Aguardando próximo ciclo (10 segundos)...
+🚀 Processando envios de vendas...
+🛠️  Iniciando processamento para empresa configurada: 99
+✅ Nenhuma transação pendente encontrada para a empresa.
+
+🔌 Conexão com o banco de dados fechada.
+🚀 Processando envios de fechamentos...
+⏳ Aguardando próximo ciclo (10 segundos)...
+🚀 Processando envios de vendas...
+🛠️  Iniciando processamento para empresa configurada: 99
+✅ Nenhuma transação pendente encontrada para a empresa.
+
+🔌 Conexão com o banco de dados fechada.
+🚀 Processando envios de fechamentos...
+⏳ Aguardando próximo ciclo (10 segundos)...
+🚀 Processando envios de vendas...
+🛠️  Iniciando processamento para empresa configurada: 99
+✅ Nenhuma transação pendente encontrada para a empresa.
+
+🔌 Conexão com o banco de dados fechada.
+🚀 Processando envios de fechamentos...
+⏳ Aguardando próximo ciclo (10 segundos)...
+🚀 Processando envios de vendas...
+🛠️  Iniciando processamento para empresa configurada: 99
+✅ Nenhuma transação pendente encontrada para a empresa.
+
+🔌 Conexão com o banco de dados fechada.
+🚀 Processando envios de fechamentos...
+⏳ Aguardando próximo ciclo (10 segundos)...
+🚀 Processando envios de vendas...
+🛠️  Iniciando processamento para empresa configurada: 99
+🧪 Grupos de trabalho encontrados: [(99.0, 1168141.0)]
+
+🔄 Processando grupo: Empresa 99, Caixa 68141
+🧾 Lote selecionado com 1 transações.
+➡️ Empresa 99 | Caixa 68141
+   • Montando lote da VENDA referente à venda 990021332
+   • Tratando como Venda padrão. Buscando em 'vendidos'.
+   • Payload final montado para VENDA 990021332:
+{
+  "fecha": "2025-08-04T15:27:52.000-0300",
+  "numero": "00000020",
+  "total": 22.8,
+  "codigoMoneda": "986",
+  "cotizacion": 1.0,
+  "descuentoTotal": 0.0,
+  "recargoTotal": 0.0,
+  "cancelacion": false,
+  "codigoCanalVenta": 1,
+  "descripcionCanalVenta": "VENDA NA LOJA-CARTÃO DEBITO-DINHEIRO",
+  "detalles": [
+    {
+      "codigoArticulo": "1272211303",
+      "codigoBarras": "7894904573387",
+      "descripcionArticulo": "PATE SEARA PRESUNTO 100G",
+      "cantidad": 6.0,
+      "importeUnitario": 2.85,
+      "importe": 17.1,
+      "descuento": 0.0,
+      "recargo": 0.0
+    },
+    {
+      "codigoArticulo": "1272211302",
+      "codigoBarras": "7894904573394",
+      "descripcionArticulo": "PATE SEARA FRANGO 100G",
+      "cantidad": 2.0,
+      "importeUnitario": 2.85,
+      "importe": 5.7,
+      "descuento": 0.0,
+      "recargo": 0.0
+    }
+  ],
+  "pagos": [
+    {
+      "codigoTipoPago": 13,
+      "importe": 12.8,
+      "codigoMoneda": "986",
+      "cotizacion": 1.0
+    },
+    {
+      "codigoTipoPago": 9,
+      "importe": 10.0,
+      "codigoMoneda": "986",
+      "cotizacion": 1.0
+    }
+  ]
+}
+   • Conexão com o banco de dados fechada para transação da venda 990021332.
+🚀 Enviando lote de 1 transações...
+📤 Payload que será enviado:
+[
+  {
+    "fecha": "2025-08-04T15:27:52.000-0300",
+    "numero": "00000020",
+    "total": 22.8,
+    "codigoMoneda": "986",
+    "cotizacion": 1.0,
+    "descuentoTotal": 0.0,
+    "recargoTotal": 0.0,
+    "cancelacion": false,
+    "codigoCanalVenta": 1,
+    "descripcionCanalVenta": "VENDA NA LOJA-CARTÃO DEBITO-DINHEIRO",
+    "detalles": [
+      {
+        "codigoArticulo": "1272211303",
+        "codigoBarras": "7894904573387",
+        "descripcionArticulo": "PATE SEARA PRESUNTO 100G",
+        "cantidad": 6.0,
+        "importeUnitario": 2.85,
+        "importe": 17.1,
+        "descuento": 0.0,
+        "recargo": 0.0
+      },
+      {
+        "codigoArticulo": "1272211302",
+        "codigoBarras": "7894904573394",
+        "descripcionArticulo": "PATE SEARA FRANGO 100G",
+        "cantidad": 2.0,
+        "importeUnitario": 2.85,
+        "importe": 5.7,
+        "descuento": 0.0,
+        "recargo": 0.0
+      }
+    ],
+    "pagos": [
+      {
+        "codigoTipoPago": 13,
+        "importe": 12.8,
+        "codigoMoneda": "986",
+        "cotizacion": 1.0
+      },
+      {
+        "codigoTipoPago": 9,
+        "importe": 10.0,
+        "codigoMoneda": "986",
+        "cotizacion": 1.0
+      }
+    ]
+  }
+]
+🔗 URL final montada: http://br.homo.apipdv.scanntech.com/api-minoristas/api/v2/minoristas/200398/locales/1/cajas/68141/movimientos/lotes
+DEBUG: 📋 Cabeçalhos que serão enviados: {'pdv-version': '8.0.2.267', 'backEnd-version': '8.0.3.81', 'Content-Type': 'application/json'}
+🔍 Status code: 200
+📦 Resposta: {"idLote":"25080488db9a6594d64415b71eff238784a4718a"}
+✅ Lote enviado (ID: 25080488db9a6594d64415b71eff238784a4718a). 0 erro(s) reportado(s) pela API.
+Database atualizado atomicamente.
+✅ Fim do processamento para o grupo Empresa 99, Caixa 68141.
+
+🔌 Conexão com o banco de dados fechada.
+🚀 Processando envios de fechamentos...
+⏳ Aguardando próximo ciclo (10 segundos)...
+🚀 Processando envios de vendas...
+🛠️  Iniciando processamento para empresa configurada: 99
+✅ Nenhuma transação pendente encontrada para a empresa.
+
+🔌 Conexão com o banco de dados fechada.
+🚀 Processando envios de fechamentos...
+⏳ Aguardando próximo ciclo (10 segundos)...
+🚀 Processando envios de vendas...
+🛠️  Iniciando processamento para empresa configurada: 99
+✅ Nenhuma transação pendente encontrada para a empresa.
+
+🔌 Conexão com o banco de dados fechada.
+🚀 Processando envios de fechamentos...
+⏳ Aguardando próximo ciclo (10 segundos)...
+🚀 Processando envios de vendas...
+🛠️  Iniciando processamento para empresa configurada: 99
+✅ Nenhuma transação pendente encontrada para a empresa.
+
+🔌 Conexão com o banco de dados fechada.
+🚀 Processando envios de fechamentos...
+⏳ Aguardando próximo ciclo (10 segundos)...
+🚀 Processando envios de vendas...
+🛠️  Iniciando processamento para empresa configurada: 99
+✅ Nenhuma transação pendente encontrada para a empresa.
+
+🔌 Conexão com o banco de dados fechada.
+🚀 Processando envios de fechamentos...
+⏳ Aguardando próximo ciclo (10 segundos)...
+🚀 Processando envios de vendas...
+🛠️  Iniciando processamento para empresa configurada: 99
+✅ Nenhuma transação pendente encontrada para a empresa.
+
+🔌 Conexão com o banco de dados fechada.
+🚀 Processando envios de fechamentos...
+⏳ Aguardando próximo ciclo (10 segundos)...
+🚀 Processando envios de vendas...
+🛠️  Iniciando processamento para empresa configurada: 99
+✅ Nenhuma transação pendente encontrada para a empresa.
+
+🔌 Conexão com o banco de dados fechada.
+🚀 Processando envios de fechamentos...
+⏳ Aguardando próximo ciclo (10 segundos)...
+🚀 Processando envios de vendas...
+🛠️  Iniciando processamento para empresa configurada: 99
+✅ Nenhuma transação pendente encontrada para a empresa.
+
+🔌 Conexão com o banco de dados fechada.
+🚀 Processando envios de fechamentos...
+⏳ Aguardando próximo ciclo (10 segundos)...
+🚀 Processando envios de vendas...
+🛠️  Iniciando processamento para empresa configurada: 99
+✅ Nenhuma transação pendente encontrada para a empresa.
+
+🔌 Conexão com o banco de dados fechada.
+🚀 Processando envios de fechamentos...
+⏳ Aguardando próximo ciclo (10 segundos)...
+🚀 Processando envios de vendas...
+🛠️  Iniciando processamento para empresa configurada: 99
+✅ Nenhuma transação pendente encontrada para a empresa.
+
+🔌 Conexão com o banco de dados fechada.
+🚀 Processando envios de fechamentos...
+⏳ Aguardando próximo ciclo (10 segundos)...
+🚀 Processando envios de vendas...
+🛠️  Iniciando processamento para empresa configurada: 99
+✅ Nenhuma transação pendente encontrada para a empresa.
+
+🔌 Conexão com o banco de dados fechada.
+🚀 Processando envios de fechamentos...
+⏳ Aguardando próximo ciclo (10 segundos)...
+🚀 Processando envios de vendas...
+🛠️  Iniciando processamento para empresa configurada: 99
+✅ Nenhuma transação pendente encontrada para a empresa.
+
+🔌 Conexão com o banco de dados fechada.
+🚀 Processando envios de fechamentos...
+⏳ Aguardando próximo ciclo (10 segundos)...
+🚀 Processando envios de vendas...
+🛠️  Iniciando processamento para empresa configurada: 99
+✅ Nenhuma transação pendente encontrada para a empresa.
+
+🔌 Conexão com o banco de dados fechada.
+🚀 Processando envios de fechamentos...
+⏳ Aguardando próximo ciclo (10 segundos)...
+🚀 Processando envios de vendas...
+🛠️  Iniciando processamento para empresa configurada: 99
+✅ Nenhuma transação pendente encontrada para a empresa.
+
+🔌 Conexão com o banco de dados fechada.
+🚀 Processando envios de fechamentos...
+⏳ Aguardando próximo ciclo (10 segundos)...
+🚀 Processando envios de vendas...
+🛠️  Iniciando processamento para empresa configurada: 99
+✅ Nenhuma transação pendente encontrada para a empresa.
+
+🔌 Conexão com o banco de dados fechada.
+🚀 Processando envios de fechamentos...
+⏳ Aguardando próximo ciclo (10 segundos)...
+🚀 Processando envios de vendas...
+🛠️  Iniciando processamento para empresa configurada: 99
+✅ Nenhuma transação pendente encontrada para a empresa.
+
+🔌 Conexão com o banco de dados fechada.
+🚀 Processando envios de fechamentos...
+⏳ Aguardando próximo ciclo (10 segundos)...
+🚀 Processando envios de vendas...
+🛠️  Iniciando processamento para empresa configurada: 99
+✅ Nenhuma transação pendente encontrada para a empresa.
+
+🔌 Conexão com o banco de dados fechada.
+🚀 Processando envios de fechamentos...
+⏳ Aguardando próximo ciclo (10 segundos)...
+🚀 Processando envios de vendas...
+🛠️  Iniciando processamento para empresa configurada: 99
+✅ Nenhuma transação pendente encontrada para a empresa.
+
+🔌 Conexão com o banco de dados fechada.
+🚀 Processando envios de fechamentos...
+⏳ Aguardando próximo ciclo (10 segundos)...
+🚀 Processando envios de vendas...
+🛠️  Iniciando processamento para empresa configurada: 99
+✅ Nenhuma transação pendente encontrada para a empresa.
+
+🔌 Conexão com o banco de dados fechada.
+🚀 Processando envios de fechamentos...
+⏳ Aguardando próximo ciclo (10 segundos)...
+🚀 Processando envios de vendas...
+🛠️  Iniciando processamento para empresa configurada: 99
+✅ Nenhuma transação pendente encontrada para a empresa.
+
+🔌 Conexão com o banco de dados fechada.
+🚀 Processando envios de fechamentos...
+⏳ Aguardando próximo ciclo (10 segundos)...
+🚀 Processando envios de vendas...
+🛠️  Iniciando processamento para empresa configurada: 99
+✅ Nenhuma transação pendente encontrada para a empresa.
+
+🔌 Conexão com o banco de dados fechada.
+🚀 Processando envios de fechamentos...
+⏳ Aguardando próximo ciclo (10 segundos)...
+🚀 Processando envios de vendas...
+🛠️  Iniciando processamento para empresa configurada: 99
+✅ Nenhuma transação pendente encontrada para a empresa.
+
+🔌 Conexão com o banco de dados fechada.
+🚀 Processando envios de fechamentos...
+⏳ Aguardando próximo ciclo (10 segundos)...
+🚀 Processando envios de vendas...
+🛠️  Iniciando processamento para empresa configurada: 99
+✅ Nenhuma transação pendente encontrada para a empresa.
+
+🔌 Conexão com o banco de dados fechada.
+🚀 Processando envios de fechamentos...
+⏳ Aguardando próximo ciclo (10 segundos)...
+🚀 Processando envios de vendas...
+🛠️  Iniciando processamento para empresa configurada: 99
+✅ Nenhuma transação pendente encontrada para a empresa.
+
+🔌 Conexão com o banco de dados fechada.
+🚀 Processando envios de fechamentos...
+⏳ Aguardando próximo ciclo (10 segundos)...
+🚀 Processando envios de vendas...
+🛠️  Iniciando processamento para empresa configurada: 99
+✅ Nenhuma transação pendente encontrada para a empresa.
+
+🔌 Conexão com o banco de dados fechada.
+🚀 Processando envios de fechamentos...
+⏳ Aguardando próximo ciclo (10 segundos)...
+🚀 Processando envios de vendas...
+🛠️  Iniciando processamento para empresa configurada: 99
+✅ Nenhuma transação pendente encontrada para a empresa.
+
+🔌 Conexão com o banco de dados fechada.
+🚀 Processando envios de fechamentos...
+⏳ Aguardando próximo ciclo (10 segundos)...
+🚀 Processando envios de vendas...
+🛠️  Iniciando processamento para empresa configurada: 99
+🧪 Grupos de trabalho encontrados: [(99.0, 1168141.0)]
+
+🔄 Processando grupo: Empresa 99, Caixa 68141
+🧾 Lote selecionado com 1 transações.
+➡️ Empresa 99 | Caixa 68141
+   • Montando lote da VENDA referente à venda 990021333
+   • Tratando como Venda padrão. Buscando em 'vendidos'.
+   • Payload final montado para VENDA 990021333:
+{
+  "fecha": "2025-08-04T15:32:31.000-0300",
+  "numero": "00000021",
+  "total": 22.14,
+  "codigoMoneda": "986",
+  "cotizacion": 1.0,
+  "descuentoTotal": 0.0,
+  "recargoTotal": 0.0,
+  "cancelacion": false,
+  "codigoCanalVenta": 5,
+  "descripcionCanalVenta": "WHATSAPP-CARTÃO CREDITO-CARTÃO CREDITO-DINHEIRO",
+  "detalles": [
+    {
+      "codigoArticulo": "1272211352",
+      "codigoBarras": "7896079500175",
+      "descripcionArticulo": "LEITE UHT ELEGE DESN S/VERSAO TP 1L",
+      "cantidad": 6.0,
+      "importeUnitario": 3.69,
+      "importe": 22.14,
+      "descuento": 0.0,
+      "recargo": 0.0
+    }
+  ],
+  "pagos": [
+    {
+      "codigoTipoPago": 10,
+      "importe": 5.0,
+      "codigoMoneda": "986",
+      "cotizacion": 1.0
+    },
+    {
+      "codigoTipoPago": 10,
+      "importe": 4.0,
+      "codigoMoneda": "986",
+      "cotizacion": 1.0
+    },
+    {
+      "codigoTipoPago": 9,
+      "importe": 13.14,
+      "codigoMoneda": "986",
+      "cotizacion": 1.0
+    }
+  ]
+}
+   • Conexão com o banco de dados fechada para transação da venda 990021333.
+🚀 Enviando lote de 1 transações...
+📤 Payload que será enviado:
+[
+  {
+    "fecha": "2025-08-04T15:32:31.000-0300",
+    "numero": "00000021",
+    "total": 22.14,
+    "codigoMoneda": "986",
+    "cotizacion": 1.0,
+    "descuentoTotal": 0.0,
+    "recargoTotal": 0.0,
+    "cancelacion": false,
+    "codigoCanalVenta": 5,
+    "descripcionCanalVenta": "WHATSAPP-CARTÃO CREDITO-CARTÃO CREDITO-DINHEIRO",
+    "detalles": [
+      {
+        "codigoArticulo": "1272211352",
+        "codigoBarras": "7896079500175",
+        "descripcionArticulo": "LEITE UHT ELEGE DESN S/VERSAO TP 1L",
+        "cantidad": 6.0,
+        "importeUnitario": 3.69,
+        "importe": 22.14,
+        "descuento": 0.0,
+        "recargo": 0.0
+      }
+    ],
+    "pagos": [
+      {
+        "codigoTipoPago": 10,
+        "importe": 5.0,
+        "codigoMoneda": "986",
+        "cotizacion": 1.0
+      },
+      {
+        "codigoTipoPago": 10,
+        "importe": 4.0,
+        "codigoMoneda": "986",
+        "cotizacion": 1.0
+      },
+      {
+        "codigoTipoPago": 9,
+        "importe": 13.14,
+        "codigoMoneda": "986",
+        "cotizacion": 1.0
+      }
+    ]
+  }
+]
+🔗 URL final montada: http://br.homo.apipdv.scanntech.com/api-minoristas/api/v2/minoristas/200398/locales/1/cajas/68141/movimientos/lotes
+DEBUG: 📋 Cabeçalhos que serão enviados: {'pdv-version': '8.0.2.267', 'backEnd-version': '8.0.3.81', 'Content-Type': 'application/json'}
+🔍 Status code: 200
+📦 Resposta: {"idLote":"250804b58d4f2002b647c990051faced4c226392"}
+✅ Lote enviado (ID: 250804b58d4f2002b647c990051faced4c226392). 0 erro(s) reportado(s) pela API.
+Database atualizado atomicamente.
+✅ Fim do processamento para o grupo Empresa 99, Caixa 68141.
+
+🔌 Conexão com o banco de dados fechada.
+🚀 Processando envios de fechamentos...
+⏳ Aguardando próximo ciclo (10 segundos)...
+🚀 Processando envios de vendas...
+🛠️  Iniciando processamento para empresa configurada: 99
+✅ Nenhuma transação pendente encontrada para a empresa.
+
+🔌 Conexão com o banco de dados fechada.
+🚀 Processando envios de fechamentos...
+⏳ Aguardando próximo ciclo (10 segundos)...
+🚀 Processando envios de vendas...
+🛠️  Iniciando processamento para empresa configurada: 99
+✅ Nenhuma transação pendente encontrada para a empresa.
+
+🔌 Conexão com o banco de dados fechada.
+🚀 Processando envios de fechamentos...
+⏳ Aguardando próximo ciclo (10 segundos)...
+🚀 Processando envios de vendas...
+🛠️  Iniciando processamento para empresa configurada: 99
+✅ Nenhuma transação pendente encontrada para a empresa.
+
+🔌 Conexão com o banco de dados fechada.
+🚀 Processando envios de fechamentos...
+⏳ Aguardando próximo ciclo (10 segundos)...
+🚀 Processando envios de vendas...
+🛠️  Iniciando processamento para empresa configurada: 99
+✅ Nenhuma transação pendente encontrada para a empresa.
+
+🔌 Conexão com o banco de dados fechada.
+🚀 Processando envios de fechamentos...
+⏳ Aguardando próximo ciclo (10 segundos)...
+🚀 Processando envios de vendas...
+🛠️  Iniciando processamento para empresa configurada: 99
+✅ Nenhuma transação pendente encontrada para a empresa.
+
+🔌 Conexão com o banco de dados fechada.
+🚀 Processando envios de fechamentos...
+⏳ Aguardando próximo ciclo (10 segundos)...
+🚀 Processando envios de vendas...
+🛠️  Iniciando processamento para empresa configurada: 99
+✅ Nenhuma transação pendente encontrada para a empresa.
+
+🔌 Conexão com o banco de dados fechada.
+🚀 Processando envios de fechamentos...
+⏳ Aguardando próximo ciclo (10 segundos)...
+🚀 Processando envios de vendas...
+🛠️  Iniciando processamento para empresa configurada: 99
+✅ Nenhuma transação pendente encontrada para a empresa.
+
+🔌 Conexão com o banco de dados fechada.
+🚀 Processando envios de fechamentos...
+⏳ Aguardando próximo ciclo (10 segundos)...
+🚀 Processando envios de vendas...
+🛠️  Iniciando processamento para empresa configurada: 99
+✅ Nenhuma transação pendente encontrada para a empresa.
+
+🔌 Conexão com o banco de dados fechada.
+🚀 Processando envios de fechamentos...
+⏳ Aguardando próximo ciclo (10 segundos)...
+🚀 Processando envios de vendas...
+🛠️  Iniciando processamento para empresa configurada: 99
+✅ Nenhuma transação pendente encontrada para a empresa.
+
+🔌 Conexão com o banco de dados fechada.
+🚀 Processando envios de fechamentos...
+⏳ Aguardando próximo ciclo (10 segundos)...
+🚀 Processando envios de vendas...
+🛠️  Iniciando processamento para empresa configurada: 99
+✅ Nenhuma transação pendente encontrada para a empresa.
+
+🔌 Conexão com o banco de dados fechada.
+🚀 Processando envios de fechamentos...
+⏳ Aguardando próximo ciclo (10 segundos)...
+🚀 Processando envios de vendas...
+🛠️  Iniciando processamento para empresa configurada: 99
+✅ Nenhuma transação pendente encontrada para a empresa.
+
+🔌 Conexão com o banco de dados fechada.
+🚀 Processando envios de fechamentos...
+⏳ Aguardando próximo ciclo (10 segundos)...
+🚀 Processando envios de vendas...
+🛠️  Iniciando processamento para empresa configurada: 99
+✅ Nenhuma transação pendente encontrada para a empresa.
+
+🔌 Conexão com o banco de dados fechada.
+🚀 Processando envios de fechamentos...
+⏳ Aguardando próximo ciclo (10 segundos)...
+🚀 Processando envios de vendas...
+🛠️  Iniciando processamento para empresa configurada: 99
+✅ Nenhuma transação pendente encontrada para a empresa.
+
+🔌 Conexão com o banco de dados fechada.
+🚀 Processando envios de fechamentos...
+⏳ Aguardando próximo ciclo (10 segundos)...
+🚀 Processando envios de vendas...
+🛠️  Iniciando processamento para empresa configurada: 99
+✅ Nenhuma transação pendente encontrada para a empresa.
+
+🔌 Conexão com o banco de dados fechada.
+🚀 Processando envios de fechamentos...
+⏳ Aguardando próximo ciclo (10 segundos)...
+🚀 Processando envios de vendas...
+🛠️  Iniciando processamento para empresa configurada: 99
+✅ Nenhuma transação pendente encontrada para a empresa.
+
+🔌 Conexão com o banco de dados fechada.
+🚀 Processando envios de fechamentos...
+⏳ Aguardando próximo ciclo (10 segundos)...
+🚀 Processando envios de vendas...
+🛠️  Iniciando processamento para empresa configurada: 99
+✅ Nenhuma transação pendente encontrada para a empresa.
+
+🔌 Conexão com o banco de dados fechada.
+🚀 Processando envios de fechamentos...
+⏳ Aguardando próximo ciclo (10 segundos)...
+🚀 Processando envios de vendas...
+🛠️  Iniciando processamento para empresa configurada: 99
+✅ Nenhuma transação pendente encontrada para a empresa.
+
+🔌 Conexão com o banco de dados fechada.
+🚀 Processando envios de fechamentos...
+⏳ Aguardando próximo ciclo (10 segundos)...
+🚀 Processando envios de vendas...
+🛠️  Iniciando processamento para empresa configurada: 99
+✅ Nenhuma transação pendente encontrada para a empresa.
+
+🔌 Conexão com o banco de dados fechada.
+🚀 Processando envios de fechamentos...
+⏳ Aguardando próximo ciclo (10 segundos)...
+🚀 Processando envios de vendas...
+🛠️  Iniciando processamento para empresa configurada: 99
+🧪 Grupos de trabalho encontrados: [(99.0, 1168141.0)]
+
+🔄 Processando grupo: Empresa 99, Caixa 68141
+🧾 Lote selecionado com 1 transações.
+➡️ Empresa 99 | Caixa 68141
+   • Montando lote da VENDA referente à venda 990021334
+   • Tratando como Venda padrão. Buscando em 'vendidos'.
+   • Payload final montado para VENDA 990021334:
+{
+  "fecha": "2025-08-04T15:35:31.000-0300",
+  "numero": "00000022",
+  "total": 44.28,
+  "codigoMoneda": "986",
+  "cotizacion": 1.0,
+  "descuentoTotal": 0.0,
+  "recargoTotal": 0.0,
+  "cancelacion": false,
+  "codigoCanalVenta": 1,
+  "descripcionCanalVenta": "VENDA NA LOJA-CARTÃO CREDITO-DINHEIRO",
+  "detalles": [
+    {
+      "codigoArticulo": "1272211305",
+      "codigoBarras": "7897511400237",
+      "descripcionArticulo": "LEITE UHT BOM GOSTO INTEG S/VERSAO TP 1LT",
+      "cantidad": 8.0,
+      "importeUnitario": 3.69,
+      "importe": 29.52,
+      "descuento": 0.0,
+      "recargo": 0.0
+    },
+    {
+      "codigoArticulo": "1272211306",
+      "codigoBarras": "7897511400244",
+      "descripcionArticulo": "LEITE UHT BOM GOSTO DESN TP 1LT",
+      "cantidad": 4.0,
+      "importeUnitario": 3.69,
+      "importe": 14.76,
+      "descuento": 0.0,
+      "recargo": 0.0
+    }
+  ],
+  "pagos": [
+    {
+      "codigoTipoPago": 10,
+      "importe": 33.28,
+      "codigoMoneda": "986",
+      "cotizacion": 1.0
+    },
+    {
+      "codigoTipoPago": 9,
+      "importe": 11.0,
+      "codigoMoneda": "986",
+      "cotizacion": 1.0
+    }
+  ]
+}
+   • Conexão com o banco de dados fechada para transação da venda 990021334.
+🚀 Enviando lote de 1 transações...
+📤 Payload que será enviado:
+[
+  {
+    "fecha": "2025-08-04T15:35:31.000-0300",
+    "numero": "00000022",
+    "total": 44.28,
+    "codigoMoneda": "986",
+    "cotizacion": 1.0,
+    "descuentoTotal": 0.0,
+    "recargoTotal": 0.0,
+    "cancelacion": false,
+    "codigoCanalVenta": 1,
+    "descripcionCanalVenta": "VENDA NA LOJA-CARTÃO CREDITO-DINHEIRO",
+    "detalles": [
+      {
+        "codigoArticulo": "1272211305",
+        "codigoBarras": "7897511400237",
+        "descripcionArticulo": "LEITE UHT BOM GOSTO INTEG S/VERSAO TP 1LT",
+        "cantidad": 8.0,
+        "importeUnitario": 3.69,
+        "importe": 29.52,
+        "descuento": 0.0,
+        "recargo": 0.0
+      },
+      {
+        "codigoArticulo": "1272211306",
+        "codigoBarras": "7897511400244",
+        "descripcionArticulo": "LEITE UHT BOM GOSTO DESN TP 1LT",
+        "cantidad": 4.0,
+        "importeUnitario": 3.69,
+        "importe": 14.76,
+        "descuento": 0.0,
+        "recargo": 0.0
+      }
+    ],
+    "pagos": [
+      {
+        "codigoTipoPago": 10,
+        "importe": 33.28,
+        "codigoMoneda": "986",
+        "cotizacion": 1.0
+      },
+      {
+        "codigoTipoPago": 9,
+        "importe": 11.0,
+        "codigoMoneda": "986",
+        "cotizacion": 1.0
+      }
+    ]
+  }
+]
+🔗 URL final montada: http://br.homo.apipdv.scanntech.com/api-minoristas/api/v2/minoristas/200398/locales/1/cajas/68141/movimientos/lotes
+DEBUG: 📋 Cabeçalhos que serão enviados: {'pdv-version': '8.0.2.267', 'backEnd-version': '8.0.3.81', 'Content-Type': 'application/json'}
+🔍 Status code: 200
+📦 Resposta: {"idLote":"250804f52ccf927afd47919cffd37d76438a9378"}
+✅ Lote enviado (ID: 250804f52ccf927afd47919cffd37d76438a9378). 0 erro(s) reportado(s) pela API.
+Database atualizado atomicamente.
+✅ Fim do processamento para o grupo Empresa 99, Caixa 68141.
+
+🔌 Conexão com o banco de dados fechada.
+🚀 Processando envios de fechamentos...
+⏳ Aguardando próximo ciclo (10 segundos)...
+🚀 Processando envios de vendas...
+🛠️  Iniciando processamento para empresa configurada: 99
+✅ Nenhuma transação pendente encontrada para a empresa.
+
+🔌 Conexão com o banco de dados fechada.
+🚀 Processando envios de fechamentos...
+⏳ Aguardando próximo ciclo (10 segundos)...
+🚀 Processando envios de vendas...
+🛠️  Iniciando processamento para empresa configurada: 99
+✅ Nenhuma transação pendente encontrada para a empresa.
+
+🔌 Conexão com o banco de dados fechada.
+🚀 Processando envios de fechamentos...
+⏳ Aguardando próximo ciclo (10 segundos)...
+🚀 Processando envios de vendas...
+🛠️  Iniciando processamento para empresa configurada: 99
+✅ Nenhuma transação pendente encontrada para a empresa.
+
+🔌 Conexão com o banco de dados fechada.
+🚀 Processando envios de fechamentos...
+⏳ Aguardando próximo ciclo (10 segundos)...
+🚀 Processando envios de vendas...
+🛠️  Iniciando processamento para empresa configurada: 99
+✅ Nenhuma transação pendente encontrada para a empresa.
+
+🔌 Conexão com o banco de dados fechada.
+🚀 Processando envios de fechamentos...
+⏳ Aguardando próximo ciclo (10 segundos)...
+🚀 Processando envios de vendas...
+🛠️  Iniciando processamento para empresa configurada: 99
+✅ Nenhuma transação pendente encontrada para a empresa.
+
+🔌 Conexão com o banco de dados fechada.
+🚀 Processando envios de fechamentos...
+⏳ Aguardando próximo ciclo (10 segundos)...
+🚀 Processando envios de vendas...
+🛠️  Iniciando processamento para empresa configurada: 99
+✅ Nenhuma transação pendente encontrada para a empresa.
+
+🔌 Conexão com o banco de dados fechada.
+🚀 Processando envios de fechamentos...
+⏳ Aguardando próximo ciclo (10 segundos)...
+🚀 Processando envios de vendas...
+🛠️  Iniciando processamento para empresa configurada: 99
+✅ Nenhuma transação pendente encontrada para a empresa.
+
+🔌 Conexão com o banco de dados fechada.
+🚀 Processando envios de fechamentos...
+⏳ Aguardando próximo ciclo (10 segundos)...
+🚀 Processando envios de vendas...
+🛠️  Iniciando processamento para empresa configurada: 99
+✅ Nenhuma transação pendente encontrada para a empresa.
+
+🔌 Conexão com o banco de dados fechada.
+🚀 Processando envios de fechamentos...
+⏳ Aguardando próximo ciclo (10 segundos)...
+🚀 Processando envios de vendas...
+🛠️  Iniciando processamento para empresa configurada: 99
+✅ Nenhuma transação pendente encontrada para a empresa.
+
+🔌 Conexão com o banco de dados fechada.
+🚀 Processando envios de fechamentos...
+⏳ Aguardando próximo ciclo (10 segundos)...
+🚀 Processando envios de vendas...
+🛠️  Iniciando processamento para empresa configurada: 99
+✅ Nenhuma transação pendente encontrada para a empresa.
+
+🔌 Conexão com o banco de dados fechada.
+🚀 Processando envios de fechamentos...
+⏳ Aguardando próximo ciclo (10 segundos)...
+🚀 Processando envios de vendas...
+🛠️  Iniciando processamento para empresa configurada: 99
+✅ Nenhuma transação pendente encontrada para a empresa.
+
+🔌 Conexão com o banco de dados fechada.
+🚀 Processando envios de fechamentos...
+⏳ Aguardando próximo ciclo (10 segundos)...
+🚀 Processando envios de vendas...
+🛠️  Iniciando processamento para empresa configurada: 99
+✅ Nenhuma transação pendente encontrada para a empresa.
+
+🔌 Conexão com o banco de dados fechada.
+🚀 Processando envios de fechamentos...
+⏳ Aguardando próximo ciclo (10 segundos)...
+🚀 Processando envios de vendas...
+🛠️  Iniciando processamento para empresa configurada: 99
+✅ Nenhuma transação pendente encontrada para a empresa.
+
+🔌 Conexão com o banco de dados fechada.
+🚀 Processando envios de fechamentos...
+⏳ Aguardando próximo ciclo (10 segundos)...
+🚀 Processando envios de vendas...
+🛠️  Iniciando processamento para empresa configurada: 99
+✅ Nenhuma transação pendente encontrada para a empresa.
+
+🔌 Conexão com o banco de dados fechada.
+🚀 Processando envios de fechamentos...
+⏳ Aguardando próximo ciclo (10 segundos)...
+🚀 Processando envios de vendas...
+🛠️  Iniciando processamento para empresa configurada: 99
+✅ Nenhuma transação pendente encontrada para a empresa.
+
+🔌 Conexão com o banco de dados fechada.
+🚀 Processando envios de fechamentos...
+⏳ Aguardando próximo ciclo (10 segundos)...
+🚀 Processando envios de vendas...
+🛠️  Iniciando processamento para empresa configurada: 99
+✅ Nenhuma transação pendente encontrada para a empresa.
+
+🔌 Conexão com o banco de dados fechada.
+🚀 Processando envios de fechamentos...
+⏳ Aguardando próximo ciclo (10 segundos)...
+🚀 Processando envios de vendas...
+🛠️  Iniciando processamento para empresa configurada: 99
+✅ Nenhuma transação pendente encontrada para a empresa.
+
+🔌 Conexão com o banco de dados fechada.
+🚀 Processando envios de fechamentos...
+⏳ Aguardando próximo ciclo (10 segundos)...
+🚀 Processando envios de vendas...
+🛠️  Iniciando processamento para empresa configurada: 99
+✅ Nenhuma transação pendente encontrada para a empresa.
+
+🔌 Conexão com o banco de dados fechada.
+🚀 Processando envios de fechamentos...
+⏳ Aguardando próximo ciclo (10 segundos)...
+🚀 Processando envios de vendas...
+🛠️  Iniciando processamento para empresa configurada: 99
+🧪 Grupos de trabalho encontrados: [(99.0, 1168141.0)]
+
+🔄 Processando grupo: Empresa 99, Caixa 68141
+🧾 Lote selecionado com 1 transações.
+➡️ Empresa 99 | Caixa 68141
+   • Montando lote da VENDA referente à venda 990021335
+   • Tratando como Venda padrão. Buscando em 'vendidos'.
+   • Payload final montado para VENDA 990021335:
+{
+  "fecha": "2025-08-04T15:39:19.000-0300",
+  "numero": "00000023",
+  "total": 3.5,
+  "codigoMoneda": "986",
+  "cotizacion": 1.0,
+  "descuentoTotal": 0.0,
+  "recargoTotal": 0.0,
+  "cancelacion": false,
+  "codigoCanalVenta": 1,
+  "descripcionCanalVenta": "VENDA NA LOJA-DINHEIRO",
+  "detalles": [
+    {
+      "codigoArticulo": "101794",
+      "codigoBarras": "7891024132906",
+      "descripcionArticulo": "C DENTAL COLGATE MFP TB 50 G",
+      "cantidad": 1.0,
+      "importeUnitario": 3.5,
+      "importe": 3.5,
+      "descuento": 0.0,
+      "recargo": 0.0
+    }
+  ],
+  "pagos": [
+    {
+      "codigoTipoPago": 9,
+      "importe": 3.5,
+      "codigoMoneda": "986",
+      "cotizacion": 1.0
+    }
+  ]
+}
+   • Conexão com o banco de dados fechada para transação da venda 990021335.
+🚀 Enviando lote de 1 transações...
+📤 Payload que será enviado:
+[
+  {
+    "fecha": "2025-08-04T15:39:19.000-0300",
+    "numero": "00000023",
+    "total": 3.5,
+    "codigoMoneda": "986",
+    "cotizacion": 1.0,
+    "descuentoTotal": 0.0,
+    "recargoTotal": 0.0,
+    "cancelacion": false,
+    "codigoCanalVenta": 1,
+    "descripcionCanalVenta": "VENDA NA LOJA-DINHEIRO",
+    "detalles": [
+      {
+        "codigoArticulo": "101794",
+        "codigoBarras": "7891024132906",
+        "descripcionArticulo": "C DENTAL COLGATE MFP TB 50 G",
+        "cantidad": 1.0,
+        "importeUnitario": 3.5,
+        "importe": 3.5,
+        "descuento": 0.0,
+        "recargo": 0.0
+      }
+    ],
+    "pagos": [
+      {
+        "codigoTipoPago": 9,
+        "importe": 3.5,
+        "codigoMoneda": "986",
+        "cotizacion": 1.0
+      }
+    ]
+  }
+]
+🔗 URL final montada: http://br.homo.apipdv.scanntech.com/api-minoristas/api/v2/minoristas/200398/locales/1/cajas/68141/movimientos/lotes
+DEBUG: 📋 Cabeçalhos que serão enviados: {'pdv-version': '8.0.2.267', 'backEnd-version': '8.0.3.81', 'Content-Type': 'application/json'}
+🔍 Status code: 200
+📦 Resposta: {"idLote":"250804f4c3609a3de646ffafc19a133c39442249"}
+✅ Lote enviado (ID: 250804f4c3609a3de646ffafc19a133c39442249). 0 erro(s) reportado(s) pela API.
+Database atualizado atomicamente.
+✅ Fim do processamento para o grupo Empresa 99, Caixa 68141.
+
+🔌 Conexão com o banco de dados fechada.
+🚀 Processando envios de fechamentos...
+⏳ Aguardando próximo ciclo (10 segundos)...
+🚀 Processando envios de vendas...
+🛠️  Iniciando processamento para empresa configurada: 99
+✅ Nenhuma transação pendente encontrada para a empresa.
+
+🔌 Conexão com o banco de dados fechada.
+🚀 Processando envios de fechamentos...
+⏳ Aguardando próximo ciclo (10 segundos)...
+🚀 Processando envios de vendas...
+🛠️  Iniciando processamento para empresa configurada: 99
+✅ Nenhuma transação pendente encontrada para a empresa.
+
+🔌 Conexão com o banco de dados fechada.
+🚀 Processando envios de fechamentos...
+⏳ Aguardando próximo ciclo (10 segundos)...
+🚀 Processando envios de vendas...
+🛠️  Iniciando processamento para empresa configurada: 99
+✅ Nenhuma transação pendente encontrada para a empresa.
+
+🔌 Conexão com o banco de dados fechada.
+🚀 Processando envios de fechamentos...
+⏳ Aguardando próximo ciclo (10 segundos)...
+🚀 Processando envios de vendas...
+🛠️  Iniciando processamento para empresa configurada: 99
+🧪 Grupos de trabalho encontrados: [(99.0, 1168141.0)]
+
+🔄 Processando grupo: Empresa 99, Caixa 68141
+🧾 Lote selecionado com 1 transações.
+➡️ Empresa 99 | Caixa 68141
+   • Montando lote da CANCELAMENTO/DEVOLUÇÃO referente à venda 990021335
+   • Payload final montado para CANCELAMENTO/DEVOLUÇÃO 990021335:
+{
+  "fecha": "2025-08-04T15:39:19.000-0300",
+  "numero": "-00000023",
+  "total": 3.5,
+  "codigoMoneda": "986",
+  "cotizacion": 1.0,
+  "descuentoTotal": 0.0,
+  "recargoTotal": 0.0,
+  "cancelacion": true,
+  "codigoCanalVenta": 1,
+  "descripcionCanalVenta": "VENDA NA LOJA-DINHEIRO",
+  "detalles": [
+    {
+      "codigoArticulo": "101794",
+      "codigoBarras": "7891024132906",
+      "descripcionArticulo": "C DENTAL COLGATE MFP TB 50 G",
+      "cantidad": 1.0,
+      "importeUnitario": 3.5,
+      "importe": 3.5,
+      "descuento": 0.0,
+      "recargo": 0.0
+    }
+  ],
+  "pagos": [
+    {
+      "codigoTipoPago": 9,
+      "importe": 3.5,
+      "codigoMoneda": "986",
+      "cotizacion": 1.0
+    }
+  ]
+}
+   • Conexão com o banco de dados fechada para transação da venda 990021335.
+🚀 Enviando lote de 1 transações...
+📤 Payload que será enviado:
+[
+  {
+    "fecha": "2025-08-04T15:39:19.000-0300",
+    "numero": "-00000023",
+    "total": 3.5,
+    "codigoMoneda": "986",
+    "cotizacion": 1.0,
+    "descuentoTotal": 0.0,
+    "recargoTotal": 0.0,
+    "cancelacion": true,
+    "codigoCanalVenta": 1,
+    "descripcionCanalVenta": "VENDA NA LOJA-DINHEIRO",
+    "detalles": [
+      {
+        "codigoArticulo": "101794",
+        "codigoBarras": "7891024132906",
+        "descripcionArticulo": "C DENTAL COLGATE MFP TB 50 G",
+        "cantidad": 1.0,
+        "importeUnitario": 3.5,
+        "importe": 3.5,
+        "descuento": 0.0,
+        "recargo": 0.0
+      }
+    ],
+    "pagos": [
+      {
+        "codigoTipoPago": 9,
+        "importe": 3.5,
+        "codigoMoneda": "986",
+        "cotizacion": 1.0
+      }
+    ]
+  }
+]
+🔗 URL final montada: http://br.homo.apipdv.scanntech.com/api-minoristas/api/v2/minoristas/200398/locales/1/cajas/68141/movimientos/lotes
+DEBUG: 📋 Cabeçalhos que serão enviados: {'pdv-version': '8.0.2.267', 'backEnd-version': '8.0.3.81', 'Content-Type': 'application/json'}
+🔍 Status code: 200
+📦 Resposta: {"idLote":"2508043245b64327b74459a307532cd1530022fa"}
+✅ Lote enviado (ID: 2508043245b64327b74459a307532cd1530022fa). 0 erro(s) reportado(s) pela API.
+Database atualizado atomicamente.
+✅ Fim do processamento para o grupo Empresa 99, Caixa 68141.
+
+🔌 Conexão com o banco de dados fechada.
+🚀 Processando envios de fechamentos...
+⏳ Aguardando próximo ciclo (10 segundos)...
+🚀 Processando envios de vendas...
+🛠️  Iniciando processamento para empresa configurada: 99
+✅ Nenhuma transação pendente encontrada para a empresa.
+
+🔌 Conexão com o banco de dados fechada.
+🚀 Processando envios de fechamentos...
+⏳ Aguardando próximo ciclo (10 segundos)...
+🚀 Processando envios de vendas...
+🛠️  Iniciando processamento para empresa configurada: 99
+✅ Nenhuma transação pendente encontrada para a empresa.
+
+🔌 Conexão com o banco de dados fechada.
+🚀 Processando envios de fechamentos...
+⏳ Aguardando próximo ciclo (10 segundos)...
+🚀 Processando envios de vendas...
+🛠️  Iniciando processamento para empresa configurada: 99
+✅ Nenhuma transação pendente encontrada para a empresa.
+
+🔌 Conexão com o banco de dados fechada.
+🚀 Processando envios de fechamentos...
+⏳ Aguardando próximo ciclo (10 segundos)...
+🚀 Processando envios de vendas...
+🛠️  Iniciando processamento para empresa configurada: 99
+✅ Nenhuma transação pendente encontrada para a empresa.
+
+🔌 Conexão com o banco de dados fechada.
+🚀 Processando envios de fechamentos...
+⏳ Aguardando próximo ciclo (10 segundos)...
+🚀 Processando envios de vendas...
+🛠️  Iniciando processamento para empresa configurada: 99
+✅ Nenhuma transação pendente encontrada para a empresa.
+
+🔌 Conexão com o banco de dados fechada.
+🚀 Processando envios de fechamentos...
+⏳ Aguardando próximo ciclo (10 segundos)...
+🚀 Processando envios de vendas...
+🛠️  Iniciando processamento para empresa configurada: 99
+✅ Nenhuma transação pendente encontrada para a empresa.
+
+🔌 Conexão com o banco de dados fechada.
+🚀 Processando envios de fechamentos...
+⏳ Aguardando próximo ciclo (10 segundos)...
+🚀 Processando envios de vendas...
+🛠️  Iniciando processamento para empresa configurada: 99
+✅ Nenhuma transação pendente encontrada para a empresa.
+
+🔌 Conexão com o banco de dados fechada.
+🚀 Processando envios de fechamentos...
+⏳ Aguardando próximo ciclo (10 segundos)...
+🚀 Processando envios de vendas...
+🛠️  Iniciando processamento para empresa configurada: 99
+✅ Nenhuma transação pendente encontrada para a empresa.
+
+🔌 Conexão com o banco de dados fechada.
+🚀 Processando envios de fechamentos...
+⏳ Aguardando próximo ciclo (10 segundos)...
+🚀 Processando envios de vendas...
+🛠️  Iniciando processamento para empresa configurada: 99
+✅ Nenhuma transação pendente encontrada para a empresa.
+
+🔌 Conexão com o banco de dados fechada.
+🚀 Processando envios de fechamentos...
+⏳ Aguardando próximo ciclo (10 segundos)...
+🚀 Processando envios de vendas...
+🛠️  Iniciando processamento para empresa configurada: 99
+✅ Nenhuma transação pendente encontrada para a empresa.
+
+🔌 Conexão com o banco de dados fechada.
+🚀 Processando envios de fechamentos...
+⏳ Aguardando próximo ciclo (10 segundos)...
+🚀 Processando envios de vendas...
+🛠️  Iniciando processamento para empresa configurada: 99
+✅ Nenhuma transação pendente encontrada para a empresa.
+
+🔌 Conexão com o banco de dados fechada.
+🚀 Processando envios de fechamentos...
+⏳ Aguardando próximo ciclo (10 segundos)...
+🚀 Processando envios de vendas...
+🛠️  Iniciando processamento para empresa configurada: 99
+✅ Nenhuma transação pendente encontrada para a empresa.
+
+🔌 Conexão com o banco de dados fechada.
+🚀 Processando envios de fechamentos...
+⏳ Aguardando próximo ciclo (10 segundos)...
+🚀 Processando envios de vendas...
+🛠️  Iniciando processamento para empresa configurada: 99
+✅ Nenhuma transação pendente encontrada para a empresa.
+
+🔌 Conexão com o banco de dados fechada.
+🚀 Processando envios de fechamentos...
+⏳ Aguardando próximo ciclo (10 segundos)...
+🚀 Processando envios de vendas...
+🛠️  Iniciando processamento para empresa configurada: 99
+✅ Nenhuma transação pendente encontrada para a empresa.
+
+🔌 Conexão com o banco de dados fechada.
+🚀 Processando envios de fechamentos...
+⏳ Aguardando próximo ciclo (10 segundos)...
+🚀 Processando envios de vendas...
+🛠️  Iniciando processamento para empresa configurada: 99
+✅ Nenhuma transação pendente encontrada para a empresa.
+
+🔌 Conexão com o banco de dados fechada.
+🚀 Processando envios de fechamentos...
+⏳ Aguardando próximo ciclo (10 segundos)...
+🚀 Processando envios de vendas...
+🛠️  Iniciando processamento para empresa configurada: 99
+🧪 Grupos de trabalho encontrados: [(99.0, 1168141.0)]
+
+🔄 Processando grupo: Empresa 99, Caixa 68141
+🧾 Lote selecionado com 1 transações.
+➡️ Empresa 99 | Caixa 68141
+   • Montando lote da VENDA referente à venda 990021336
+   • Tratando como Venda padrão. Buscando em 'vendidos'.
+   • Payload final montado para VENDA 990021336:
+{
+  "fecha": "2025-08-04T15:42:59.000-0300",
+  "numero": "00000024",
+  "total": 50.75,
+  "codigoMoneda": "986",
+  "cotizacion": 1.0,
+  "descuentoTotal": 0.0,
+  "recargoTotal": 5.0,
+  "cancelacion": false,
+  "codigoCanalVenta": 1,
+  "descripcionCanalVenta": "VENDA NA LOJA-DINHEIRO",
+  "detalles": [
+    {
+      "codigoArticulo": "1272211302",
+      "codigoBarras": "7894904573394",
+      "descripcionArticulo": "PATE SEARA FRANGO 100G",
+      "cantidad": 4.0,
+      "importeUnitario": 2.85,
+      "importe": 16.4,
+      "descuento": 0.0,
+      "recargo": 5.0
+    },
+    {
+      "codigoArticulo": "1272211315",
+      "codigoBarras": "7891149103119",
+      "descripcionArticulo": "CERVEJA SKOL PILSEN CL C/ALCOOL LT 269 ML X15",
+      "cantidad": 1.0,
+      "importeUnitario": 34.35,
+      "importe": 34.35,
+      "descuento": 0.0,
+      "recargo": 0.0
+    }
+  ],
+  "pagos": [
+    {
+      "codigoTipoPago": 9,
+      "importe": 50.75,
+      "codigoMoneda": "986",
+      "cotizacion": 1.0
+    }
+  ]
+}
+   • Conexão com o banco de dados fechada para transação da venda 990021336.
+🚀 Enviando lote de 1 transações...
+📤 Payload que será enviado:
+[
+  {
+    "fecha": "2025-08-04T15:42:59.000-0300",
+    "numero": "00000024",
+    "total": 50.75,
+    "codigoMoneda": "986",
+    "cotizacion": 1.0,
+    "descuentoTotal": 0.0,
+    "recargoTotal": 5.0,
+    "cancelacion": false,
+    "codigoCanalVenta": 1,
+    "descripcionCanalVenta": "VENDA NA LOJA-DINHEIRO",
+    "detalles": [
+      {
+        "codigoArticulo": "1272211302",
+        "codigoBarras": "7894904573394",
+        "descripcionArticulo": "PATE SEARA FRANGO 100G",
+        "cantidad": 4.0,
+        "importeUnitario": 2.85,
+        "importe": 16.4,
+        "descuento": 0.0,
+        "recargo": 5.0
+      },
+      {
+        "codigoArticulo": "1272211315",
+        "codigoBarras": "7891149103119",
+        "descripcionArticulo": "CERVEJA SKOL PILSEN CL C/ALCOOL LT 269 ML X15",
+        "cantidad": 1.0,
+        "importeUnitario": 34.35,
+        "importe": 34.35,
+        "descuento": 0.0,
+        "recargo": 0.0
+      }
+    ],
+    "pagos": [
+      {
+        "codigoTipoPago": 9,
+        "importe": 50.75,
+        "codigoMoneda": "986",
+        "cotizacion": 1.0
+      }
+    ]
+  }
+]
+🔗 URL final montada: http://br.homo.apipdv.scanntech.com/api-minoristas/api/v2/minoristas/200398/locales/1/cajas/68141/movimientos/lotes
+DEBUG: 📋 Cabeçalhos que serão enviados: {'pdv-version': '8.0.2.267', 'backEnd-version': '8.0.3.81', 'Content-Type': 'application/json'}
+🔍 Status code: 200
+📦 Resposta: {"idLote":"250804e9eeeba92f7c4eb5a577aafee52638382c"}
+✅ Lote enviado (ID: 250804e9eeeba92f7c4eb5a577aafee52638382c). 0 erro(s) reportado(s) pela API.
+Database atualizado atomicamente.
+✅ Fim do processamento para o grupo Empresa 99, Caixa 68141.
+
+🔌 Conexão com o banco de dados fechada.
+🚀 Processando envios de fechamentos...
+⏳ Aguardando próximo ciclo (10 segundos)...
+🚀 Processando envios de vendas...
+🛠️  Iniciando processamento para empresa configurada: 99
+✅ Nenhuma transação pendente encontrada para a empresa.
+
+🔌 Conexão com o banco de dados fechada.
+🚀 Processando envios de fechamentos...
+⏳ Aguardando próximo ciclo (10 segundos)...
+🚀 Processando envios de vendas...
+🛠️  Iniciando processamento para empresa configurada: 99
+✅ Nenhuma transação pendente encontrada para a empresa.
+
+🔌 Conexão com o banco de dados fechada.
+🚀 Processando envios de fechamentos...
+⏳ Aguardando próximo ciclo (10 segundos)...
+🚀 Processando envios de vendas...
+🛠️  Iniciando processamento para empresa configurada: 99
+✅ Nenhuma transação pendente encontrada para a empresa.
+
+🔌 Conexão com o banco de dados fechada.
+🚀 Processando envios de fechamentos...
+⏳ Aguardando próximo ciclo (10 segundos)...
+🚀 Processando envios de vendas...
+🛠️  Iniciando processamento para empresa configurada: 99
+✅ Nenhuma transação pendente encontrada para a empresa.
+
+🔌 Conexão com o banco de dados fechada.
+🚀 Processando envios de fechamentos...
+⏳ Aguardando próximo ciclo (10 segundos)...
+🚀 Processando envios de vendas...
+🛠️  Iniciando processamento para empresa configurada: 99
+✅ Nenhuma transação pendente encontrada para a empresa.
+
+🔌 Conexão com o banco de dados fechada.
+🚀 Processando envios de fechamentos...
+⏳ Aguardando próximo ciclo (10 segundos)...
+🚀 Processando envios de vendas...
+🛠️  Iniciando processamento para empresa configurada: 99
+✅ Nenhuma transação pendente encontrada para a empresa.
+
+🔌 Conexão com o banco de dados fechada.
+🚀 Processando envios de fechamentos...
+⏳ Aguardando próximo ciclo (10 segundos)...
+🚀 Processando envios de vendas...
+🛠️  Iniciando processamento para empresa configurada: 99
+✅ Nenhuma transação pendente encontrada para a empresa.
+
+🔌 Conexão com o banco de dados fechada.
+🚀 Processando envios de fechamentos...
+⏳ Aguardando próximo ciclo (10 segundos)...
+🚀 Processando envios de vendas...
+🛠️  Iniciando processamento para empresa configurada: 99
+✅ Nenhuma transação pendente encontrada para a empresa.
+
+🔌 Conexão com o banco de dados fechada.
+🚀 Processando envios de fechamentos...
+⏳ Aguardando próximo ciclo (10 segundos)...
+🚀 Processando envios de vendas...
+🛠️  Iniciando processamento para empresa configurada: 99
+✅ Nenhuma transação pendente encontrada para a empresa.
+
+🔌 Conexão com o banco de dados fechada.
+🚀 Processando envios de fechamentos...
+⏳ Aguardando próximo ciclo (10 segundos)...
+🚀 Processando envios de vendas...
+🛠️  Iniciando processamento para empresa configurada: 99
+✅ Nenhuma transação pendente encontrada para a empresa.
+
+🔌 Conexão com o banco de dados fechada.
+🚀 Processando envios de fechamentos...
+⏳ Aguardando próximo ciclo (10 segundos)...
+🚀 Processando envios de vendas...
+🛠️  Iniciando processamento para empresa configurada: 99
+✅ Nenhuma transação pendente encontrada para a empresa.
+
+🔌 Conexão com o banco de dados fechada.
+🚀 Processando envios de fechamentos...
+⏳ Aguardando próximo ciclo (10 segundos)...
+🚀 Processando envios de vendas...
+🛠️  Iniciando processamento para empresa configurada: 99
+✅ Nenhuma transação pendente encontrada para a empresa.
+
+🔌 Conexão com o banco de dados fechada.
+🚀 Processando envios de fechamentos...
+⏳ Aguardando próximo ciclo (10 segundos)...
+🚀 Processando envios de vendas...
+🛠️  Iniciando processamento para empresa configurada: 99
+🧪 Grupos de trabalho encontrados: [(99.0, 1168141.0)]
+
+🔄 Processando grupo: Empresa 99, Caixa 68141
+🧾 Lote selecionado com 1 transações.
+➡️ Empresa 99 | Caixa 68141
+   • Montando lote da VENDA referente à venda 990021337
+
+🔌 Conexão com o banco de dados fechada.
+Traceback (most recent call last):
+  File "C:\Users\AdyFera\Documents\Scanntech\scanntech\core\loop.py", line 94, in <module>
+    iniciar_loop()
+  File "C:\Users\AdyFera\Documents\Scanntech\scanntech\core\loop.py", line 65, in iniciar_loop
+    processar_envio_vendas(config)
+  File "C:\Users\AdyFera\Documents\Scanntech\scanntech\services\processors\vendas_processor.py", line 167, in processar_envio_vendas
+    payload = montar_payload_da_venda(
+              ^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\AdyFera\Documents\Scanntech\scanntech\services\payloads\vendas_payload.py", line 32, in montar_payload_da_venda
+    conn = conectar()
+           ^^^^^^^^^^
+  File "C:\Users\AdyFera\Documents\Scanntech\scanntech\db\conexao.py", line 46, in conectar
+    return psycopg2.connect(**dados)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\AdyFera\Documents\Scanntech\scanntech\venv\Lib\site-packages\psycopg2\__init__.py", line 122, in connect
+    conn = _connect(dsn, connection_factory=connection_factory, **kwasync)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+KeyboardInterrupt
+🔄 Iniciando integrador. Intervalo definido: 10 segundos.
+
+🧪 Verificando configuração inicial...
+
+🚀 Verificando fechamentos pendentes dos últimos 7 dias ao iniciar...
+🔍 Chaves carregadas do config (debug real): dict_keys(['integração scanntech', 'usuário', 'senha', 'url 1', 'url 2', 'url 3', 'empresa', 'local', 'crm', 'código da empresa', 'intervalo (s)', 'data de início', 'data início envio de vendas', 'data início envio de fechamentos'])
+🔁 Já existe fechamento para 2025-07-28 (Empresa 99)
+🔁 Já existe fechamento para 2025-07-29 (Empresa 99)
+🔁 Já existe fechamento para 2025-07-30 (Empresa 99)
+🔁 Já existe fechamento para 2025-07-31 (Empresa 99)
+🔁 Já existe fechamento para 2025-08-01 (Empresa 99)
+🔁 Já existe fechamento para 2025-08-02 (Empresa 99)
+🔁 Já existe fechamento para 2025-08-03 (Empresa 99)
+✅ Geração de fechamentos pendentes finalizada para empresa 99 (últimos 7 dias).
+
+🚀 Processando promoções...
+🔗 URL final montada: http://br.homo.apipdv.scanntech.com/pmkt-rest-api/v2/minoristas/200398/locales/1/promociones
+DEBUG: 📋 Cabeçalhos que serão enviados: {'pdv-version': '8.0.2.267', 'backEnd-version': '8.0.3.81'}
+🔍 Status code: 200
+📦 Resposta: {"total":1,"results":[{"id":311868,"titulo":"HOMOLOGACION LLEVA PAGA 2025","descripcion":"HOMOLOGACION LLEVA PAGA 2025","tipo":"LLEVA_PAGA","autor":{"descripcion":"Scanntech"},"detalles":{"condiciones":{"items":[{"cantidad":6,"articulos":[{"nombre":"LEITE UHT BOM GOSTO DESN TP 1LT","codigoBarras":"7897511400244"},{"nombre":"LEITE UHT ELEGE SEMI DESN S/VERSAO TP 1L","codigoBarras":"7896079500168"},{"nombre":"LEITE UHT BOM GOSTO INTEG S/VERSAO TP 1LT","codigoBarras":"7897511400237"},{"nombre":"LEITE UHT ELEGE DESN S/VERSAO TP 1L","codigoBarras":"7896079500175"}]}],"formasPago":null},"beneficios":null,"precio":null,"descuento":null,"paga":5},"vigenciaDesde":"2025-01-01T00:00:00.000-0300","vigenciaHasta":"2025-12-31T23:59:59.000-0300","limitePromocionesPorTicket":0}]}
+
+🔍 Processando promoção: 311868 - HOMOLOGACION LLEVA PAGA 2025
+❌ Erro fatal ao processar a promoção 311868: ERRO:  o valor nulo na coluna "desconto" da relação "promocao_prd" viola a restrição de não-nulo
+DETAIL:  Registro que falhou contém (1272211306, 1b77215c324a296fe275ff5deaff7dda    , b074bd6201f8b64859dde411632844cf    , -530, 2025-08-04 15:45:42.505786, 2025-08-04 15:45:42.505786, null, null, 6, 5, null, 0).
+
+   -> Desfazendo alterações para esta promoção.
+
+💾 Transação finalizada.
+✅ 1 promoções salvas com sucesso.
+🔄 Iniciando reprocessamento de produtos pendentes...
+🔁 Nenhuma promoção ou produto pendente para processar.
+🔁 Reprocessando produtos pendentes...
+🔁 Nenhuma promoção ou produto pendente para processar.
+🚀 Processando envios de vendas...
+🛠️  Iniciando processamento para empresa configurada: 99
+🧪 Grupos de trabalho encontrados: [(99.0, 1168141.0)]
+
+🔄 Processando grupo: Empresa 99, Caixa 68141
+🧾 Lote selecionado com 1 transações.
+➡️ Empresa 99 | Caixa 68141
+   • Montando lote da VENDA referente à venda 990021337
+   • Tratando como Venda padrão. Buscando em 'vendidos'.
+   • Payload final montado para VENDA 990021337:
+{
+  "fecha": "2025-08-04T15:45:20.000-0300",
+  "numero": "00000025",
+  "total": 495.0,
+  "codigoMoneda": "986",
+  "cotizacion": 1.0,
+  "descuentoTotal": 6.0,
+  "recargoTotal": 0.0,
+  "cancelacion": false,
+  "codigoCanalVenta": 1,
+  "descripcionCanalVenta": "VENDA NA LOJA-DINHEIRO",
+  "detalles": [
+    {
+      "codigoArticulo": "101794",
+      "codigoBarras": "7891024132906",
+      "descripcionArticulo": "C DENTAL COLGATE MFP TB 50 G",
+      "cantidad": 1.0,
+      "importeUnitario": 3.5,
+      "importe": 3.5,
+      "descuento": 0.0,
+      "recargo": 0.0
+    },
+    {
+      "codigoArticulo": "1272211318",
+      "codigoBarras": "5000329002537",
+      "descripcionArticulo": "GIN BEEFEATER LONDON DRY 750 ML",
+      "cantidad": 5.0,
+      "importeUnitario": 99.5,
+      "importe": 491.5,
+      "descuento": 6.0,
+      "recargo": 0.0
+    }
+  ],
+  "pagos": [
+    {
+      "codigoTipoPago": 9,
+      "importe": 495.0,
+      "codigoMoneda": "986",
+      "cotizacion": 1.0
+    }
+  ]
+}
+   • Conexão com o banco de dados fechada para transação da venda 990021337.
+🚀 Enviando lote de 1 transações...
+📤 Payload que será enviado:
+[
+  {
+    "fecha": "2025-08-04T15:45:20.000-0300",
+    "numero": "00000025",
+    "total": 495.0,
+    "codigoMoneda": "986",
+    "cotizacion": 1.0,
+    "descuentoTotal": 6.0,
+    "recargoTotal": 0.0,
+    "cancelacion": false,
+    "codigoCanalVenta": 1,
+    "descripcionCanalVenta": "VENDA NA LOJA-DINHEIRO",
+    "detalles": [
+      {
+        "codigoArticulo": "101794",
+        "codigoBarras": "7891024132906",
+        "descripcionArticulo": "C DENTAL COLGATE MFP TB 50 G",
+        "cantidad": 1.0,
+        "importeUnitario": 3.5,
+        "importe": 3.5,
+        "descuento": 0.0,
+        "recargo": 0.0
+      },
+      {
+        "codigoArticulo": "1272211318",
+        "codigoBarras": "5000329002537",
+        "descripcionArticulo": "GIN BEEFEATER LONDON DRY 750 ML",
+        "cantidad": 5.0,
+        "importeUnitario": 99.5,
+        "importe": 491.5,
+        "descuento": 6.0,
+        "recargo": 0.0
+      }
+    ],
+    "pagos": [
+      {
+        "codigoTipoPago": 9,
+        "importe": 495.0,
+        "codigoMoneda": "986",
+        "cotizacion": 1.0
+      }
+    ]
+  }
+]
+🔗 URL final montada: http://br.homo.apipdv.scanntech.com/api-minoristas/api/v2/minoristas/200398/locales/1/cajas/68141/movimientos/lotes
+DEBUG: 📋 Cabeçalhos que serão enviados: {'pdv-version': '8.0.2.267', 'backEnd-version': '8.0.3.81', 'Content-Type': 'application/json'}
+🔍 Status code: 200
+📦 Resposta: {"idLote":"2508049a4f86cfe0bd43c2a2150fbabbb4b9f592"}
+✅ Lote enviado (ID: 2508049a4f86cfe0bd43c2a2150fbabbb4b9f592). 0 erro(s) reportado(s) pela API.
+Database atualizado atomicamente.
+✅ Fim do processamento para o grupo Empresa 99, Caixa 68141.
+
+🔌 Conexão com o banco de dados fechada.
+🚀 Processando envios de fechamentos...
+⏳ Aguardando próximo ciclo (10 segundos)...
+Traceback (most recent call last):
+  File "C:\Users\AdyFera\Documents\Scanntech\scanntech\core\loop.py", line 94, in <module>
+    iniciar_loop()
+  File "C:\Users\AdyFera\Documents\Scanntech\scanntech\core\loop.py", line 87, in iniciar_loop
+    time.sleep(intervalo)
+KeyboardInterrupt

@@ -1,0 +1,1 @@
+from scanntech.services.processors.fechamentos_processor import processar_envio_fechamento
