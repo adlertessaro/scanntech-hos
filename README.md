@@ -1,206 +1,113 @@
-Perfeito, Adler! Aqui está a versão completa e atualizada do seu `README.md` com **todos os detalhes**, incluindo o trecho dos **canais de venda** já incorporado na estrutura certa e formatado para Markdown.
+# 🧠 Meu Projeto de Integração: HOS Farma & Scanntech
+
+Olá! Sou o Adler, e este é o meu projeto de integração entre o sistema de gestão **HOS Farma** e a plataforma de inteligência **Scanntech**.
+
+O objetivo principal é criar uma ponte robusta e automatizada entre os dois sistemas, garantindo que dados de **vendas**, **cancelamentos**, **fechamentos de caixa** e **promoções** fluam de maneira contínua e segura.
 
 ---
 
-```markdown
-# 🧠 Integração HOS Farma x Scanntech
+## 📦 Como Organizei o Projeto
 
-Este projeto tem como objetivo realizar a integração entre o sistema **HOS Farma** e a plataforma **Scanntech**, automatizando o envio de **vendas**, **cancelamentos**, **fechamentos diários** e a **consulta de promoções**.
+Para manter tudo limpo e escalável, estruturei o projeto da seguinte forma:
 
----
-
-## 📦 Estrutura do Projeto
-
-```
 Scanntech/
-├── config/                  # Armazena o arquivo criptografado settings.config
-├── gui/                     # Interface gráfica para configuração (Tkinter)
+├── data/                    # Armazena o banco de dados DuckDB com as configurações seguras.
+├── gui/                     # Módulo da interface gráfica para o usuário.
 │   └── configurador.py
-├── integrador/              # Núcleo da aplicação
-│   ├── integrador.py        # Carrega e descriptografa as configurações
-│   ├── autenticacao.py      # Monta autenticação básica (HTTP Basic Auth)
-│   ├── utils.py             # Funções genéricas de requisição e failover
-│   ├── promocoes.py         # Consulta de promoções
-│   ├── vendasLote.py        # Envio de vendas em lote
-│   └── fechamentosLote.py   # Envio de fechamentos em lote
-└── logs/                    # (Futuramente) Armazenará os logs das integrações
-```
+├── integrador/              # O coração da aplicação, onde a mágica acontece.
+│   ├── integrador.py        # Orquestra todo o fluxo da integração.
+│   ├── autenticacao.py      # Cuida da autenticação HTTP Basic Auth.
+│   ├── utils.py             # Funções úteis, como a lógica de requisições com failover.
+│   ├── promocoes.py         # Módulo específico para consultar promoções.
+│   ├── vendasLote.py        # Responsável por enviar as vendas em lote.
+│   └── fechamentosLote.py   # Responsável por enviar os fechamentos diários.
+└── logs/                    # Diretório para armazenar os logs de execução (a ser implementado).
 
 ---
 
-## ⚙️ Configuração do Sistema
+## ⚙️ O Módulo de Configuração
 
-### configurador.py
+Para facilitar a vida do usuário, criei uma interface gráfica simples e intuitiva.
 
-Interface gráfica (Tkinter) para preencher e salvar configurações de integração de forma criptografada:
+### `configurador.py`
 
-- URLs base (até 3)
-- Usuário e senha da API
-- Código da empresa, filial e PDV
-- Intervalo de execução do integrador
+Desenvolvido com **Tkinter**, este configurador permite que o usuário insira e salve todas as informações necessárias para a integração:
 
-As configurações são salvas de forma segura em `settings.config` usando `cryptography.fernet`.
+-   Até 3 URLs base da API (para garantir redundância).
+-   Usuário e senha de acesso.
+-   Códigos da empresa, filial e PDV.
+-   O intervalo (em minutos) para a execução automática do integrador.
 
-### integrador.py
-
-Responsável por carregar e interpretar o arquivo `settings.config` e disponibilizar os dados para os demais módulos.
-
-### utils.py
-
-Contém a função `fazer_requisicao()` com lógica de:
-
-- Substituição de variáveis (ex: idEmpresa, idLocal)
-- Requisições redundantes (failover de URLs)
-- Tratamento de erros e exibição dos retornos da API
+Em vez de salvar em um arquivo de texto simples, optei por usar o **DuckDB** para armazenar esses dados. As credenciais sensíveis, como a senha, são criptografadas com `cryptography.fernet` antes de serem salvas, garantindo uma camada extra de segurança.
 
 ---
 
-## 📆 Funcionalidades Implementadas
+## 🚀 Funcionalidades que Implementei
 
-### 🌐 Promoções
+### 🌐 Consulta de Promoções
 
-Consulta de promoções ativas na base da Scanntech.
+Este módulo busca ativamente as promoções cadastradas na Scanntech, permitindo que o HOS Farma tenha sempre informações atualizadas.
 
-**Endpoints:**
+**Endpoints que utilizo:**
+*   `GET /pmkt-rest-api/v2/minoristas/{idEmpresa}/locales/{idLocal}/promociones`
+*   `GET /pmkt-rest-api/minoristas/{idEmpresa}/locales/{idLocal}/promocionesConLimitePorTicket`
+*   `GET /pmkt-rest-api/v3/minoristas/{idEmpresa}/locales/{idLocal}/promociones-crm`
 
-- `GET /pmkt-rest-api/v2/minoristas/{idEmpresa}/locales/{idLocal}/promociones`
-- `GET /pmkt-rest-api/minoristas/{idEmpresa}/locales/{idLocal}/promocionesConLimitePorTicket`
-- `GET /pmkt-rest-api/v3/minoristas/{idEmpresa}/locales/{idLocal}/promociones-crm`
+### 💳 Envio de Vendas e Cancelamentos
 
-**Estados:** `PENDIENTE`, `ACEPTADA`, `RECHAZADA`  
-**Tipos:** `LLEVA_PAGA`, `ADICIONAL_DESCUENTO`, `ADICIONAL_REGALO`, `PRECIO_FIJO`, `DESCUENTO_VARIABLE`, `DESCUENTO_FIJO`
+O sistema agrupa as vendas e as envia em lotes de até 350 registros por vez para a API da Scanntech.
 
----
+**Endpoint principal:**
+`POST /api-minoristas/api/v2/minoristas/{idEmpresa}/locales/{idLocal}/cajas/{idCaja}/movimientos/lotes`
 
-### 💳 Vendas
+#### Detalhe Importante: Canais de Venda
 
-Envio periódico de vendas em lote (até 350 registros por requisição).
+Para que a Scanntech saiba a origem da venda (loja física, e-commerce, Rappi, etc.), eu envio os campos `codigoCanalVenta` e `descripcionCanalVenta`.
 
-**Endpoint:**
-```
-POST /api-minoristas/api/v2/minoristas/{idEmpresa}/locales/{idLocal}/cajas/{idCaja}/movimientos/lotes
-```
+**Exemplos de mapeamento:**
 
-#### Campos do JSON de Venda
+| `codigoCanalVenta` | `descripcionCanalVenta` |
+|:------------------:|:-----------------------:|
+| 1                  | VENTA EN EL LOCAL       |
+| 2                  | E-COMMERCE              |
+| 3                  | TELEVENTA               |
+| 4                  | RAPPI                   |
+| 5                  | IFOOD                   |
+| 7                  | WHATSAPP                |
 
-| Campo | Descrição |
-|-------|-----------|
-| `fecha` | Data e hora da venda (formato ISO 8601) |
-| `numero` | Número de controle (igual ao do cupom impresso). Em cancelamentos, usar prefixo hífen (ex: `-0358`) |
-| `descuentoTotal` | Soma dos descontos (itens + subtotal) |
-| `recargoTotal` | Soma dos recargos (itens + subtotal) |
-| `codigoMoneda` | Código ISO 4217 da moeda (ex: `986` para BRL) |
-| `cotizacion` | Cotação do câmbio da moeda usada |
-| `total` | Valor total da venda |
-| `cancelacion` | `true` para devolução, `false` para venda normal. Enviar os dois registros separadamente |
-| `idCliente` | ID no CRM ou programa de fidelidade |
-| `documentoCliente` | Documento do cliente (se informado) |
-| `codigoCanalVenta` | Código do canal de venda |
-| `descripcionCanalVenta` | Descrição do canal de venda |
+Se o sistema de origem for mais simples, eu mapeio `1` para **VENDA EM LOCAL** e `2` para **E-COMMERCE**.
 
-#### 🛒 Canais de Venda (codigoCanalVenta / descripcionCanalVenta)
+### 📊 Envio de Fechamentos Diários
 
-Para indicar por qual canal foi realizada a venda, é necessário enviar dois campos:
+Ao final do dia, o integrador envia um resumo consolidado das operações de cada caixa (PDV).
 
-- `codigoCanalVenta`: valor numérico
-- `descripcionCanalVenta`: valor descritivo do canal
+**Endpoint utilizado:**
+`POST /api-minoristas/api/v2/minoristas/{idEmpresa}/locales/{idLocal}/cajas/{idCaja}/cierresDiarios/lotes`
 
-##### Exemplos:
-
-| codigoCanalVenta | descripcionCanalVenta |
-|------------------|-----------------------|
-| 1                | VENTA EN EL LOCAL     |
-| 2                | E-COMMERCE            |
-| 3                | TELEVENTA             |
-| 4                | RAPPI                 |
-| 5                | IFOOD                 |
-| 6                | APP PROPRIA           |
-| 7                | WHATSAPP              |
-| 8                | GLOVO                 |
-
-> 💡 Dica: Se o sistema só indica “loja física” ou “e-commerce”, use mapeamentos simples como:
->
-> `1 - VENTA EN EL LOCAL`  
-> `2 - E-COMMERCE`
+Isso garante que os totais de vendas líquidas, cancelamentos e a quantidade de transações estejam sempre sincronizados.
 
 ---
 
-#### detalhes (array)
+## ⏱️ Execução Automática
 
-| Campo | Descrição |
-|-------|-----------|
-| `codigoArticulo` | Código interno do produto |
-| `codigoBarras` | Código de barras utilizado |
-| `descripcionArticulo` | Nome do produto |
-| `cantidad` | Quantidade vendida |
-| `importeUnitario` | Valor unitário (com impostos, sem descontos/recargos) |
-| `importe` | Subtotal: `(importeUnitario * cantidad) - descuento + recargo` |
-| `descuento` | Valor de desconto no item |
-| `recargo` | Valor de recargo no item |
-
-#### pagos (array)
-
-| Campo | Descrição |
-|-------|-----------|
-| `codigoTipoPago` | Código da forma de pagamento:<br>9=Dinheiro, 10=Crédito, 11=Cheque, 12=Vale, 13=Débito, 14=QR/PIX |
-| `codigoMoneda` | Código ISO 4217 da moeda usada |
-| `importe` | Valor pago |
-| `cotizacion` | Cotação da moeda do pagamento |
-| `codigoProveedorQR` | 1 = PIX, outros = “outros” |
-| `codigoBanco` | (opcional) Código do banco utilizado no QR |
-| `descripcionBanco` | (opcional) Nome do banco |
-| `documentoCliente` | Enviar `null` |
-| `bin` | Primeiros 6 ou 8 dígitos do cartão (obrigatório para promoções com cartão) |
-| `ultimosDigitosTarjeta` | Últimos 4 dígitos do cartão (idem) |
-| `numeroAutorizacion` | Número de autorização da transação |
-| `codigoTarjeta` | Enviar `null` |
+O integrador foi projetado para rodar como um serviço em segundo plano. Ele executa todas as tarefas (envio de vendas, fechamentos e consulta de promoções) em ciclos, conforme o intervalo definido pelo usuário na tela de configuração.
 
 ---
 
-### 📊 Fechamento Diário
+## 🛠️ Tecnologias que Utilizei no Projeto
 
-Resumo das vendas por caixa (PDV) por dia.
-
-**Endpoint:**
-```
-POST /api-minoristas/api/v2/minoristas/{idEmpresa}/locales/{idLocal}/cajas/{idCaja}/cierresDiarios/lotes
-```
-
-**Campos enviados:** `fechaVentas`, `montoVentaLiquida`, `montoCancelaciones`, `cantidadMovimientos`, `cantidadCancelaciones`  
-**Retorno:** `idLote`, `errores`
+-   **Linguagem:** Python 3
+-   **Banco de Dados para Configs:** DuckDB
+-   **Comunicação HTTP:** Biblioteca `requests`
+-   **Segurança:** `cryptography.fernet` para criptografar as credenciais.
+-   **Interface Gráfica:** Tkinter
+-   **Formato de Dados:** JSON (UTF-8)
+-   **Autenticação:** HTTP Basic Auth
 
 ---
 
-## ⏱ Execução
+## 📌 Notas Finais
 
-O integrador executa automaticamente, em ciclos definidos pelo usuário:
-
-- Envia vendas acumuladas
-- Envia fechamentos diários
-- Consulta promoções ativas
-
----
-
-## 🛠 Tecnologias Utilizadas
-
-- Python 3
-- PostgreSQL
-- `requests` (requisições HTTP)
-- `cryptography.fernet` (criptografia)
-- Tkinter (interface de configuração)
-- JSON (UTF-8)
-- HTTP Basic Auth
-
----
-
-## 📌 Observações Finais
-
-- `idCaja` = Código do PDV  
-- `idLocal` = Código da filial (geralmente 1 ou 2 em ambientes de homologação)  
-- A comunicação segue autenticação básica e validações via API da Scanntech  
-- Toda resposta da API deve ser analisada para fins de logging e diagnóstico
-
-
-
-
-Usar duckdb para salvar dados credenciais scanntech
+-   O `idCaja` corresponde ao código do PDV.
+-   O `idLocal` é o código da filial.
+-   Toda a comunicação com a API da Scanntech é autenticada e as respostas são tratadas para garantir a integridade dos dados e facilitar o diagnóstico de possíveis problemas.

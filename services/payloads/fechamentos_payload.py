@@ -2,18 +2,25 @@ import sys
 import os
 from datetime import datetime
 import logging
+import json
 
 logging.basicConfig(level=logging.INFO, format='%(asctime)s - %(levelname)s - %(message)s')
 
 BASE_DIR = os.path.abspath(os.path.join(os.path.dirname(__file__), '../..'))
 if BASE_DIR not in sys.path:
     sys.path.insert(0, BASE_DIR)
-    
+
 from db.conexao import conectar
 
-def montar_payload_do_fechamento(empresa, config, data_fechamento, id_caixa=None):
-    if id_caixa:
-        logging.info(f"Montando payload para: Empresa={empresa}, Data={data_fechamento}, Caixa Específico={id_caixa}")
+def montar_payload_do_fechamento(empresa, config, data_fechamento, estacao=None):
+    """
+    Calcula o fechamento com base nos VALORES REAIS ENVIADOS E ACEITOS pela API.
+    Usa o campo 'valor_enviado' da tabela int_scanntech_vendas_logs.
+    """
+    log_avancado = config.get('log_avancado', 'false').lower() == 'true'
+    
+    if estacao is not None:
+        logging.info(f"Montando payload para: Empresa={empresa}, Data={data_fechamento}, Estação={estacao}")
     else:
         logging.info(f"Montando payload CONSOLIDADO para: Empresa={empresa}, Data={data_fechamento}")
     
@@ -22,46 +29,111 @@ def montar_payload_do_fechamento(empresa, config, data_fechamento, id_caixa=None
         conn = conectar()
         cur = conn.cursor()
 
-        # --- CORREÇÃO PRINCIPAL AQUI ---
-        # Formata o objeto de data para o formato de texto com pontos (YYYY.MM.DD)
-        data_formatada_para_sql = data_fechamento.strftime('%Y.%m.%d')
-        logging.info(f"Data formatada para a consulta SQL: '{data_formatada_para_sql}'")
+        if isinstance(data_fechamento, str):
+            # Se vier string 'YYYY-MM-DD', usamos direto
+            data_formatada_para_sql = data_fechamento
+            # Para o JSON precisamos do objeto date se for usar strftime depois
+            # Mas como o payload usa strftime, vamos garantir que seja objeto
+            try:
+                data_obj = datetime.strptime(data_fechamento, '%Y-%m-%d').date()
+                data_fechamento = data_obj # sobrescreve para uso posterior
+            except:
+                pass 
+        else:
+            data_formatada_para_sql = data_fechamento.strftime('%Y-%m-%d')
         
+        if log_avancado:
+            logging.info(f"\n{'='*80}")
+            logging.info(f"🔍 LOG AVANÇADO - FECHAMENTO")
+            logging.info(f"{'='*80}")
+            logging.info(f"   🏢 Empresa: {empresa}")
+            logging.info(f"   📅 Data: {data_fechamento}")
+            logging.info(f"   🖥️  Estação: {estacao or 'CONSOLIDADO'}")
+        
+        # 🔥 Busca o VALOR ENVIADO, não o valor da tabela caixa
         sql_base = """
-            SELECT
-                COALESCE(SUM(CASE WHEN lancamen IN ('VV', 'VP', 'VC', 'VR') THEN valor ELSE 0 END), 0),
-                COALESCE(SUM(CASE WHEN lancamen IN ('CC') THEN valor ELSE 0 END), 0),
-                COALESCE(SUM(CASE WHEN lancamen IN ('DV') THEN valor ELSE 0 END), 0),
-                COALESCE(SUM(CASE WHEN lancamen IN ('VV', 'VP', 'VC', 'VR') THEN 1 ELSE 0 END), 0),
-                COALESCE(SUM(CASE WHEN lancamen IN ('CC', 'DV') THEN 1 ELSE 0 END), 0)
-            FROM caixa
-            WHERE empresa = %s AND data = %s
+            SELECT 
+                l.tipo_evento,
+                ABS(l.valor_enviado) as valor_final
+            FROM int_scanntech_vendas_logs l
+            JOIN caixa c ON c.venda = l.venda AND c.empresa = l.empresa
+            WHERE l.empresa = %s 
+            AND c.data = %s
+            AND l.id_lote IS NOT NULL
         """
-        # Usa a data já formatada como string nos parâmetros da consulta
-        params = (empresa, data_formatada_para_sql)
-
-        if id_caixa:
-            sql_base += " AND caixa = %s"
-            params += (str(id_caixa),)
-
+        
+        params = [empresa, data_formatada_para_sql]
+        
+        if estacao is not None:
+            sql_base += " AND l.estacao = %s"
+            params.append(estacao)
+        
         cur.execute(sql_base, params)
-        resultado = cur.fetchone()
-
-        if not resultado or (resultado[3] == 0 and resultado[4] == 0):
-            logging.info("Sem movimentos no banco de dados para os critérios fornecidos.")
+        movimentos = cur.fetchall()
+        
+        if not movimentos:
+            logging.info("Sem movimentos ENVIADOS E ACEITOS para os critérios fornecidos.")
             return []
-
-        valor_vendas_brutas, valor_cancelamentos, valor_devolucao, qtd_vendas, qtd_cancelamentos = resultado
-        valor_liquido = valor_vendas_brutas - valor_devolucao
-        valor_cc_dv = valor_devolucao + valor_cancelamentos
-        total_movimentos_iniciados = qtd_vendas + qtd_cancelamentos
-
-        payload = [{"fechaVentas": data_fechamento.strftime("%Y-%m-%d"), "montoVentaLiquida": round(float(valor_liquido), 2), "montoCancelaciones": round(float(valor_cc_dv), 2), "cantidadMovimientos": int(total_movimentos_iniciados), "cantidadCancelaciones": int(qtd_cancelamentos)}]
-        logging.info(f"Payload final gerado: {payload}")
+        
+        if log_avancado:
+            logging.info(f"\n   📊 MOVIMENTOS ENCONTRADOS: {len(movimentos)}")
+        
+        # Calcular valores
+        valor_vendas = 0.0
+        valor_cancelamentos = 0.0
+        qtd_vendas = 0
+        qtd_cancelamentos = 0
+        
+        for tipo_evento, valor_final in movimentos:
+            valor_float = float(valor_final)
+            
+            # Vendas normais (cancelacion: false)
+            if tipo_evento == 'VENDA':
+                valor_vendas += valor_float
+                qtd_vendas += 1
+                
+                if log_avancado:
+                    logging.info(f"      ✓ VENDA: R$ {valor_float:.2f}")
+            
+            # Cancelamentos e devoluções (cancelacion: true)
+            elif tipo_evento in ('CC', 'DV'):
+                valor_cancelamentos += valor_float
+                qtd_cancelamentos += 1
+                
+                if log_avancado:
+                    logging.info(f"      ❌ CANCEL: R$ {valor_float:.2f}")
+        
+        # montoVentaLiquida = (vendas) - (cancelamentos)
+        valor_liquido = valor_vendas - valor_cancelamentos
+        
+        payload = [
+            {
+                "fechaVentas": data_fechamento.strftime("%Y-%m-%d"),
+                "montoVentaLiquida": round(valor_liquido, 2),
+                "montoCancelaciones": round(valor_cancelamentos, 2),
+                "cantidadMovimientos": int(qtd_vendas),
+                "cantidadCancelaciones": int(qtd_cancelamentos),
+            }
+        ]
+        
+        if log_avancado:
+            logging.info(f"\n   💰 TOTAIS CALCULADOS:")
+            logging.info(f"      Vendas (cancelacion=false): {qtd_vendas} movimentos = R$ {valor_vendas:.2f}")
+            logging.info(f"      Cancelamentos (cancelacion=true): {qtd_cancelamentos} movimentos = R$ {valor_cancelamentos:.2f}")
+            logging.info(f"      Valor Líquido: R$ {valor_liquido:.2f}")
+            
+            logging.info(f"\n   🎯 PAYLOAD FINAL:")
+            logging.info(json.dumps(payload, indent=2, ensure_ascii=False))
+            logging.info(f"{'='*80}\n")
+        else:
+            logging.info(f"Payload gerado: Líquido=R${valor_liquido:.2f}, Vendas={qtd_vendas}, Cancels={qtd_cancelamentos}")
+        
         return payload
+        
     except Exception as e:
         logging.error(f"❌ ERRO ao montar payload do fechamento: {e}", exc_info=True)
         return []
+    
     finally:
         if conn and not getattr(conn, 'closed', True):
             cur.close()

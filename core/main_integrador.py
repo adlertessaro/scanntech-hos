@@ -1,87 +1,124 @@
+# C:\Users\AdyFera\Documents\Scanntech\scanntech\core\main_integrador.py
+
 import threading
-import time
 import sys
-import os
-from datetime import datetime
-import pystray
+import logging
+import subprocess
+from pathlib import Path
 from PIL import Image
+from pystray import Icon, Menu, MenuItem
 
-# Adiciona o diretório raiz do projeto ao sys.path
-# Isso é crucial para que os imports relativos funcionem após o empacotamento
-# O diretório raiz do projeto é Scanntech (um nível acima de 'scanntech')
-sys.path.insert(0, os.path.abspath(os.path.join(os.path.dirname(__file__), '..', '..')))
+# --- MUDANÇA IMPORTANTE AQUI ---
+# Em vez de calcular o ROOT_DIR aqui, nós o importamos da nossa função confiável
+# Isso garante que todos os arquivos usem EXATAMENTE a mesma lógica
+from scanntech.utils.logger import configurar_logger, get_root_dir
 
-# Importa o loop original
-from scanntech.core.loop import iniciar_loop
+# Agora definimos ROOT_DIR usando a função importada
+ROOT_DIR = get_root_dir()
 
-# --- Funções para executar o configurador e o monitor ---
-def run_configurador_exe():
-    # Caminho relativo ao executável principal (main_integrador.exe)
-    # Assumimos que 'configurador.exe' estará na mesma pasta 'dist'
-    script_dir = os.path.dirname(sys.executable) # Diretorio onde main_integrador.exe esta
-    configurador_path = os.path.join(script_dir, "configurador.exe")
-    print(f"Tentando iniciar Configurador: {configurador_path}")
-    if os.path.exists(configurador_path):
-        os.startfile(configurador_path)
-    else:
-        print(f"ERRO: Configurador.exe não encontrado em {configurador_path}")
+# O sys.path.append não é mais necessário, pois o PyInstaller já foi instruído
+# sobre onde encontrar os pacotes.
 
-def run_monitor_exe():
-    # Caminho relativo ao executável principal (main_integrador.exe)
-    script_dir = os.path.dirname(sys.executable) # Diretorio onde main_integrador.exe esta
-    monitor_path = os.path.join(script_dir, "monitor.exe")
-    print(f"Tentando iniciar Monitor: {monitor_path}")
-    if os.path.exists(monitor_path):
-        os.startfile(monitor_path)
-    else:
-        print(f"ERRO: Monitor.exe não encontrado em {monitor_path}")
+from scanntech.core.loop import IntegradorLoop
 
-# --- Thread para rodar o loop de integração ---
-def run_integration_loop():
+# Configura o logger para este processo. Essencial para depuração.
+configurar_logger()
+
+# --- CRIAR ARQUIVO PID (NOVO CÓDIGO) ---
+PID_FILE = ROOT_DIR / "integrador.pid"
+
+def criar_arquivo_pid():
+    """Cria o arquivo PID para o monitor detectar que estamos rodando"""
     try:
-        iniciar_loop() # Chama a função iniciar_loop do seu core/loop.py
+        import os
+        with open(PID_FILE, 'w') as f:
+            f.write(str(os.getpid()))
+        logging.info(f"✅ Arquivo PID criado: {PID_FILE}")
     except Exception as e:
-        print(f"Erro fatal no loop de integração: {e}")
-        # Aqui você pode adicionar lógica para parar o ícone da bandeja ou notificar o usuário
+        logging.error(f"❌ Erro ao criar arquivo PID: {e}")
 
-# --- Configuração do ícone da bandeja ---
-def setup_tray_icon():
-    # Crie um ícone simples. Você pode criar um arquivo .ico e incluí-lo
-    # Para o exemplo, vamos criar uma imagem em tempo de execução
-    image_path = os.path.join(os.path.dirname(sys.executable), "icone.ico")
-    if os.path.exists(image_path):
-        image = Image.open(image_path)
-    else:
-        # Fallback para uma imagem simples se o ícone não for encontrado
-        image = Image.new('RGB', (64, 64), 'black')
-        dc = ImageDraw.Draw(image)
-        dc.text((10,10), "S", fill='white')
-    dc = ImageDraw.Draw(image)
-    dc.text((10,10), "S", fill='white') # Desenha um 'S' no ícone
-    # Se você tiver um arquivo .ico, use: Image.open("caminho/para/seu/icone.ico")
+def remover_arquivo_pid():
+    """Remove o arquivo PID quando o integrador para"""
+    try:
+        if PID_FILE.exists():
+            PID_FILE.unlink()
+            logging.info("✅ Arquivo PID removido")
+    except Exception as e:
+        logging.error(f"❌ Erro ao remover arquivo PID: {e}")
 
-    menu = (
-        pystray.MenuItem('Abrir Configurador', run_configurador_exe),
-        pystray.MenuItem('Abrir Monitor', run_monitor_exe),
-        pystray.MenuItem('Sair', lambda icon: icon.stop()) # Para o ícone
-    )
+# --- Funções para o Menu do Ícone (sem alterações) ---
 
-    icon = pystray.Icon("integrador_scanntech", image, "Integrador Scanntech", menu)
+def abrir_monitor(icon):
+    try:
+        monitor_exe = ROOT_DIR / "monitor.exe"
+        if monitor_exe.exists():
+            subprocess.Popen([str(monitor_exe)])
+        else:
+            monitor_script = ROOT_DIR / "scanntech" / "monitor" / "monitor.pyw"
+            if monitor_script.exists():
+                subprocess.Popen([sys.executable, str(monitor_script)])
+            else:
+                logging.error("❌ Executável/script do Monitor não encontrado.")
+    except Exception as e:
+        logging.error(f"❌ Falha ao tentar abrir o Monitor: {e}")
 
-    # Inicia o loop de integração em uma thread separada
-    integration_thread = threading.Thread(target=run_integration_loop)
-    integration_thread.daemon = True # Permite que a thread termine quando o programa principal terminar
-    integration_thread.start()
+def abrir_configurador(icon):
+    try:
+        configurador_exe = ROOT_DIR / "configurador.exe"
+        if configurador_exe.exists():
+            subprocess.Popen([str(configurador_exe)])
+        else:
+            configurador_script = ROOT_DIR / "scanntech" / "config" / "configurador.pyw"
+            if configurador_script.exists():
+                subprocess.Popen([sys.executable, str(configurador_script)])
+            else:
+                logging.error("❌ Executável/script do Configurador não encontrado.")
+    except Exception as e:
+        logging.error(f"❌ Falha ao tentar abrir o Configurador: {e}")
 
-    # Roda o ícone da bandeja. Isso é um loop de eventos, então deve ser o último a ser chamado
-    icon.run()
-    # Quando icon.run() for parado (pelo MenuItem 'Sair'), o programa principal continua aqui
-    # e espera a thread de integração terminar se ela ainda estiver rodando.
-    integration_thread.join(timeout=10) # Dá um tempo para a thread terminar
-    print("Integrador Scanntech encerrado.")
+def fechar_integrador(icon, item):
+    logging.info("Comando de parada recebido. Encerrando...")
+    remover_arquivo_pid()
+    parar_evento.set()
+    icon.stop()
 
+# --- Configuração e Execução Principal (sem alterações na lógica) ---
 
 if __name__ == "__main__":
-    # Importa ImageDraw para desenhar no ícone. Precisa ser aqui para evitar import circular com PIL.Image
-    from PIL import ImageDraw
-    setup_tray_icon()
+    parar_evento = threading.Event()
+    integrador = IntegradorLoop(parar_evento)
+    
+    try:
+        #criar o PID
+        criar_arquivo_pid()
+        
+        logging.info("🚀 Iniciando thread do loop principal do integrador...")
+        loop_thread = threading.Thread(target=integrador.iniciar, daemon=True)
+        loop_thread.start()
+        
+        logging.info("🎨 Carregando imagem para o ícone da bandeja...")
+        # Esta linha agora funcionará, pois ROOT_DIR estará correto
+        image_path = ROOT_DIR / "logo.png"
+        imagem_icone = Image.open(image_path)
+
+        menu = Menu(
+            MenuItem('Abrir Monitor', abrir_monitor, default=True),
+            MenuItem('Abrir Configurador', abrir_configurador),
+            Menu.SEPARATOR,
+            MenuItem('Fechar Integrador', fechar_integrador)
+        )
+
+        icon = Icon(
+            "IntegradorScanntech",
+            icon=imagem_icone,
+            title="Integrador Scanntech",
+            menu=menu
+        )
+
+        logging.info("🔔 Executando ícone da bandeja. O programa ficará ativo em segundo plano.")
+        icon.run()
+
+    except Exception as e:
+        logging.critical(f"🔥 Falha CRÍTICA ao iniciar o ícone da bandeja: {e}", exc_info=True)
+        remover_arquivo_pid()
+        sys.exit(1)

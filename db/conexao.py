@@ -44,13 +44,3 @@ def obter_dados_conexao():
 def conectar():
     dados = obter_dados_conexao()
     return psycopg2.connect(**dados)
-
-# if __name__ == "__main__":
-#     try:
-#         dados = obter_dados_conexao()
-#         print("🔐 Usuário:", dados["user"])
-#         print("🔑 Senha descriptografada:", dados["password"])
-#         print("🗃️ Banco:", dados["dbname"])
-#         print("🌐 Host:", dados["host"])
-#     except Exception as e:
-#         print("❌ Erro ao carregar conexão:", e)

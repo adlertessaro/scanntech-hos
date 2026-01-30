@@ -1,3 +1,29 @@
+"""Utility functions for ttkbootstrap.
+
+This module provides various utility functions for common tasks in
+ttkbootstrap applications, including high-DPI support, screen geometry
+calculations, and color manipulations.
+
+Functions:
+    enable_high_dpi_awareness: Enable high-DPI scaling on Windows/Linux
+    scale_size: Scale a size value for high-DPI displays
+    get_desktop_geometry: Get the screen dimensions
+    get_asset_path: Get the path to an asset file
+
+Example:
+    ```python
+    from ttkbootstrap.utility import enable_high_dpi_awareness
+    import ttkbootstrap as ttk
+
+    # Enable high-DPI before creating window
+    enable_high_dpi_awareness()
+
+    root = ttk.Window()
+    root.mainloop()
+    ```
+"""
+
+
 def enable_high_dpi_awareness(root=None, scaling=None):
     """Enable high dpi awareness.
 
@@ -98,3 +124,26 @@ def scale_size(widget, size):
         return int(size * factor)
     elif isinstance(size, tuple) or isinstance(size, list):
         return [int(x * factor) for x in size]
+
+
+def center_on_parent(win, parent=None):
+    """Center `win` on parent or over its master if not given"""
+    win.update_idletasks() # ensure geometry
+    if parent is None:
+        parent = getattr(win, 'master', None) or win # root if no parent
+
+    # parent geometry
+    parent.update_idletasks()
+    px, py = parent.winfo_rootx(), parent.winfo_rooty()
+    pw, ph = parent.winfo_width(), parent.winfo_height()
+    if pw <= 1 or ph <= 1:
+        # not yet realized, fallback to requested size
+        pw, ph = parent.winfo_reqwidth(), parent.winfo_reqheight()
+
+    # window geometry
+    ww = win.winfo_width() or win.winfo_reqwidth()
+    wh = win.winfo_height() or win.winfo_reqheight()
+
+    x = px + (pw - ww) // 2
+    y = py + (ph - wh) // 2
+    win.geometry(f"{ww}x{wh}+{x}+{y}")

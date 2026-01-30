@@ -1,38 +1,43 @@
 from scanntech.api.scanntech_api_promocoes import consultar_promocoes as get_promocoes
-from scanntech.db.promo_repo import salvar_promocoes, reprocessar_produtos_pendentes
+from scanntech.db.promo_repo import salvar_e_processar_promocoes
+import logging
 
-def processar_promocoes(config):
-    respostas = [
-        get_promocoes(config)
-        # get_promocoes_limite_ticket(config),
-        # get_promocoes_crm(config)
-    ]
+def processar_promocoes(config_completa):
+    """
+    Busca promoções para uma única loja, recebendo uma configuração unificada
+    que contém tanto os dados gerais (autenticação) quanto os da loja.
+    """
+    # Extrai os dados da loja do dicionário de configuração completo
+    id_empresa = config_completa.get("idempresa")
+    id_local = config_completa.get("idlocal")
+    empresa_erp = config_completa.get("empresa")
+    
+    if not all([id_empresa, id_local, empresa_erp]):
+        logging.error(f"Configuração da loja incompleta: {config_completa}")
+        raise ValueError("Configuração de loja inválida.")
 
-    total_geral = 0
+    logging.info(f"Buscando promoções para a loja: idLocal={id_local}, idEmpresa={id_empresa}")
+    
+    loja_info = {
+        "idEmpresa": id_empresa,
+        "idLocal": id_local,
+        "empresaErp": int(empresa_erp)
+    }
 
-    for resposta in respostas:
-        if not isinstance(resposta, dict):
-            print("❌ Erro: resposta não é um dicionário.")
-            continue
-
-        status = resposta.get("status_code", 0)
-        if status != 200:
-            print(f"❌ Erro ao consultar promoções. Código: {status}")
-            continue
-
-        dados = resposta.get("dados", {})
-        total = dados.get("total", 0)
-        resultados = dados.get("results", [])
-
-        if total > 0:
-            salvar_promocoes(resultados, config)
-            total_geral += total
-            print(f"✅ {total} promoções salvas com sucesso.")
+    # A função `get_promocoes` agora recebe o dicionário completo, que contém
+    # as credenciais de autenticação e qualquer outro parâmetro geral.
+    resposta = get_promocoes(config_completa, loja_info)
+    
+    if resposta and resposta.get("status_code") == 200:
+        promocoes = resposta.get("dados", {}).get("results", [])
+        if promocoes:
+            logging.info(f"{len(promocoes)} promoções encontradas para a loja {id_local}.")
+            return {loja_info['empresaErp']: promocoes}
         else:
-            print("🔍 Nenhuma promoção ativa neste endpoint.")
-
-    if total_geral == 0:
-        print("📭 Nenhuma promoção encontrada em nenhum dos endpoints.")
+            logging.info(f"Nenhuma promoção encontrada para a loja {id_local}.")
+            return {loja_info['empresaErp']: []}
     else:
-        print("🔄 Iniciando reprocessamento de produtos pendentes...")
-        reprocessar_produtos_pendentes()  # Chama a função após salvar
+        status_code = resposta.get("status_code") if resposta else "N/A"
+        msg_erro = f"Erro ao buscar promoções para a loja {id_local}. Código: {status_code}"
+        logging.error(msg_erro)
+        raise ConnectionError(msg_erro)

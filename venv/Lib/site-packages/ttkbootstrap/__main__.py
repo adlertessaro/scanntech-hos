@@ -7,11 +7,10 @@
 import ttkbootstrap as ttk
 from ttkbootstrap.constants import *
 from ttkbootstrap.dialogs import Messagebox
-from ttkbootstrap.scrolled import ScrolledText
+from ttkbootstrap.widgets.scrolled import ScrolledText
 
 
 def setup_demo(master):
-
     ZEN = """Beautiful is better than ugly. 
 Explicit is better than implicit. 
 Simple is better than complex. 
@@ -47,7 +46,6 @@ Namespaces are one honking great idea -- let's do more of those!"""
     lbl = ttk.Label(theme_selection, text="Select a theme:")
     theme_cbo = ttk.Combobox(
         master=theme_selection,
-        text=style.theme.name,
         values=theme_names,
     )
     theme_cbo.pack(padx=10, side=RIGHT)
@@ -57,7 +55,7 @@ Namespaces are one honking great idea -- let's do more of those!"""
     ttk.Separator(root).pack(fill=X, pady=10, padx=10)
 
     def change_theme(e):
-        t = cbo.get()
+        t = theme_cbo.get()
         style.theme_use(t)
         theme_selected.configure(text=t)
         theme_cbo.selection_clear()
@@ -93,9 +91,9 @@ Namespaces are one honking great idea -- let's do more of those!"""
     check2.pack(side=LEFT, expand=YES, padx=5)
 
     check4 = ttk.Checkbutton(rb_group, text="deselected")
-    check4.pack(side=LEFT, expand=YES, padx=5)    
+    check4.pack(side=LEFT, expand=YES, padx=5)
     check4.invoke()
-    check4.invoke()    
+    check4.invoke()
 
     check3 = ttk.Checkbutton(rb_group, text="disabled", state=DISABLED)
     check3.pack(side=LEFT, expand=YES, padx=5)
@@ -125,7 +123,7 @@ Namespaces are one honking great idea -- let's do more of those!"""
 
     tv = ttk.Treeview(master=ttframe, columns=[0, 1], show=HEADINGS, height=5)
     for row in table_data:
-        tv.insert("", END, values=row)
+        tv.insert("", 'end', values=row)
 
     tv.selection_set("I001")
     tv.heading(0, text="City")
@@ -278,7 +276,6 @@ Namespaces are one honking great idea -- let's do more of those!"""
 
     cbo = ttk.Combobox(
         master=input_group,
-        text=style.theme.name,
         values=theme_names,
         exportselection=False,
     )
@@ -292,7 +289,6 @@ Namespaces are one honking great idea -- let's do more of those!"""
 
 
 if __name__ == "__main__":
-
     app = ttk.Window("ttkbootstrap widget demo")
 
     bagel = setup_demo(app)

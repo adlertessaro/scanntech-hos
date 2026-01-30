@@ -2,20 +2,20 @@
 DROP TRIGGER IF EXISTS int_scanntech_vendas ON caixa;
 DROP FUNCTION IF EXISTS trg_func_int_scanntech_vendas();
 
--- Cria a função da trigger com a lógica correta de verificação de evento
+-- Cria a função da trigger com a lógica correta usando "estacao"
 CREATE OR REPLACE FUNCTION trg_func_int_scanntech_vendas()
 RETURNS trigger AS $$
 DECLARE
     ja_enviado BOOLEAN;
     v_tipo_evento VARCHAR(10);
 BEGIN
-    IF (SESSION_USER = 'INTWEBSYNC' OR SESSION_USER = 'INTEGRADORWEB' OR SESSION_USER = 'REPLICADOR') THEN
+    IF (SESSION_USER = 'INTWEBSYNC' OR SESSION_USER = 'INTEGRADORWEB') THEN
         RETURN NULL;
     END IF;
 
-    -- Apenas para tipos de lançamento válidos
+    -- Apenas para tipos de lançamento válidos e com estação diferente de 0
     IF (NEW.lancamen IN ('VV', 'VC', 'VP', 'CR', 'CH', 'DV', 'CC')
-        AND NEW.nrcaixa <> 0) THEN
+        AND NEW.estacao <> 0) THEN
     BEGIN
         -- Determina o tipo de evento (VENDA, CC, ou DV)
         IF (NEW.lancamen IN ('CC', 'DV')) THEN
@@ -24,7 +24,7 @@ BEGIN
             v_tipo_evento := 'VENDA';
         END IF;
 
-        -- CORREÇÃO: Verifica se ESTE EVENTO específico já foi enviado
+        -- Verifica se ESTE EVENTO específico já foi enviado
         SELECT EXISTS (
             SELECT 1 FROM int_scanntech_vendas_logs
             WHERE venda = NEW.venda 
@@ -35,10 +35,10 @@ BEGIN
 
         -- Se este evento ainda não foi enviado, insere na fila
         IF NOT ja_enviado THEN
-            INSERT INTO int_scanntech_vendas (venda, empresa, nrcaixa, tentativas, data_hora_inclusao)
-            VALUES (NEW.venda, NEW.empresa, NEW.nrcaixa, 0, CURRENT_TIMESTAMP)
+            INSERT INTO int_scanntech_vendas (venda, empresa, estacao, tentativas, data_hora_inclusao)
+            VALUES (NEW.venda, NEW.empresa, NEW.estacao, 0, CURRENT_TIMESTAMP)
             ON CONFLICT (venda, empresa) DO UPDATE
-            SET nrcaixa = EXCLUDED.nrcaixa,
+            SET estacao = EXCLUDED.estacao,
                 tentativas = 0,
                 data_hora_inclusao = CURRENT_TIMESTAMP;
         END IF;

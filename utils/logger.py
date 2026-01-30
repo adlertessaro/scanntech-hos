@@ -1,25 +1,53 @@
-from datetime import date
-from pathlib import Path
+import logging
+import logging.handlers  # Importa os handlers de rotação
 import sys
+from pathlib import Path
+# 'date' não é mais necessário aqui
+# from datetime import date 
 
-def configurar_saida_terminal():
-    log_dir = Path(__file__).parent.parent / "logs"
-    log_dir.mkdir(parents=True, exist_ok=True)
-    log_file = log_dir / f"monitor_{date.today().strftime('%Y-%m-%d')}.log"
+def get_root_dir():
+    if getattr(sys, 'frozen', False):
+        return Path(sys.executable).parent.resolve()
+    else:
+        return Path(__file__).parent.parent.parent.resolve()
 
-    class LoggerWriter:
-        def __init__(self, stream):
-            self.stream = stream
-            self.log_file = open(log_file, "a", encoding="utf-8")
+def configurar_logger():
+    ROOT_DIR = get_root_dir()
+    LOG_DIR = ROOT_DIR / "logs"
+    LOG_DIR.mkdir(exist_ok=True)
+    
+    # --- MUDANÇA 1 ---
+    # O nome do arquivo agora é fixo. O handler cuidará de adicionar as datas
+    # nos arquivos antigos (Ex: 'integrador.log.2025-11-02')
+    log_file_path = LOG_DIR / "integrador.log"
+    
+    log_formatter = logging.Formatter(
+        fmt='%(asctime)s - [%(levelname)s] - %(message)s',
+        datefmt='%Y-%m-%d %H:%M:%S'
+    )
+    
+    logger = logging.getLogger()
+    logger.setLevel(logging.DEBUG)
 
-        def write(self, message):
-            self.stream.write(message)
-            self.log_file.write(message)
-            self.log_file.flush()
+    if logger.hasHandlers():
+        logger.handlers.clear()
 
-        def flush(self):
-            self.stream.flush()
-            self.log_file.flush()
-
-    sys.stdout = LoggerWriter(sys.stdout)
-    sys.stderr = LoggerWriter(sys.stderr)
+    # --- MUDANÇA 2 ---
+    # Trocamos o 'FileHandler' pelo 'TimedRotatingFileHandler'
+    handler_rotativo = logging.handlers.TimedRotatingFileHandler(
+        filename=log_file_path,
+        when='midnight',      # Rotaciona todo dia à meia-noite
+        interval=1,           # A cada 1 (dia, baseado no 'when')
+        backupCount=7,        # Mantém os últimos 7 arquivos de log
+        encoding='utf-8'
+    )
+    handler_rotativo.setFormatter(log_formatter)
+    handler_rotativo.setLevel(logging.DEBUG)
+    logger.addHandler(handler_rotativo)
+    
+    # Isso permanece igual (log no console)
+    if sys.stdout:
+        stream_handler = logging.StreamHandler(sys.stdout)
+        stream_handler.setFormatter(log_formatter)
+        stream_handler.setLevel(logging.INFO)
+        logger.addHandler(stream_handler)
