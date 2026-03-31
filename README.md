@@ -1,113 +1,82 @@
-# 🧠 Meu Projeto de Integração: HOS Farma & Scanntech
+Este sistema é um middleware robusto projetado para sincronizar dados de vendas, cancelamentos e fechamentos diários entre o ERP HOS Farma e os servidores da Scanntech. Ele garante a integridade dos dados através de ciclos automáticos de auditoria e manutenção.
 
-Olá! Sou o Adler, e este é o meu projeto de integração entre o sistema de gestão **HOS Farma** e a plataforma de inteligência **Scanntech**.
+🛠️ Tecnologias e Dependências
+Para fabricar e rodar este sistema, você precisará do Python 3.9+ e das seguintes bibliotecas:
 
-O objetivo principal é criar uma ponte robusta e automatizada entre os dois sistemas, garantindo que dados de **vendas**, **cancelamentos**, **fechamentos de caixa** e **promoções** fluam de maneira contínua e segura.
+Núcleo (Core)
+psycopg2-binary: Para conexão de alta performance com o banco PostgreSQL.
 
----
+requests: Para comunicação com a API REST da Scanntech.
 
-## 📦 Como Organizei o Projeto
+pytz: Para manipulação precisa de fusos horários.
 
-Para manter tudo limpo e escalável, estruturei o projeto da seguinte forma:
+cryptography / pycryptodome: Para descriptografar as senhas do banco de dados do arquivo de configuração do ERP.
 
-Scanntech/
-├── data/                    # Armazena o banco de dados DuckDB com as configurações seguras.
-├── gui/                     # Módulo da interface gráfica para o usuário.
-│   └── configurador.py
-├── integrador/              # O coração da aplicação, onde a mágica acontece.
-│   ├── integrador.py        # Orquestra todo o fluxo da integração.
-│   ├── autenticacao.py      # Cuida da autenticação HTTP Basic Auth.
-│   ├── utils.py             # Funções úteis, como a lógica de requisições com failover.
-│   ├── promocoes.py         # Módulo específico para consultar promoções.
-│   ├── vendasLote.py        # Responsável por enviar as vendas em lote.
-│   └── fechamentosLote.py   # Responsável por enviar os fechamentos diários.
-└── logs/                    # Diretório para armazenar os logs de execução (a ser implementado).
+Interface Gráfica (Configurador)
+tkinter: Base da interface.
 
----
+ttkbootstrap: Para um visual moderno e profissional (baseado em Bootstrap).
 
-## ⚙️ O Módulo de Configuração
+Como Instalar:
+No terminal, dentro da pasta do projeto, execute:
 
-Para facilitar a vida do usuário, criei uma interface gráfica simples e intuitiva.
+Bash
 
-### `configurador.py`
+pip install psycopg2-binary requests pytz pycryptodome ttkbootstrap
+🏗️ Arquitetura dos Componentes
+O sistema é dividido em 4 camadas principais:
 
-Desenvolvido com **Tkinter**, este configurador permite que o usuário insira e salve todas as informações necessárias para a integração:
+1. Interface de Controle (configurador.py)
+É a torre de comando. Permite configurar URLs, credenciais e, principalmente, forçar ações manuais.
 
--   Até 3 URLs base da API (para garantir redundância).
--   Usuário e senha de acesso.
--   Códigos da empresa, filial e PDV.
--   O intervalo (em minutos) para a execução automática do integrador.
+Destaque: Possui uma "Mecânica de Espera" (threading) para que a interface não trave enquanto o sistema processa milhares de vendas no banco de dados.
 
-Em vez de salvar em um arquivo de texto simples, optei por usar o **DuckDB** para armazenar esses dados. As credenciais sensíveis, como a senha, são criptografadas com `cryptography.fernet` antes de serem salvas, garantindo uma camada extra de segurança.
+2. O Coração Processador (loop.py)
+Um serviço que roda em segundo plano gerenciando 4 ciclos vitais:
 
----
 
-## 🚀 Funcionalidades que Implementei
+Auditoria (12h): Consulta a Scanntech para saber se eles perderam algum dado e precisam de reenvio.
 
-### 🌐 Consulta de Promoções
+Promoções (30min): Busca novas ofertas para os PDVs.
 
-Este módulo busca ativamente as promoções cadastradas na Scanntech, permitindo que o HOS Farma tenha sempre informações atualizadas.
+Vendas (Intervalo configurável): Envia os cupons fiscais e cancelamentos.
 
-**Endpoints que utilizo:**
-*   `GET /pmkt-rest-api/v2/minoristas/{idEmpresa}/locales/{idLocal}/promociones`
-*   `GET /pmkt-rest-api/minoristas/{idEmpresa}/locales/{idLocal}/promocionesConLimitePorTicket`
-*   `GET /pmkt-rest-api/v3/minoristas/{idEmpresa}/locales/{idLocal}/promociones-crm`
+Fechamentos (Diário): Consolida os valores do dia e envia o resumo financeiro.
 
-### 💳 Envio de Vendas e Cancelamentos
+3. Camada de Inteligência de Dados (payloads/)
+Aqui a "mágica" acontece. O sistema transforma dados brutos do SQL em JSONs perfeitos para a Scanntech.
 
-O sistema agrupa as vendas e as envia em lotes de até 350 registros por vez para a API da Scanntech.
+vendas_payload.py: Gerencia a complexidade de descontos, acréscimos e meios de pagamento (PIX, Cartão, Dinheiro).
 
-**Endpoint principal:**
-`POST /api-minoristas/api/v2/minoristas/{idEmpresa}/locales/{idLocal}/cajas/{idCaja}/movimientos/lotes`
+fechamentos_payload.py: Não confia apenas no que está no ERP; ele calcula o fechamento com base no que a Scanntech realmente recebeu (int_scanntech_vendas_logs), garantindo que o fechamento bata 100% com as vendas enviadas.
 
-#### Detalhe Importante: Canais de Venda
+4. Módulo de Auditoria e Reset (auditoria_processor.py)
+Responsável pelo "Self-Healing" (Auto-cura) do sistema.
 
-Para que a Scanntech saiba a origem da venda (loja física, e-commerce, Rappi, etc.), eu envio os campos `codigoCanalVenta` e `descripcionCanalVenta`.
+Reset de Vendas: Deleta logs antigos e dá um UPDATE na tabela caixa para disparar as triggers e reprocessar as vendas.
 
-**Exemplos de mapeamento:**
+Reset de Fechamento: Limpa o id_lote para que o sistema reenvie o dia solicitado pela Scanntech.
 
-| `codigoCanalVenta` | `descripcionCanalVenta` |
-|:------------------:|:-----------------------:|
-| 1                  | VENTA EN EL LOCAL       |
-| 2                  | E-COMMERCE              |
-| 3                  | TELEVENTA               |
-| 4                  | RAPPI                   |
-| 5                  | IFOOD                   |
-| 7                  | WHATSAPP                |
+🚦 Fluxo de Dados (A "Verdade Única")
+O sistema utiliza uma tabela de logs (int_scanntech_vendas_logs) como fonte da verdade.
 
-Se o sistema de origem for mais simples, eu mapeio `1` para **VENDA EM LOCAL** e `2` para **E-COMMERCE**.
+Uma venda é realizada no ERP.
 
-### 📊 Envio de Fechamentos Diários
+A Trigger a coloca na fila.
 
-Ao final do dia, o integrador envia um resumo consolidado das operações de cada caixa (PDV).
+O integrador envia para a Scanntech.
 
-**Endpoint utilizado:**
-`POST /api-minoristas/api/v2/minoristas/{idEmpresa}/locales/{idLocal}/cajas/{idCaja}/cierresDiarios/lotes`
+Se a API aceitar, gravamos o id_lote no log.
 
-Isso garante que os totais de vendas líquidas, cancelamentos e a quantidade de transações estejam sempre sincronizados.
+O Fechamento é gerado somando apenas esses logs de sucesso.
 
----
+[!TIP] Dica de Engenharia: Se houver divergência de centavos nos últimos 3 dias, o fechamentos_processor.py invalida o fechamento automaticamente e o reenvia corrigido.
 
-## ⏱️ Execução Automática
+📋 Requisitos de Banco de Dados
+O sistema espera que o banco de dados possua as seguintes tabelas de integração:
 
-O integrador foi projetado para rodar como um serviço em segundo plano. Ele executa todas as tarefas (envio de vendas, fechamentos e consulta de promoções) em ciclos, conforme o intervalo definido pelo usuário na tela de configuração.
+int_scanntech_vendas: Fila de cupons pendentes.
 
----
+int_scanntech_vendas_logs: Histórico de envios com ID de retorno da API.
 
-## 🛠️ Tecnologias que Utilizei no Projeto
-
--   **Linguagem:** Python 3
--   **Banco de Dados para Configs:** DuckDB
--   **Comunicação HTTP:** Biblioteca `requests`
--   **Segurança:** `cryptography.fernet` para criptografar as credenciais.
--   **Interface Gráfica:** Tkinter
--   **Formato de Dados:** JSON (UTF-8)
--   **Autenticação:** HTTP Basic Auth
-
----
-
-## 📌 Notas Finais
-
--   O `idCaja` corresponde ao código do PDV.
--   O `idLocal` é o código da filial.
--   Toda a comunicação com a API da Scanntech é autenticada e as respostas são tratadas para garantir a integridade dos dados e facilitar o diagnóstico de possíveis problemas.
+int_scanntech_fechamentos: Controle de status dos fechamentos diários.

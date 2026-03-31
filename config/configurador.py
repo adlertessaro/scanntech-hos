@@ -28,7 +28,6 @@ import threading
 logging.basicConfig(level=logging.DEBUG, format="%(asctime)s - %(levelname)s - %(message)s")
 
 def validar_config_hos():
-    # (sem alterações)
     caminho = Path.home() / ".hos" / "config"
     if not caminho.exists():
         messagebox.showerror("Erro", "Arquivo de configuração do HOS Farma não foi encontrado.\nO configurador será encerrado.")
@@ -45,7 +44,7 @@ def validar_config_hos():
         return False
     return True
 
-# --- NOVA CLASSE PARA JANELA DE ESPERA ---
+# CLASSE PARA JANELA DE ESPERA ---
 class JanelaAguarde(ttk.Toplevel):
     def __init__(self, parent):
         super().__init__(parent)
@@ -76,7 +75,6 @@ class JanelaAguarde(ttk.Toplevel):
         progress.start()
 
 class JanelaLoja(ttk.Toplevel):
-    # (sem alterações nesta classe)
     def __init__(self, parent, treeview, item_selecionado=None):
         super().__init__(parent)
         self.treeview = treeview
@@ -153,7 +151,6 @@ class JanelaLoja(ttk.Toplevel):
         self.destroy()
 
 class ConfiguradorApp:
-    # --- __init__ e outras funções de criação de widgets sem alterações ---
     def __init__(self, master):
         self.master = master
         master.title("Configurador Scanntech")
@@ -163,7 +160,7 @@ class ConfiguradorApp:
             if caminho_icone.exists():
                 master.iconbitmap(caminho_icone)
             else:
-                # O logging já está configurado neste arquivo, então vamos usá-lo
+
                 logging.warning(f"Arquivo de ícone não encontrado em: {caminho_icone}")
         except Exception as e:
             logging.warning(f"Não foi possível carregar o ícone. Erro: {e}")
@@ -294,10 +291,6 @@ class ConfiguradorApp:
         botoes_acoes_frame.pack(pady=10)
         
         self.botoes_acoes = {}
-        # Parte do codigo comentada para que não seja utilizado as promoções até as promoçoes multiplas do HOS Farma esta pronta.
-        # self.botoes_acoes["promocoes"] = ttk.Button(botoes_acoes_frame, text="Buscar Promoções", command=lambda: self.executar_acao('promocoes'), bootstyle="primary")
-        # self.botoes_acoes["promocoes"].pack(side=LEFT, padx=10)
-        # ToolTip(self.botoes_acoes["promocoes"], text="Busca promoções de todas as lojas cadastradas.", bootstyle="inverse")
         self.botoes_acoes["vendas"] = ttk.Button(botoes_acoes_frame, text="Forçar Envio de Vendas", command=lambda: self.executar_acao('vendas'), bootstyle="primary")
         self.botoes_acoes["vendas"].pack(side=LEFT, padx=10)
         ToolTip(self.botoes_acoes["vendas"], text="Força envio de vendas pendentes da loja selecionada.", bootstyle="inverse")
@@ -305,11 +298,9 @@ class ConfiguradorApp:
         self.botoes_acoes["fechamentos"].pack(side=LEFT, padx=10)
         ToolTip(self.botoes_acoes["fechamentos"], text="Força envio de fechamentos pendentes da loja selecionada.", bootstyle="inverse")
     
-    # --- LÓGICA DE AÇÕES MANUAIS TOTALMENTE REESTRUTURADA ---
     def executar_acao(self, acao):
         """Orquestra a execução da ação, mostrando a janela de espera e usando uma thread."""
         
-        # Define a função de trabalho e os argumentos com base na ação
         if acao == 'promocoes':
             if not self.tree_acoes.get_children():
                 messagebox.showwarning("Nenhuma Loja", "Não há lojas cadastradas para buscar promoções.")
@@ -326,9 +317,9 @@ class ConfiguradorApp:
                 return
             
             valores = self.tree_acoes.item(selecionado[0], 'values')
-            loja_str = f"Loja {valores[1]} da Empresa {valores[0]} (ERP: {valores[2]})"
+            loja_str = f"Loja {valores[1]} da Empresa {valores[0]}"
             
-            if not messagebox.askyesno("Confirmar Ação", f"Deseja executar a ação '{acao}' para:\n{loja_str}?"):
+            if not messagebox.askyesno("Confirmar Ação", f"Deseja forçar '{acao}' para:\n{loja_str}?"):
                 return
             tarefa = self._tarefa_acao_loja_unica
             args = (acao, valores)
@@ -371,10 +362,6 @@ class ConfiguradorApp:
             for loja_config in todas_as_lojas_config:
                 id_loja = loja_config.get('idlocal', 'Desconhecida')
                 try:
-                    # --- ALTERAÇÃO PRINCIPAL ---
-                    # Combinamos a config geral com a da loja específica em um único dicionário.
-                    # Isso garante que a função `processar_promocoes` receba todas as informações
-                    # necessárias, padronizando com o fluxo de loja única que já funciona.
                     config_completa_loja = {**config_geral, **loja_config}
                     
                     # Passamos o dicionário combinado para o serviço.
@@ -387,7 +374,7 @@ class ConfiguradorApp:
                     logging.error(f"Falha na API ao buscar promoções para loja {id_loja}: {e}")
                     falhas.append(f"Loja {id_loja} (API): {e}")
 
-            # Etapa 2: Salvar todas as promoções coletadas de uma vez (sem alterações aqui)
+            # Etapa 2: Salvar todas as promoções coletadas de uma vez
             if promocoes_agrupadas_para_salvar:
                 try:
                     salvar_e_processar_promocoes(promocoes_agrupadas_para_salvar)
@@ -396,7 +383,7 @@ class ConfiguradorApp:
                     logging.error(f"Falha ao salvar promoções no banco de dados: {e}")
                     falhas.append(f"Banco de Dados: {e}")
             
-            # Etapa 3: Montar o relatório final (sem alterações aqui)
+            # Etapa 3: Montar o relatório final
             relatorio = f"Busca e salvamento de promoções concluído!\n\nLojas consultadas com sucesso: {len(sucessos)}\nLojas com falha: {len(falhas)}."
             if falhas:
                 relatorio += "\n\nDetalhes das falhas:\n" + "\n".join(falhas)
@@ -408,7 +395,6 @@ class ConfiguradorApp:
 
 
     def _tarefa_acao_loja_unica(self, acao, valores_loja, resultado_final):
-        # (sem alterações)
         id_empresa, id_local, erp_code = valores_loja
         configs = carregar_configuracoes()
         config_geral = configs.get('geral', {})
@@ -513,7 +499,6 @@ class ConfiguradorApp:
             parser.set(section_name, "empresa", valores[2])
 
         try:
-            # --- ALTERAÇÃO PRINCIPAL ---
             # Garante que a pasta de logs exista antes de salvar o arquivo de configuração
             LOG_DIR.mkdir(exist_ok=True)
             logging.info(f"Pasta de logs verificada/criada em: {LOG_DIR}")

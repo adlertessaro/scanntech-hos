@@ -1,5 +1,3 @@
-# C:\Users\AdyFera\Documents\Scanntech\scanntech\core\main_integrador.py
-
 import threading
 import sys
 import logging
@@ -7,23 +5,16 @@ import subprocess
 from pathlib import Path
 from PIL import Image
 from pystray import Icon, Menu, MenuItem
-
-# Em vez de calcular o ROOT_DIR aqui, nós o importamos da nossa função confiável
-# Isso garante que todos os arquivos usem EXATAMENTE a mesma lógica
 from scanntech.utils.logger import configurar_logger, get_root_dir
 
-# Agora definimos ROOT_DIR usando a função importada
 ROOT_DIR = get_root_dir()
-
-# O sys.path.append não é mais necessário, pois o PyInstaller já foi instruído
-# sobre onde encontrar os pacotes.
 
 from scanntech.core.loop import IntegradorLoop
 
 # Configura o logger para este processo. Essencial para depuração.
 configurar_logger()
 
-# --- CRIAR ARQUIVO PID (NOVO CÓDIGO) ---
+# CRIAR ARQUIVO PID
 PID_FILE = ROOT_DIR / "integrador.pid"
 
 def criar_arquivo_pid():
@@ -45,7 +36,7 @@ def remover_arquivo_pid():
     except Exception as e:
         logging.error(f"❌ Erro ao remover arquivo PID: {e}")
 
-# --- Funções para o Menu do Ícone (sem alterações) ---
+# Funções para o Menu do Ícone
 
 def abrir_monitor(icon):
     try:
@@ -81,7 +72,7 @@ def fechar_integrador(icon, item):
     parar_evento.set()
     icon.stop()
 
-# --- Configuração e Execução Principal (sem alterações na lógica) ---
+# Configuração e Execução Principal
 
 if __name__ == "__main__":
     parar_evento = threading.Event()

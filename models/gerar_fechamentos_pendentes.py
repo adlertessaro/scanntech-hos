@@ -1,8 +1,5 @@
-# scanntech/models/gerar_fechamentos_pendentes.py
-
 from datetime import datetime, timedelta
 from scanntech.db.conexao import conectar
-# Adicionado para carregar todas as configurações de lojas
 from scanntech.config.settings import carregar_configuracoes
 import logging
 
@@ -44,7 +41,7 @@ def gerar_fechamentos_pendentes(dias_retroativos=7):
                 cur.execute(
                     """
                     SELECT DISTINCT estacao FROM caixa
-                    WHERE empresa = %s AND data = %s AND lancamen IN ('VV', 'VP', 'VC', 'VR', 'CC', 'DV')
+                    WHERE empresa = %s AND data = %s AND lancamen IN ('VV', 'VP', 'VC', 'CR', 'CH', 'CP', 'CC', 'DV', 'DP')
                     """,
                     (empresa, data_atual),
                 )

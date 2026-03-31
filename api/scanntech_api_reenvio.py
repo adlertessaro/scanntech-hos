@@ -1,4 +1,3 @@
-# scanntech/api/scanntech_api_reenvio.py
 from . import autenticacao
 
 def consultar_solicitacoes_vendas(config):

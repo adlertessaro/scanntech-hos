@@ -1,20 +1,26 @@
-# scanntech/db/fechamentos_repo.py
 from .conexao import conectar
 import logging
-
-# Adiciona os imports necessários
 from scanntech.api.scanntech_api_reenvio import consultar_solicitacoes_fechamentos
 from scanntech.services.processors.fechamentos_processor import enviar_fechamentos_lote
 
-
 def buscar_fechamentos_pendentes(empresa):
-    """Busca todos os fechamentos com tentativas < 5."""
-    # (Esta função permanece como está)
-    pass # Mantenha sua implementação original aqui
+    """Busca fechamentos que ainda não possuem id_lote (pendentes)."""
+    conn = conectar()
+    cur = conn.cursor()
+    try:
+        cur.execute("""
+            SELECT data_fechamento, estacao 
+            FROM int_scanntech_fechamentos 
+            WHERE empresa = %s AND id_lote IS NULL AND tentativas < 3
+        """, (empresa,))
+        # O processador de fechamentos espera uma lista de tuplas (data, estacao)
+        return cur.fetchall()
+    finally:
+        cur.close()
+        conn.close()
 
 def marcar_fechamentos_para_reenvio(solicitacoes, empresa):
     """Marca fechamentos como pendentes com base na solicitação da API."""
-    # (Esta função permanece como está)
     if not solicitacoes:
         return 0
     conn = conectar()
@@ -40,8 +46,6 @@ def marcar_fechamentos_para_reenvio(solicitacoes, empresa):
     conn.close()
     return total_marcado
 
-
-# --- NOVA FUNÇÃO CHAMADA PELO BOTÃO ---
 def forcar_envio_fechamentos_com_verificacao(config):
     """
     Orquestra o processo de forçar o envio de fechamentos a partir de um comando manual.

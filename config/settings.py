@@ -6,8 +6,7 @@ import os
 import sys
 import logging
 import unicodedata
-
-# --- LÓGICA DE CAMINHO (sem alterações) ---
+# --- LÓGICA DE CAMINHO PARA SUPORTE A EXECUTÁVEIS ---
 if getattr(sys, 'frozen', False):
     BASE_DIR = Path(sys.executable).parent
 else:
@@ -18,7 +17,6 @@ CONFIG_PATH = BASE_DIR / "settings.config"
 CHAVE_CRIPTO = b'YsbSwFbAnHR0z2dGRWkmXsh5SxUlWzF6RDbAvmt0_AA='
 logging.basicConfig(level=logging.DEBUG, format="%(asctime)s - %(levelname)s - %(message)s")
 
-# --- NOVA FUNÇÃO INTERNA PARA TRATAR NOMES DE CHAVES ---
 def _normalizar_chave(key_string):
     """Normaliza uma chave: remove acentos, espaços e converte para minúsculas."""
     s = ''.join(c for c in unicodedata.normalize('NFD', key_string) if unicodedata.category(c) != 'Mn')
@@ -82,7 +80,6 @@ def carregar_configuracoes():
 
 
 def exibir_configuracoes(config_dict):
-    # (sem alterações nesta função)
     print("\n🛠️  Configurações Atuais Carregadas:\n")
     if not config_dict or not config_dict.get('geral'):
         print("Nenhuma configuração para exibir.")

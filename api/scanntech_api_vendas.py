@@ -1,12 +1,8 @@
-# scanntech/api/scanntech_api_vendas.py
-
 import json
 from scanntech.api import autenticacao
 
 def validar_codigo_caixa(id_caja):
-    """
-    Valida que o código do caixa é uma string de 5 dígitos. Se inválido, retorna valor padrão.
-    """
+    # Valida que o código do caixa é uma string de 5 dígitos. Se inválido, retorna valor padrão.
     try:
         if isinstance(id_caja, float):
             id_caja = int(id_caja)
@@ -17,12 +13,11 @@ def validar_codigo_caixa(id_caja):
         print(f"⚠️ Erro ao validar id_caja '{id_caja}': {e}")
         return "00001"
 
-# --- ALTERAÇÃO APLICADA AQUI ---
-# A função agora recebe os IDs da empresa e local diretamente, em vez de depender do dicionário 'config'.
+# A função recebe os IDs da empresa e local diretamente, em vez de depender do dicionário 'config'.
 def enviar_vendas_lote(config, id_empresa_scanntech, id_local_scanntech, id_caja, vendas):
-    """
-    Envia um lote de vendas para a API da Scanntech, formatando o payload e a URL final.
-    """
+    
+    #Envia um lote de vendas para a API da Scanntech, formatando o payload e a URL final.
+
     id_caja_validado = validar_codigo_caixa(id_caja)
     
     # O payload da requisição agora é apenas a lista de vendas, conforme a documentação.

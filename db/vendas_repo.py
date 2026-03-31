@@ -1,17 +1,27 @@
-# scanntech/db/vendas_repo.py
 from .conexao import conectar
 import logging
 from scanntech.api.scanntech_api_reenvio import consultar_solicitacoes_vendas
 from scanntech.services.processors.vendas_processor import processar_envio_vendas
 
 def buscar_vendas_pendentes(empresa):
-    """Busca todas as vendas com tentativas < 5."""
-    # (Esta função permanece como está)
-    pass # Mantenha sua implementação original aqui
+    """Busca todas as vendas na fila com menos de 3 tentativas para a empresa."""
+    conn = conectar()
+    cur = conn.cursor()
+    try:
+        # Buscamos apenas o ID da venda, pois o processador se encarrega do resto
+        cur.execute("""
+            SELECT DISTINCT venda 
+            FROM int_scanntech_vendas 
+            WHERE empresa = %s AND tentativas < 3
+        """, (empresa,))
+        # Retorna uma lista simples de IDs
+        return [row[0] for row in cur.fetchall()]
+    finally:
+        cur.close()
+        conn.close()
 
 def marcar_vendas_para_reenvio(solicitacoes, empresa):
     """Marca vendas como pendentes com base na solicitação da API."""
-    # (Esta função permanece como está)
     if not solicitacoes:
         return 0
     conn = conectar()
@@ -37,7 +47,6 @@ def marcar_vendas_para_reenvio(solicitacoes, empresa):
     conn.close()
     return total_marcado
 
-# --- NOVA FUNÇÃO CHAMADA PELO BOTÃO ---
 def forcar_envio_vendas_com_verificacao(config):
     """
     Orquestra o processo de forçar o envio de vendas a partir de um comando manual.
@@ -69,5 +78,5 @@ def forcar_envio_vendas_com_verificacao(config):
         return "Nenhuma venda pendente encontrada para enviar."
     
     logging.info(f"Encontradas {len(vendas_pendentes)} vendas pendentes. Enviando...")
-    processar_lote_vendas(vendas_pendentes, config)
+    processar_envio_vendas(vendas_pendentes, config)
     return f"Processo de envio de {len(vendas_pendentes)} vendas concluído."

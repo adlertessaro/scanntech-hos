@@ -1,4 +1,4 @@
-from api import autenticacao
+from scanntech.api import autenticacao
 
 def enviar_fechamentos_lote(config, id_caja, fechamentos):
     """
@@ -16,9 +16,9 @@ def enviar_fechamentos_lote(config, id_caja, fechamentos):
             "mensagem": "ID da Empresa ou ID do Local não encontrado nas configurações."
         }
 
-    id_caja_int = int(id_caja)
+    id_caja_int = int(float(id_caja))
 
-    # Agora as variáveis estão definidas e podem ser usadas na f-string
+    # As variáveis estão definidas e podem ser usadas na f-string
     endpoint_path = f"/api-minoristas/api/v2/minoristas/{id_empresa}/locales/{id_local}/cajas/{id_caja_int}/cierresDiarios/lotes"
 
     return autenticacao.fazer_requisicao(config=config, endpoint_path=endpoint_path, metodo='POST', dados=fechamentos)

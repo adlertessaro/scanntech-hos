@@ -49,23 +49,21 @@ def montar_payload_do_fechamento(empresa, config, data_fechamento, estacao=None)
             logging.info(f"   🏢 Empresa: {empresa}")
             logging.info(f"   📅 Data: {data_fechamento}")
             logging.info(f"   🖥️  Estação: {estacao or 'CONSOLIDADO'}")
-        
-        # 🔥 Busca o VALOR ENVIADO, não o valor da tabela caixa
+
         sql_base = """
             SELECT 
-                l.tipo_evento,
-                ABS(l.valor_enviado) as valor_final
-            FROM int_scanntech_vendas_logs l
-            JOIN caixa c ON c.venda = l.venda AND c.empresa = l.empresa
-            WHERE l.empresa = %s 
-            AND c.data = %s
-            AND l.id_lote IS NOT NULL
+                tipo_evento,
+                ABS(valor_enviado) as valor_final
+            FROM int_scanntech_vendas_logs
+            WHERE empresa = %s 
+            AND data_registro = %s
+            AND id_lote IS NOT NULL
         """
         
         params = [empresa, data_formatada_para_sql]
         
         if estacao is not None:
-            sql_base += " AND l.estacao = %s"
+            sql_base += " AND estacao = %s"
             params.append(estacao)
         
         cur.execute(sql_base, params)
@@ -83,29 +81,27 @@ def montar_payload_do_fechamento(empresa, config, data_fechamento, estacao=None)
         valor_cancelamentos = 0.0
         qtd_vendas = 0
         qtd_cancelamentos = 0
-        
+
         for tipo_evento, valor_final in movimentos:
             valor_float = float(valor_final)
+            tipo = str(tipo_evento).strip().upper() # Garante a comparação limpa
             
-            # Vendas normais (cancelacion: false)
-            if tipo_evento == 'VENDA':
-                valor_vendas += valor_float
-                qtd_vendas += 1
-                
-                if log_avancado:
-                    logging.info(f"      ✓ VENDA: R$ {valor_float:.2f}")
-            
-            # Cancelamentos e devoluções (cancelacion: true)
-            elif tipo_evento in ('CC', 'DV'):
+            # Se for um dos códigos de cancelamento conhecidos
+            if tipo in ('CC', 'DV', 'DP'):
                 valor_cancelamentos += valor_float
                 qtd_cancelamentos += 1
-                
                 if log_avancado:
                     logging.info(f"      ❌ CANCEL: R$ {valor_float:.2f}")
-        
-        # montoVentaLiquida = (vendas) - (cancelamentos)
+            else:
+                # Se for qualquer outro (VP, VV, VENDA, etc), conta como VENDA
+                valor_vendas += valor_float
+                qtd_vendas += 1
+                if log_avancado:
+                    logging.info(f"      ✓ VENDA ({tipo}): R$ {valor_float:.2f}")
+
+        # montoVentaLiquida para a Scanntech (Líquido)
         valor_liquido = valor_vendas - valor_cancelamentos
-        
+
         payload = [
             {
                 "fechaVentas": data_fechamento.strftime("%Y-%m-%d"),
@@ -113,6 +109,8 @@ def montar_payload_do_fechamento(empresa, config, data_fechamento, estacao=None)
                 "montoCancelaciones": round(valor_cancelamentos, 2),
                 "cantidadMovimientos": int(qtd_vendas),
                 "cantidadCancelaciones": int(qtd_cancelamentos),
+                # Adicionamos este campo extra apenas para uso interno do nosso processor
+                "_montoVentaBruta": round(valor_vendas, 2) 
             }
         ]
         

@@ -30,7 +30,7 @@ def gerar_fechamentos_pendentes(config):
                 SELECT DISTINCT estacao FROM caixa
                 WHERE empresa = %s
                   AND data = %s
-                  AND lancamen IN ('VV', 'VP', 'VC', 'VR', 'CC', 'DV')
+                  AND lancamen IN ('VV', 'VP', 'VC', 'VR', 'CC', 'DV', 'DP')
                 """,
                 (empresa, data_atual),
             )

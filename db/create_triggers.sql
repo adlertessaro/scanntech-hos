@@ -14,11 +14,11 @@ BEGIN
     END IF;
 
     -- Apenas para tipos de lançamento válidos e com estação diferente de 0
-    IF (NEW.lancamen IN ('VV', 'VC', 'VP', 'CR', 'CH', 'DV', 'CC')
+    IF (NEW.lancamen IN ('VV', 'VC', 'VP', 'CR', 'CH', 'DV', 'CC', 'DP')
         AND NEW.estacao <> 0) THEN
     BEGIN
         -- Determina o tipo de evento (VENDA, CC, ou DV)
-        IF (NEW.lancamen IN ('CC', 'DV')) THEN
+        IF (NEW.lancamen IN ('CC', 'DV', 'DP')) THEN
             v_tipo_evento := NEW.lancamen;
         ELSE
             v_tipo_evento := 'VENDA';

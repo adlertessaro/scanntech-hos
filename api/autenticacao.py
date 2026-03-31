@@ -1,5 +1,3 @@
-# scanntech/api/autenticacao.py
-
 import time
 import logging
 import requests
@@ -79,7 +77,7 @@ except Exception as e:
     logging.error(f"   Caminho PDV: {caminho_pdv}")
     logging.error(f"   Caminho Backend: {caminho_backend}")
     
-    # 🔥 FALLBACK: Tenta versão genérica
+    # Se não der, tenta versão genérica
     versao_backend = "1.0.0"
     versao_pdv = "1.0.0"
     
@@ -90,12 +88,9 @@ BASE_HEADERS = {
     "backEnd-version": versao_backend,
 }
 
-# 🔥 LOG DOS HEADERS MONTADOS
+# LOG DOS HEADERS MONTADOS
 logging.info(f"📤 Headers BASE configurados: {BASE_HEADERS}")
 
-# ---------------------------
-# Nova rotina com retry e timers
-# ---------------------------
 
 def _join_url(url_base: str, endpoint_path: str) -> str:
     """
@@ -120,12 +115,12 @@ def fazer_requisicao(config, endpoint_path, metodo='GET', dados=None, headers=No
     """
     logging.debug(f"Iniciando fazer_requisicao para endpoint: {endpoint_path}")
 
-    # 🔥 DIAGNÓSTICO: Ver o que tem no config
+    # LOG DE DIAGNÓSTICO: Ver o que tem no config
     logging.debug(f"🔍 Config recebido: {config}")
     logging.debug(f"🔍 Tipo do config: {type(config)}")
     logging.debug(f"🔍 Keys do config: {list(config.keys()) if isinstance(config, dict) else 'N/A'}")
     
-    # 🔥 DEFINIR VARIÁVEIS FALTANTES
+    # DEFINIR VARIÁVEIS FALTANTES
     backoff_segundos = [1.0, 2.0, 4.0]  # Tempos de espera progressivos
     
     # Obter URLs e credenciais do config
@@ -144,7 +139,7 @@ def fazer_requisicao(config, endpoint_path, metodo='GET', dados=None, headers=No
     
     auth = montar_autenticacao(usuario, senha)
     
-    # 🔥 MONTAGEM PROTEGIDA DE HEADERS
+    # MONTAGEM PROTEGIDA DE HEADERS
     final_headers = dict(BASE_HEADERS)
     
     if metodo.upper() == 'POST':

@@ -9,6 +9,10 @@ from scanntech.services.vendas_service import processar_envio_vendas
 from scanntech.services.processors.fechamentos_processor import processar_envio_fechamento
 from scanntech.models.gerar_fechamentos_pendentes import gerar_fechamentos_pendentes
 from scanntech.db.promo_repo import salvar_e_processar_promocoes
+from scanntech.api.auditoria import consultar_solicitacoes_vendas, consultar_solicitacoes_fechamentos
+from scanntech.db.conexao import conectar
+from scanntech.services.processors.auditoria_processor import executar_auditoria_e_reset
+from scanntech.services.processors.fechamentos_processor import invalidar_fechamentos_desatualizados
 
 
 class IntegradorLoop:
@@ -23,6 +27,30 @@ class IntegradorLoop:
         self.ultimo_ciclo_promocoes = None
         self.ultimo_ciclo_fechamento_diario = None
         configurar_logger()
+        self.ultimo_ciclo_auditoria = None
+
+    def _ciclo_auditoria(self, agora: datetime):
+        # Regra: Consultar duas vezes ao dia (a cada 12 horas / 43200 segundos) [cite: 613]
+        if self.ultimo_ciclo_auditoria and (agora - self.ultimo_ciclo_auditoria).total_seconds() < 43200:
+            return 
+
+        logging.info("🕵️ Iniciando auditoria de reenvios (Ciclo 12h)...")
+        
+        conn = None
+        try:
+            conn = conectar()
+            cur = conn.cursor()
+            # Itera sobre as lojas conforme suas configs atuais
+            for loja in self.configs.get('lojas', []):
+                config_loja = {**self.configs.get('geral', {}), **loja}
+                executar_auditoria_e_reset(cur, config_loja)
+            conn.commit()
+            self.ultimo_ciclo_auditoria = agora
+        except Exception as e:
+            logging.error(f"❌ Erro na auditoria: {e}")
+            if conn: conn.rollback()
+        finally:
+            if conn: conn.close()
 
     def _carregar_e_validar_configs(self):
         """Carrega as configurações e verifica se a integração está ativa."""
@@ -40,7 +68,7 @@ class IntegradorLoop:
     def _desativar_carga_inicial(self):
         """Desativa o switch de carga inicial no arquivo físico após a execução."""
         from configparser import ConfigParser
-        from scanntech.config.settings import CONFIG_PATH
+        from config.settings import CONFIG_PATH
 
         config_geral = self.configs.get('geral', {})
         if config_geral.get("carga_inicial", "false").lower() == "true":
@@ -148,9 +176,26 @@ class IntegradorLoop:
                 logging.info("📅 Verificando fechamentos pendentes dos últimos 7 dias...")
                 try:
                     gerar_fechamentos_pendentes(dias_retroativos=7)
+                    self._invalidar_fechamentos_todas_lojas()
                     self.ultimo_ciclo_fechamento_diario = datetime.now()
                 except Exception as e:
                     logging.error(f"❌ Erro ao gerar fechamentos pendentes: {e}")
+
+    def _invalidar_fechamentos_todas_lojas(self):
+        """Invalida fechamentos com divergência, uma vez por dia."""
+        conn = None
+        try:
+            conn = conectar()
+            cur = conn.cursor()
+            for loja in self.configs.get('lojas', []):
+                empresa_erp = int(loja.get('empresa'))
+                invalidar_fechamentos_desatualizados(cur, empresa_erp)
+            conn.commit()
+        except Exception as e:
+            logging.error(f"❌ Erro ao invalidar fechamentos: {e}")
+            if conn: conn.rollback()
+        finally:
+            if conn: conn.close()
 
     def iniciar(self):
         """O ponto de entrada principal que executa o loop infinito."""
@@ -170,7 +215,7 @@ class IntegradorLoop:
         # Loop principal
         while not self.parar_evento.is_set():
             agora = datetime.now()
-
+            self._ciclo_auditoria(agora)
             self._ciclo_promocoes(agora)
             self._ciclo_vendas()
             self._ciclo_envio_fechamentos()

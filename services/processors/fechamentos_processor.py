@@ -8,6 +8,7 @@ from scanntech.db.conexao import conectar
 from scanntech.services.processors.vendas_processor import limitar_codigo_estacao
 import logging
 import traceback
+from scanntech.db.manutencao import limpar_dados_antigos
 
 # Configuração básica de log
 logging.basicConfig(level=logging.INFO, format='%(asctime)s - %(levelname)s - %(message)s')
@@ -22,37 +23,33 @@ def invalidar_fechamentos_desatualizados(cur, empresa_erp):
     try:
         logging.info("🧹 Verificando integridade dos últimos 3 dias (Retroativo)...")
         
-        # A lógica compara:
-        # A) O que consta na tabela de fechamentos (f.valor_enviado_vendas)
-        # B) A soma atual dos logs de sucesso (calculo.v_venda_calc)
-        
+        # 1. Soma os logs (Realidade Aceita pela Scanntech)
+        # 2. Compara com o que está gravado na tabela de fechamento
+        # 3. Não usa JOIN com a tabela 'caixa' para evitar perdas
         sql_revalida = """
         UPDATE int_scanntech_fechamentos f
-        SET id_lote = NULL,     -- Força o reenvio (remove o ID de sucesso)
+        SET id_lote = NULL,
             tentativas = 0, 
-            erro = NULL,
+            erro = 'Divergência detectada entre Logs e Fechamento',
             data_hora_tentativa = NULL
         FROM (
             SELECT
-                l.empresa,
-                c.data as data_ref,
-                l.estacao,
-                -- Soma apenas logs com SUCESSO (id_lote IS NOT NULL)
-                SUM(CASE WHEN l.tipo_evento = 'VENDA' THEN l.valor_enviado ELSE 0 END) as v_venda_calc,
-                SUM(CASE WHEN l.tipo_evento IN ('CC', 'DV') THEN l.valor_enviado ELSE 0 END) as v_cancel_calc
-            FROM int_scanntech_vendas_logs l
-            JOIN caixa c ON c.venda = l.venda AND c.empresa = l.empresa
-            WHERE l.empresa = %s
-              AND l.id_lote IS NOT NULL
-              AND c.data >= CURRENT_DATE - 7
+                empresa,
+                data_registro,
+                estacao,
+                SUM(CASE WHEN tipo_evento = 'VENDA' THEN ABS(valor_enviado) ELSE 0 END) as v_venda_calc,
+                SUM(CASE WHEN tipo_evento IN ('CC', 'DV', 'DP') THEN ABS(valor_enviado) ELSE 0 END) as v_cancel_calc
+            FROM int_scanntech_vendas_logs
+            WHERE empresa = %s
+              AND id_lote IS NOT NULL
+              AND data_registro >= CURRENT_DATE - INTERVAL '7 days'
             GROUP BY 1, 2, 3
         ) calculo
         WHERE f.empresa = calculo.empresa
-          AND f.data_fechamento = calculo.data_ref
+          AND f.data_fechamento = calculo.data_registro
           AND f.estacao = calculo.estacao
-          AND f.id_lote IS NOT NULL -- Apenas checa os que constam como "Enviados"
+          AND f.id_lote IS NOT NULL -- Só revalida o que já foi enviado
           AND (
-               -- Se a diferença for maior que 1 centavo, invalida.
                ABS(COALESCE(f.valor_enviado_vendas, 0) - calculo.v_venda_calc) > 0.01
                OR
                ABS(COALESCE(f.valor_enviado_cancelamentos, 0) - calculo.v_cancel_calc) > 0.01
@@ -71,9 +68,6 @@ def invalidar_fechamentos_desatualizados(cur, empresa_erp):
 def processar_envio_fechamento(empresa_param=None, config_param=None):
     """
     Processa o envio de fechamentos.
-    CORREÇÃO FINAL: Grava os valores calculados (do payload) no banco após o sucesso,
-    garantindo que as colunas 'valor_enviado_vendas' e 'valor_enviado_cancelamentos'
-    sejam preenchidas com o que foi efetivamente enviado.
     """
     conn = None
     try:
@@ -103,52 +97,56 @@ def processar_envio_fechamento(empresa_param=None, config_param=None):
 
         conn = conectar()
         cur = conn.cursor()
+
+        # 1. Primeiro, o Gerente identifica quem são os ativos
+        ids_ativas = [item['empresa'] for item in lojas_para_processar]
         
+        # 2. Faz a faxina
+        if ids_ativas:
+            logging.info(f"🧹 Realizando manutenção para empresas: {ids_ativas}")
+            limpar_dados_antigos(cur, ids_ativas)
+            conn.commit()
+        else:
+            logging.warning("⚠️ Nenhuma empresa ativa para manutenção.")
+
         for item in lojas_para_processar:
             empresa_erp = item['empresa']
             config_completa_loja = item['config']
 
             logging.info(f"🔧 Iniciando processador para Empresa {empresa_erp}...")
 
-
             # ==============================================================================
-            # PASSO FECHAMENTO DE SEGURANÇA
-            # Verifica se logs atrasados chegaram e invalida fechamentos antigos
-            # ==============================================================================
-            invalidar_fechamentos_desatualizados(cur, empresa_erp)
-            conn.commit() # Comita a limpeza antes de prosseguir
-
-            # ==============================================================================
-            # PASSO 0: POPULAR A TABELA AUTOMATICAMENTE
+            # PASSO 0: POPULAR A TABELA AUTOMATICAMENTE (Otimizado)
             # ==============================================================================
             try:
-                # Usa CAST(NULL AS TIMESTAMP) para evitar erro de tipo no Postgres
+                # Agora usamos apenas int_scanntech_vendas_logs (Verdade Única)
                 sql_insert = """
-                    INSERT INTO int_scanntech_fechamentos (empresa, data_fechamento, estacao, tentativas, data_hora_tentativa)
+                    INSERT INTO int_scanntech_fechamentos 
+                    (empresa, data_fechamento, estacao, tentativas, data_hora_tentativa)
                     SELECT DISTINCT 
                         l.empresa, 
-                        c.data, 
+                        l.data_registro,
                         l.estacao, 
                         0, 
                         CAST(NULL AS TIMESTAMP)
                     FROM int_scanntech_vendas_logs l
-                    JOIN caixa c ON c.venda = l.venda AND c.empresa = l.empresa
                     WHERE l.empresa = %s
                       AND l.id_lote IS NOT NULL
+                      AND l.data_registro < CURRENT_DATE
                       AND NOT EXISTS (
                           SELECT 1 FROM int_scanntech_fechamentos f
                           WHERE f.empresa = l.empresa 
-                            AND f.data_fechamento = c.data 
+                            AND f.data_fechamento = l.data_registro 
                             AND f.estacao = l.estacao
                       )
                 """
                 cur.execute(sql_insert, (empresa_erp,))
                 if cur.rowcount > 0:
-                    logging.info(f"🆕 Empresa {empresa_erp}: Gerados {cur.rowcount} registros de fechamento pendente.")
+                    logging.info(f"🆕 Empresa {empresa_erp}: {cur.rowcount} novos fechamentos na fila.")
                 conn.commit()
 
             except Exception as e:
-                logging.error(f"Erro ao inserir pendências: {e}")
+                logging.error(f"Erro no Passo 0: {e}")
                 conn.rollback()
             
             # ==============================================================================
@@ -160,6 +158,7 @@ def processar_envio_fechamento(empresa_param=None, config_param=None):
                 WHERE tentativas < 3 
                   AND id_lote IS NULL 
                   AND empresa = %s
+                  AND data_fechamento < CURRENT_DATE
             """, (empresa_erp,))
             fechamentos_a_processar = cur.fetchall()
 
@@ -200,10 +199,16 @@ def processar_envio_fechamento(empresa_param=None, config_param=None):
                             conn.commit()
 
                     if not payload_lote:
+                        cur.execute("""
+                            UPDATE int_scanntech_fechamentos
+                            SET erro = 'Sem dados para envio', tentativas = tentativas + 1, data_hora_tentativa = %s
+                            WHERE empresa = %s AND estacao = %s AND data_fechamento = ANY(%s)
+                        """, (datetime.now(), empresa_erp, estacao, datas_no_lote))
+                        conn.commit()
                         continue
 
                     # Envia API
-                    resposta = enviar_fechamentos_lote(config_completa_loja, estacao_envio, payload_lote)
+                    resposta = enviar_fechamentos_lote(config_completa_loja, estacao, payload_lote)
                     status = resposta.get("status_code")
                     dados = resposta.get("dados", {})
 
@@ -211,7 +216,6 @@ def processar_envio_fechamento(empresa_param=None, config_param=None):
                         id_lote = dados.get("idLote", "enviado")
                         logging.info(f"✅ SUCESSO: Lote {id_lote} gravado. Atualizando {len(payload_lote)} registros com valores calculados...")
                         
-                        # --- CORREÇÃO IMPORTANTE AQUI ---
                         # Não usamos 'dados.get(monto)', usamos o 'payload_lote' que contém o que calculamos
                         for item_payload in payload_lote:
                             data_str = item_payload['fechaVentas'] # data 'YYYY-MM-DD'

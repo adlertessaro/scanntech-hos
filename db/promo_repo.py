@@ -1,300 +1,312 @@
 from datetime import datetime
 import uuid
-from .conexao import conectar
+from scanntech.db.conexao import conectar
 import logging
-import json
 
 logging.basicConfig(level=logging.INFO, format='%(asctime)s - %(levelname)s - %(message)s')
 
 def _gerar_uuid():
-    """Gera um ID único no formato UUID."""
+    """Gera um ID único para as tabelas do sistema."""
     return str(uuid.uuid4())
 
-def _buscar_ou_criar_cabecalho(cur, promo_scanntech):
-    """Verifica se o cabeçalho da promoção já existe. Se não, cria um novo."""
-    id_promo_scanntech = str(promo_scanntech.get("id"))
-    cur.execute("SELECT id FROM promocao_cab WHERE id_scanntech = %s", (id_promo_scanntech,))
-    resultado = cur.fetchone()
+# --- CAMADA DE INTEGRAÇÃO (STAGING) ---
+
+def _gravar_integracao_scanntech(cur, empresa_erp, promo):
+    """
+    Grava os dados brutos da Scanntech nas tabelas de integração.
+    Aqui usamos ON CONFLICT pois são tabelas de controle.
+    """
+    id_promo_str = str(promo.get("id"))
+    autor_desc = promo.get("autor", {}).get("descripcion")
     
-    if resultado:
-        id_cab_final = resultado[0]
-        logging.info(f"  -> Cabeçalho da promoção Scanntech {id_promo_scanntech} já existe. Reutilizando ID do sistema: {id_cab_final}")
-        return id_cab_final
-    else:
-        id_cab_uuid = _gerar_uuid()
-        now_timestamp = datetime.now()
-        cur.execute("""
-            INSERT INTO promocao_cab (
-                id, descricao, vigencia_inicial, vigencia_final,
-                dias_semana, dias_mes, operador_alteracao,
-                created_at, updated_at, deleted_at, tipo_venda, id_scanntech
-            ) VALUES (%s, %s, %s, %s, 127, '1111111111111111111111111111111', -530, %s, %s, NULL, 7, %s)
-        """, (
-            id_cab_uuid, promo_scanntech.get("descripcion", ""),
-            promo_scanntech.get("vigenciaDesde", "")[:10] if promo_scanntech.get("vigenciaDesde") else None,
-            promo_scanntech.get("vigenciaHasta", "")[:10] if promo_scanntech.get("vigenciaHasta") else None,
-            now_timestamp, now_timestamp, id_promo_scanntech
-        ))
-        logging.info(f"  -> Promoção Scanntech {id_promo_scanntech} nova. Inserindo cabeçalho com ID do sistema: {id_cab_uuid}")
-        return id_cab_uuid
-
-def _vincular_loja_ao_cabecalho(cur, id_cab_promocao, empresa_erp):
-    """Insere o vínculo da promoção com a loja, se ainda não existir."""
     cur.execute("""
-        INSERT INTO promocao_cab_lojas (id_cab_promocao, empresa) VALUES (%s, %s)
-        ON CONFLICT (id_cab_promocao, empresa) DO NOTHING;
-    """, (id_cab_promocao, empresa_erp))
+        INSERT INTO int_scanntech_promocao (
+            data_envio, empresa, nome_promocao, autor, tipo, data_inicio, data_fim, id
+        ) VALUES (CURRENT_DATE, %s, %s, %s, %s, %s, %s, %s::varchar)
+        ON CONFLICT (id, empresa) DO UPDATE SET
+            nome_promocao = EXCLUDED.nome_promocao,
+            data_fim = EXCLUDED.data_fim,
+            data_envio = CURRENT_DATE
+    """, (
+        empresa_erp,
+        promo.get("titulo"),
+        autor_desc,
+        promo.get("tipo"),
+        promo.get("vigenciaDesde")[:10] if promo.get("vigenciaDesde") else None,
+        promo.get("vigenciaHasta")[:10] if promo.get("vigenciaHasta") else None,
+        id_promo_str
+    ))
 
-def _buscar_produto_no_erp(cur, cod_barras):
-    """Busca os dados de um produto no banco local pelo código de barras."""
-    cur.execute("SELECT p.codigo, p.descricao, p.prc_venda FROM produtos p JOIN cod_barras cb ON p.codigo = cb.codigo WHERE cb.cod_barra = %s", (cod_barras,))
-    return cur.fetchone()
+    detalhes = promo.get("detalles", {})
+    condiciones = detalhes.get("condiciones", {}).get("items", [])
+    
+    # Limpamos os itens de integração antigos para evitar duplicidade na tabela de apoio
+    cur.execute("DELETE FROM int_scanntech_promocao_prd WHERE id_promocao = %s::varchar AND empresa = %s", (id_promo_str, empresa_erp))
 
-def _preparar_regras_promocao(tipo_promo, item, detalhes, produto_erp):
+    for item in condiciones:
+        qtd_leva = item.get("cantidad")
+        articulos = item.get("articulos", [])
+        
+        for art in articulos:
+            cur.execute("""
+                INSERT INTO int_scanntech_promocao_prd (
+                    id_promocao, empresa, codigo_barras, nome_produto, 
+                    quantidade_leva, quantidade_paga, preco, desconto, tipo_desconto
+                ) VALUES (%s::varchar, %s, %s, %s, %s, %s, %s, %s, %s)
+            """, (
+                id_promo_str,
+                empresa_erp,
+                art.get("codigoBarras"),
+                art.get("nombre"),
+                qtd_leva,
+                detalhes.get("paga"),
+                detalhes.get("precio"),
+                detalhes.get("descuento"),
+                promo.get("tipo")
+            ))
+
+def _marcar_como_inserido(cur, id_promocao, empresa_erp, cod_barras):
+    """Atualiza a flag de controle usando casting para evitar erro de tipo."""
+    cur.execute("""
+        UPDATE int_scanntech_promocao_prd 
+        SET inserido_na_promocao = true 
+        WHERE id_promocao = %s::varchar AND empresa = %s AND codigo_barras = %s
+    """, (str(id_promocao), empresa_erp, cod_barras))
+
+# --- PROCESSAMENTO OFICIAL ---
+
+def _buscar_ou_criar_cabecalho(cur, promo_scanntech):
     """
-    Calcula os valores da promoção com base no seu tipo e nas novas regras de negócio.
-    Esta função precisa do 'produto_erp' para acessar o 'prc_venda'.
+    Busca ou atualiza o cabeçalho. 
+    Se a promoção já existe (via id_scanntech), forçamos a atualização 
+    dos dados para que a Scanntech seja sempre a soberana.
     """
+    id_scanntech_str = str(promo_scanntech.get("id"))
+    now = datetime.now()
+    titulo_api = promo_scanntech.get('titulo', '')[:38]
+    titulo = f"SCANNTECH - {titulo_api}"
+    
+    # Verificação manual para evitar duplicados sem depender de Constraints no banco
+    cur.execute("SELECT id FROM promocao_cab WHERE id_scanntech = %s::varchar", (id_scanntech_str,))
+    res = cur.fetchone()
+    
+    if res:
+        id_cab = res[0]
+        logging.info(f" -> Atualizando promo existente: ID Scanntech {id_scanntech_str} (Interno: {id_cab})")
+        # Atualização Soberana: Se mudou na API, muda no sistema.
+        cur.execute("""
+            UPDATE promocao_cab SET 
+                descricao = %s, vigencia_inicial = %s, vigencia_final = %s, updated_at = %s
+            WHERE id = %s
+        """, (
+            titulo,
+            promo_scanntech.get("vigenciaDesde")[:10] if promo_scanntech.get("vigenciaDesde") else None,
+            promo_scanntech.get("vigenciaHasta")[:10] if promo_scanntech.get("vigenciaHasta") else None,
+            now, id_cab
+        ))
+        return id_cab
+    
+    # Se não existe, cria um novo
+    id_uuid = _gerar_uuid()
+    logging.info(f" -> Criando NOVA promoção: ID Scanntech {id_scanntech_str}")
+    cur.execute("""
+        INSERT INTO promocao_cab (
+            id, descricao, vigencia_inicial, vigencia_final,
+            dias_semana, dias_mes, operador_alteracao,
+            created_at, updated_at, tipo_venda, id_scanntech
+        ) VALUES (%s, %s, %s, %s, 127, '1111111111111111111111111111111', -531, %s, %s, 7, %s::varchar)
+    """, (
+        id_uuid, titulo,
+        promo_scanntech.get("vigenciaDesde")[:10] if promo_scanntech.get("vigenciaDesde") else None,
+        promo_scanntech.get("vigenciaHasta")[:10] if promo_scanntech.get("vigenciaHasta") else None,
+        now, now, id_scanntech_str
+    ))
+    return id_uuid
+
+def _preparar_regras_promocao(tipo_promo, item, detalhes, produto_erp, promo_completa):
     _, _, prc_venda = produto_erp
     prc_venda = float(prc_venda or 0.0)
+    qtd_api = item.get("cantidad", 1)
 
-    # Dicionário base para as regras
+    # Se cantidad == 1, quantidade entra como None
+    levex = None if (qtd_api is None or qtd_api <= 1) else qtd_api
+
+    multiplos = 1 if (levex is not None and levex > 1) else 0
+
+    quantidade = None
+
+    # Se limitePromocionesPorTicket == 0 ou None, quantidade_por_venda entra como None
+    limite = promo_completa.get("limitePromocionesPorTicket")
+    quantidade_por_venda = None if (limite is None or limite == 0) else limite
+
     regras = {
         "desconto": 0.0,
-        "levex": None,
-        "paguey": None,
-        "por_valor": 0,
+        "levex": levex,
+        "paguey": detalhes.get("paga"),
         "valor": 0.0,
-        "quantidade": None  # Campo 'quantidade' será sempre nulo conforme a regra
+        "multiplos": multiplos,
+        "quantidade": quantidade,
+        "quantidade_por_venda": quantidade_por_venda 
     }
 
-    quantidade_api = item.get("cantidad", 1)
+    if detalhes.get("paga") is not None:
+        p_api = float(detalhes.get("paga"))
+        regras["valor"] = (prc_venda * p_api) / qtd_api if qtd_api > 0 else prc_venda
+        regras["desconto"] = ((qtd_api - p_api) * 100) / qtd_api if qtd_api > 0 else 0
 
-    if tipo_promo == "PRECIO_FIJO":
-        regras["por_valor"] = 0
-        # Para 'promocao_prd', 'levex' só é preenchido se for maior que 1
-        if quantidade_api > 1:
-            regras["levex"] = quantidade_api
+    elif detalhes.get("descuento") is not None:
+        desc_api = float(detalhes.get("descuento"))
+        regras["desconto"] = desc_api
+        regras["valor"] = prc_venda * (1 - (desc_api / 100))
 
-        preco_fixo_api = float(detalhes.get("precio", 0.0))
-        if prc_venda > 0 and preco_fixo_api > 0 and quantidade_api > 0:
-            preco_unitario_promo = preco_fixo_api / quantidade_api
-            regras["valor"] = preco_unitario_promo
-            # Cálculo de desconto para 'promocao_prd_lojas'
-            desconto_percent = ((prc_venda - preco_unitario_promo) * 100) / prc_venda
-            regras["desconto"] = max(0, desconto_percent) # Garante que o desconto não seja negativo
-
-    elif tipo_promo == "LLEVA_PAGA":
-        paga_api = detalhes.get("paga")
-        regras["levex"] = quantidade_api
-        regras["paguey"] = paga_api
-
-        if paga_api is not None and prc_venda > 0 and quantidade_api > 0:
-            # Cálculo de valor unitário efetivo para 'promocao_prd' e 'promocao_prd_lojas'
-            valor_unitario_efetivo = (prc_venda * paga_api) / quantidade_api
-            regras["valor"] = valor_unitario_efetivo
-            
-            # O desconto percentual total da promoção "Leve X Pague Y" é (X-Y)/X * 100
-            desconto_percent = ((quantidade_api - paga_api) * 100) / quantidade_api
-            regras["desconto"] = max(0, desconto_percent)
-
-    elif tipo_promo == "DESCUENTO_VARIABLE":
-        desconto_api = detalhes.get("descuento", 0.0)
-        regras["levex"] = quantidade_api
-        regras["desconto"] = desconto_api
-        
+    elif detalhes.get("precio") is not None:
+        v_total = float(detalhes.get("precio"))
+        regras["valor"] = v_total / qtd_api if qtd_api > 0 else v_total
         if prc_venda > 0:
-            # Cálculo do valor unitário com o desconto aplicado
-            valor_unitario_efetivo = prc_venda * (1 - (desconto_api / 100))
-            regras["valor"] = valor_unitario_efetivo
+            regras["desconto"] = ((prc_venda - regras["valor"]) * 100) / prc_venda
 
     return regras
 
 
-def _inserir_ou_atualizar_produto_promocao(cur, id_cab_final, produto_erp, empresa_erp, regras):
-    """
-    Verifica se o produto já está na promoção.
-    Se sim, ATUALIZA. Se não, INSERE.
-    """
-    codigo_interno, _, _ = produto_erp
-    now_timestamp = datetime.now()
+def _inserir_ou_atualizar_produto_promocao(cur, id_cab, produto_erp, empresa_erp, regras, id_scanntech_api):
+    cod_interno, _, _ = produto_erp
+    now = datetime.now()
+    chave_item = f"SCAN_{id_scanntech_api}_{cod_interno}"
+    chave_loja = f"SCAN_{id_scanntech_api}_{cod_interno}_{empresa_erp}"
 
-    cur.execute(
-        "SELECT id FROM promocao_prd WHERE produto = %s AND id_cab_promocao = %s",
-        (codigo_interno, id_cab_final)
-    )
-    resultado = cur.fetchone()
-
-    id_prd_final = None
-    if resultado:
-        id_prd_final = resultado[0]
-        logging.info(f"    -> [UPDATE PATH] Produto (cód: {codigo_interno}) já vinculado à promoção. Atualizando regras com ID de produto: {id_prd_final}")
-        
-        cur.execute("""
-            UPDATE promocao_prd SET
-                updated_at = %s,
-                desconto = %s,
-                levex = %s,
-                paguey = %s,
-                por_valor = %s,
-                valor = %s
-            WHERE id = %s
-        """, (
-            now_timestamp, 
-            regras["desconto"], 
-            regras["levex"],
-            regras["paguey"], 
-            regras["por_valor"], 
-            regras["valor"], 
-            id_prd_final
-        ))
-    else:
-        id_prd_final = _gerar_uuid()
-        logging.info(f"    -> [INSERT PATH] Produto (cód: {codigo_interno}) novo na promoção. Inserindo com novo ID: {id_prd_final}")
-        
+    try:
+        # 1. UPSERT no Item da Promoção
         cur.execute("""
             INSERT INTO promocao_prd (
-                id, produto, id_cab_promocao, operador_alteracao, created_at,
-                updated_at, desconto, levex, paguey, por_valor, valor
-            ) VALUES (%s, %s, %s, -530, %s, %s, %s, %s, %s, %s, %s)
+                id, produto, id_cab_promocao, levex, paguey, valor, desconto,
+                multiplos, updated_at, created_at, operador_alteracao, scanntech_item_key
+            ) VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s, %s, -531, %s)
+            ON CONFLICT (scanntech_item_key) WHERE scanntech_item_key IS NOT NULL DO UPDATE SET
+                levex        = EXCLUDED.levex,
+                paguey       = EXCLUDED.paguey,
+                valor        = EXCLUDED.valor,
+                desconto     = EXCLUDED.desconto,
+                multiplos    = EXCLUDED.multiplos,
+                deleted_at   = NULL,
+                updated_at   = EXCLUDED.updated_at
+            RETURNING id
         """, (
-            id_prd_final, codigo_interno, id_cab_final, now_timestamp, now_timestamp,
-            regras["desconto"], regras["levex"], regras["paguey"],
-            regras["por_valor"], regras["valor"]
+            _gerar_uuid(), cod_interno, id_cab, regras["levex"], regras["paguey"],
+            regras["valor"], regras["desconto"], regras["multiplos"], now, now, chave_item
         ))
 
-    logging.info(f"    -> Vinculando produto (ID: {id_prd_final}) à loja {empresa_erp} em 'promocao_prd_lojas'.")
-    
-    # MODIFICADO: Os campos 'quantidade', 'desconto', 'levex', 'paguey' são atualizados.
-    # O campo 'quantidade' recebe o valor do dicionário de regras, que agora é sempre nulo.
-    cur.execute("""
-        INSERT INTO promocao_prd_lojas (
-            id_prd_promocao, empresa, quantidade, desconto, levex, paguey)
-        VALUES (%s, %s, %s, %s, %s, %s)
-        ON CONFLICT (id_prd_promocao, empresa) DO UPDATE SET
-            quantidade = EXCLUDED.quantidade,
-            desconto = EXCLUDED.desconto,
-            levex = EXCLUDED.levex,
-            paguey = EXCLUDED.paguey;
-    """, (
-        id_prd_final, empresa_erp, regras["quantidade"], regras["desconto"],
-        regras["levex"], regras["paguey"]
-    ))
+        row = cur.fetchone()
+        if not row:
+            logging.error(f"UPSERT promocao_prd não retornou ID | chave={chave_item}")
+            return
+        id_prd = row[0]
+        logging.info(f"  ✅ promocao_prd | chave={chave_item} | id={id_prd}")
+
+        # 2. UPSERT no Vínculo com a Loja
+        cur.execute("""
+            INSERT INTO promocao_prd_lojas (
+                id_prd_promocao, empresa, quantidade, desconto,
+                levex, paguey, quantidade_por_venda, scanntech_loja_key
+            ) VALUES (%s, %s, %s, %s, %s, %s, %s, %s)  -- quantidade agora é regras["quantidade"]
+            ON CONFLICT (scanntech_loja_key) WHERE scanntech_loja_key IS NOT NULL DO UPDATE SET
+                id_prd_promocao    = EXCLUDED.id_prd_promocao,
+                desconto           = EXCLUDED.desconto,
+                levex              = EXCLUDED.levex,
+                paguey             = EXCLUDED.paguey,
+                quantidade         = EXCLUDED.quantidade, 
+                quantidade_por_venda = EXCLUDED.quantidade_por_venda
+        """, (
+            id_prd, empresa_erp, regras["quantidade"], regras["desconto"],
+            regras["levex"], regras["paguey"], regras["quantidade_por_venda"], chave_loja
+        ))
+        logging.info(f"  ✅ promocao_prd_lojas | chave={chave_loja}")
+
+    except Exception as e:
+        logging.error(f"💥 ERRO em _inserir_ou_atualizar_produto_promocao: {e}")
+        logging.error(f"   chave_item={chave_item} | id_cab={id_cab} | empresa={empresa_erp} | regras={regras}")
+        raise
+
 
 def _remover_vinculos_obsoletos(cur, empresa_erp, ids_promocoes_api):
-    """
-    Remove os vínculos de promoções que existem no banco para uma loja, 
-    mas que não vieram mais na carga da API.
-    IGNORA completamente promoções com id_scanntech NULO.
-    """
-    logging.info(f"  -> Iniciando sincronização: Verificando promoções a serem removidas para a empresa {empresa_erp}.")
-
+    """Monitora e inativa promoções que sumiram da API."""
+    ids_api_str_list = [str(pid) for pid in ids_promocoes_api if pid]
+    
     cur.execute("""
-        SELECT DISTINCT c.id_scanntech 
+        SELECT c.id_scanntech, c.id 
         FROM promocao_cab c
         JOIN promocao_cab_lojas cl ON c.id = cl.id_cab_promocao
         WHERE cl.empresa = %s AND c.id_scanntech IS NOT NULL
     """, (empresa_erp,))
     
-    ids_no_banco = {str(row[0]) for row in cur.fetchall()}
-    ids_api_set = {str(pid) for pid in ids_promocoes_api if pid is not None}
-    ids_a_remover = ids_no_banco - ids_api_set
-
-    if not ids_a_remover:
-        logging.info(f"  -> Sincronização finalizada. Nenhuma promoção obsoleta encontrada para a empresa {empresa_erp}.")
-        return
-
-    logging.warning(f"  -> PROMOÇÕES OBSOLETAS PARA EMPRESA {empresa_erp}: {ids_a_remover}. Removendo vínculos...")
-
-    placeholders = ','.join(['%s'] * len(ids_a_remover))
-    cur.execute(f"""
-        SELECT pp.id, pc.id FROM promocao_prd pp
-        JOIN promocao_cab pc ON pp.id_cab_promocao = pc.id
-        JOIN promocao_cab_lojas pcl ON pc.id = pcl.id_cab_promocao
-        WHERE pcl.empresa = %s AND pc.id_scanntech IN ({placeholders})
-    """, (empresa_erp, *list(ids_a_remover)))
+    promos_no_banco = cur.fetchall()
     
-    ids_internos_para_limpeza = cur.fetchall()
-    if not ids_internos_para_limpeza:
-        logging.warning("  -> Nenhum vínculo interno encontrado para os IDs obsoletos. Nenhuma remoção necessária.")
-        return
-
-    ids_prd_promocao = [item[0] for item in ids_internos_para_limpeza]
-    ids_cab_promocao = list(set([item[1] for item in ids_internos_para_limpeza]))
-
-    cur.execute("DELETE FROM promocao_prd_lojas WHERE empresa = %s AND id_prd_promocao = ANY(%s)", (empresa_erp, ids_prd_promocao))
-    logging.info(f"    -> Removidos {cur.rowcount} vínculos de produtos em 'promocao_prd_lojas'.")
+    # --- CONSOLE LOGS DE AUDITORIA ---
+    logging.info(f"🔍 [AUDITORIA REMOÇÃO] Empresa: {empresa_erp}")
+    logging.info(f" > IDs na API (Vivos): {ids_api_str_list}")
+    logging.info(f" > IDs no Banco para esta empresa: {[p[0] for p in promos_no_banco]}")
     
-    cur.execute("DELETE FROM promocao_cab_lojas WHERE empresa = %s AND id_cab_promocao = ANY(%s)", (empresa_erp, ids_cab_promocao))
-    logging.info(f"    -> Removidos {cur.rowcount} vínculos de cabeçalhos em 'promocao_cab_lojas'.")
-
+    for id_scan, id_interno in promos_no_banco:
+        if str(id_scan) not in ids_api_str_list:
+            logging.warning(f" ⚠️ INATIVANDO: Promoção {id_scan} não retornou na API. Zerando quantidade no sistema.")
+            
+            cur.execute("""
+                UPDATE promocao_prd_lojas 
+                SET quantidade = 0 
+                WHERE empresa = %s AND id_prd_promocao IN (
+                    SELECT id FROM promocao_prd WHERE id_cab_promocao = %s
+                )
+            """, (empresa_erp, id_interno))
+        else:
+            logging.info(f" ✅ MANTENDO: Promoção {id_scan} continua ativa na API.")
 
 def salvar_e_processar_promocoes(todas_promocoes_por_loja):
-    """Orquestra a sincronização de promoções: insere, atualiza e remove vínculos com as lojas."""
     conn = None
     try:
         conn = conectar()
         cur = conn.cursor()
         
-        if not todas_promocoes_por_loja:
-            logging.warning("O dicionário 'todas_promocoes_por_loja' está vazio. Nenhuma promoção para processar.")
-            return
+        # Log de entrada geral
+        logging.info(f"🚀 Iniciando processamento de {len(todas_promocoes_por_loja)} lojas.")
 
-        for empresa_erp, promocoes_da_loja in todas_promocoes_por_loja.items():
-            logging.info(f"\n============================================================")
-            logging.info(f"Processando {len(promocoes_da_loja)} promoções para a EMPRESA ERP: {empresa_erp}...")
+        for empresa_erp, promocoes in todas_promocoes_por_loja.items():
+            logging.info(f"--- Processando Loja ERP: {empresa_erp} | Promoções recebidas: {len(promocoes)} ---")
             
-            if not promocoes_da_loja:
-                logging.warning(f"A lista de promoções para a empresa {empresa_erp} está vazia. Pulando para a próxima.")
-                continue
-
-            for promo in promocoes_da_loja:
-                id_promo_scanntech = promo.get('id', 'ID_N/A')
-                logging.info(f"\n--- Processando Promoção Scanntech ID: {id_promo_scanntech} ---")
+            ids_vivos_na_api = []
+            for promo in promocoes:
+                p_id = promo.get("id")
+                ids_vivos_na_api.append(p_id)
                 
-                id_cab_final = _buscar_ou_criar_cabecalho(cur, promo)
-                _vincular_loja_ao_cabecalho(cur, id_cab_final, empresa_erp)
-
-                detalhes = promo.get("detalles", {})
-                condiciones = detalhes.get("condiciones", {})
-                items = condiciones.get("items", [])
-
-                if not items:
-                    logging.warning(f"Promoção {id_promo_scanntech} não possui a lista de 'items'. Pulando.")
-                    continue
-
+                _gravar_integracao_scanntech(cur, empresa_erp, promo)
+                id_cab = _buscar_ou_criar_cabecalho(cur, promo)
+                
+                cur.execute("SELECT 1 FROM promocao_cab_lojas WHERE id_cab_promocao = %s AND empresa = %s", (id_cab, empresa_erp))
+                if not cur.fetchone():
+                    cur.execute("INSERT INTO promocao_cab_lojas (id_cab_promocao, empresa) VALUES (%s, %s)", (id_cab, empresa_erp))
+                
+                detalhes = promo.get("detalles", {}) 
+                items = detalhes.get("condiciones", {}).get("items", []) 
+                
                 for item in items:
-                    articulos = item.get("articulos", [])
-                    if not articulos:
-                        logging.warning(f"Dentro da promoção {id_promo_scanntech}, um 'item' não possui 'articulos'. Pulando.")
-                        continue
+                    for art in item.get("articulos", []):
+                        ean = art.get("codigoBarras") 
+                        cur.execute("SELECT p.codigo, p.descricao, p.prc_venda FROM produtos p JOIN cod_barras cb ON p.codigo = cb.codigo WHERE cb.cod_barra = %s", (ean,))
+                        prod = cur.fetchone()
                         
-                    for art in articulos:
-                        cod_barras = art.get("codigoBarras")
-                        if not cod_barras: continue
-
-                        produto_erp = _buscar_produto_no_erp(cur, cod_barras)
-                        
-                        if not produto_erp:
-                            logging.warning(f"    -> AVISO: Produto com EAN {cod_barras} (da promoção {id_promo_scanntech}) não foi encontrado. Produto NÃO será inserido.")
-                            continue
-                        
-                        # MODIFICADO: A função de cálculo agora é chamada AQUI, pois temos o produto_erp
-                        regras = _preparar_regras_promocao(promo.get("tipo"), item, detalhes, produto_erp)
-                        
-                        logging.info(f"    -> SUCESSO: Produto com EAN {cod_barras} encontrado no ERP (Cód: {produto_erp[0]}). Prosseguindo com regras: {regras}")
-                        _inserir_ou_atualizar_produto_promocao(cur, id_cab_final, produto_erp, empresa_erp, regras)
-
-            ids_promocoes_api = [p.get("id") for p in promocoes_da_loja]
-            _remover_vinculos_obsoletos(cur, empresa_erp, ids_promocoes_api)
-
+                        if prod:
+                            regras = _preparar_regras_promocao(promo.get("tipo"), item, detalhes, prod, promo)
+                            _inserir_ou_atualizar_produto_promocao(cur, id_cab, prod, empresa_erp, regras, p_id)
+                            _marcar_como_inserido(cur, p_id, empresa_erp, ean)
+                        else:
+                            logging.warning(f" ❌ Produto EAN {ean} não encontrado no ERP para a promo {p_id}")
+            
+            # Chama a inativação com logs detalhados
+            _remover_vinculos_obsoletos(cur, empresa_erp, ids_vivos_na_api)
+        
         conn.commit()
-        logging.info("\n💾 Processamento de todas as promoções finalizado com sucesso.")
+        logging.info("💾 Sincronização finalizada com sucesso.")
     except Exception as e:
         if conn: conn.rollback()
-        logging.error(f"❌ Erro fatal durante o processamento das promoções: {e}", exc_info=True)
+        logging.error(f"💥 ERRO FATAL: {e}")
         raise e
     finally:
-        if conn:
-            if cur: cur.close()
-            conn.close()
+        if conn: conn.close()

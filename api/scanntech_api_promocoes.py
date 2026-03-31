@@ -13,7 +13,12 @@ def consultar_promocoes(config, loja_info, estado='ACEPTADA'):
     tipos_desejados = ['LLEVA_PAGA', 'PRECIO_FIJO', 'DESCUENTO_VARIABLE', 'DESCUENTO_FIJO']
     params = { "estado": estado, "tipo": ",".join(tipos_desejados) }
 
-    resposta = autenticacao.fazer_requisicao(config, endpoint_path, metodo='GET', params=params)
+    resposta = autenticacao.fazer_requisicao(
+        config=config,
+        endpoint_path=endpoint_path,
+        metodo='GET',
+        dados=params
+    )
 
     if resposta:
         resposta_formatada = json.dumps(resposta, indent=2, ensure_ascii=False)
