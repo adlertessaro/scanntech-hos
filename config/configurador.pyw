@@ -1,9 +1,9 @@
 import ctypes
 import tkinter as tk
-from tkinter import messagebox
+from tkinter import BOTH, CENTER, LEFT, RIGHT, VERTICAL, X, Y, messagebox
 import ttkbootstrap as ttk
 from ttkbootstrap.constants import *
-from ttkbootstrap.tooltip import ToolTip
+from ttkbootstrap.widgets import ToolTip
 from datetime import datetime
 import os
 import sys
@@ -168,7 +168,7 @@ class ConfiguradorApp:
         if sys.platform == 'win32':
             try:
                 # Define um ID único para a aplicação
-                app_id = 'scanntech.integrador.configurador.1'
+                app_id = 'integrador.configurador.1'
                 ctypes.windll.shell32.SetCurrentProcessExplicitAppUserModelID(app_id)
             except Exception as e:
                 logging.warning(f"Não foi possível definir o ícone da barra de tarefas. Erro: {e}")

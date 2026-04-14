@@ -1,4 +1,4 @@
-from scanntech.api import autenticacao
+from api import autenticacao
 
 def enviar_fechamentos_lote(config, id_caja, fechamentos):
     """

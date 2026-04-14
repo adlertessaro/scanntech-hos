@@ -36,8 +36,8 @@ def validar_config_hos():
         with open(caminho, "r", encoding="utf-8") as f:
             dados = json.load(f)
             banco = dados.get("Configuracoes", {}).get("BANCO_DADOS", "").upper()
-            if banco != "POSTGRES":
-                messagebox.showerror("Banco não suportado", "Somente disponível para POSTGRES.\nO configurador será encerrado.")
+            if banco != "POSTGRES" and banco != "FIREBIRD":
+                messagebox.showerror("Banco não suportado", "Somente disponível para POSTGRES e FIREBIRD.\nO configurador será encerrado.")
                 return False
     except Exception as e:
         messagebox.showerror("Erro", f"Falha ao ler o arquivo de configuração:\n{str(e)}")

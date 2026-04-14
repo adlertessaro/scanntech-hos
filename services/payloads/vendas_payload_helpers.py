@@ -8,7 +8,7 @@ import unicodedata
 
 CANAIS_VENDA = {
     1: "VENDA NA LOJA", 2: "E-COMMERCE", 3: "IFOOD",
-    4: "RAPPI", 5: "WHATSAPP", 6: "OUTROS", 7: "ZÉ DELIVERY",
+    4: "RAPPI", 6: "OUTROS", 8: "GLOVO",
 }
 
 FINALIZADORAS = {

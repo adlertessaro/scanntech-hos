@@ -1,6 +1,6 @@
 # componente responsável por processar as solicitações de auditoria e reset vindas da API, garantindo que as vendas e fechamentos sejam reenviados corretamente.
 import logging
-from scanntech.api.auditoria import consultar_solicitacoes_vendas, consultar_solicitacoes_fechamentos
+from api.auditoria import consultar_solicitacoes_vendas, consultar_solicitacoes_fechamentos
 
 def executar_auditoria_e_reset(cur, config_loja):
     empresa_erp = int(config_loja['empresa'])
@@ -9,20 +9,22 @@ def executar_auditoria_e_reset(cur, config_loja):
     res_vendas = consultar_solicitacoes_vendas(config_loja)
     if res_vendas.get('sucesso') and res_vendas.get('dados'):
         for sol in res_vendas['dados']:
-            # Se não houver codigoCaja, reenvia todas as caixas daquela data [cite: 615, 633, 646]
-            sql_del_log = "DELETE FROM int_scanntech_vendas_logs WHERE empresa = %s AND data_registro = %s"
-            sql_trigger = "UPDATE caixa SET venda = venda WHERE data = %s AND empresa = %s"
-            params_del_log = [empresa_erp, sol['fecha']]
-            params_trigger = [sol['fecha'], empresa_erp]
-            if sol.get('codigoCaja'):
-                sql_del_log += " AND estacao = %s"
-                sql_trigger += " AND estacao = %s"
-                params_del_log.append(str(sol['codigoCaja']))
-                params_trigger.append(str(sol['codigoCaja']))
-                
-            cur.execute(sql_del_log, tuple(params_del_log))
-            cur.execute(sql_trigger, tuple(params_trigger))
-            logging.warning(f"♻️ Reset de VENDAS para data {sol['fecha']} solicitado pela API.")
+            estacao_reenvio = str(sol['codigoCaja']) if sol.get('codigoCaja') else None
+
+            sql_reset_log = """
+                UPDATE int_scanntech_vendas_logs
+                SET id_lote = NULL
+                WHERE empresa = %s AND data_registro = %s
+            """
+            params_reset = [empresa_erp, sol['fecha']]
+
+            if estacao_reenvio:
+                sql_reset_log += " AND estacao = %s"
+                params_reset.append(estacao_reenvio)
+
+            cur.execute(sql_reset_log, tuple(params_reset))
+            _reinserir_fila_pelo_log(cur, empresa_erp, sol['fecha'], estacao_reenvio)
+            logging.warning(f"♻️ Reset de VENDAS para data {sol['fecha']} PDV: {sol.get('codigoCaja', 'TODOS')} solicitado pela API.")
 
     # --- TRATAR FECHAMENTOS (CIERRES_DIARIOS) ---
     res_fech = consultar_solicitacoes_fechamentos(config_loja)
@@ -37,3 +39,36 @@ def executar_auditoria_e_reset(cur, config_loja):
             
             cur.execute(sql, tuple(params))
             logging.warning(f"♻️ Reset de FECHAMENTO para {sol['fecha']} PDV: {sol.get('codigoCaja', 'TODOS')}")
+
+def _reinserir_fila_pelo_log(cur, empresa_erp, data, estacao=None):
+    """
+    Reinsere na fila de envio todas as vendas que tiveram id_lote nulificado,
+    consultando diretamente o log — sem depender da trigger da caixa.
+    """
+    sql = """
+        SELECT l.venda, l.estacao
+        FROM int_scanntech_vendas_logs l
+        WHERE l.empresa = %s
+          AND l.data_registro = %s
+          AND l.id_lote IS NULL
+    """
+    params = [empresa_erp, data]
+
+    if estacao:
+        sql += " AND l.estacao = %s"
+        params.append(str(estacao))
+
+    cur.execute(sql, tuple(params))
+    registros = cur.fetchall()
+
+    for (venda, estacao_log) in registros:
+        cur.execute("""
+            INSERT INTO int_scanntech_vendas
+                (venda, empresa, estacao, tentativas, data_hora_inclusao)
+            VALUES (%s, %s, %s, 0, CURRENT_TIMESTAMP)
+            ON CONFLICT (venda, empresa) DO UPDATE
+            SET tentativas = 0,
+                data_hora_inclusao = CURRENT_TIMESTAMP
+        """, (venda, empresa_erp, estacao_log))
+
+    logging.info(f"📥 {len(registros)} vendas reinseridas na fila para reenvio (data: {data}).")

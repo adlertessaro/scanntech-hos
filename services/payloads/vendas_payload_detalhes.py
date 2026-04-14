@@ -5,7 +5,7 @@ incluindo toda a lógica de cancelamentos, devoluções e ajustes de diferença.
 """
 
 import logging
-from scanntech.services.payloads.vendas_payload_helpers import (
+from services.payloads.vendas_payload_helpers import (
     limpar_codigo_barras,
     remove_acentos,
 )

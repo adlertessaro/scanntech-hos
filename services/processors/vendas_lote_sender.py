@@ -9,8 +9,8 @@ import logging
 import time
 from datetime import datetime
 
-from scanntech.api.scanntech_api_vendas import enviar_vendas_lote
-from scanntech.services.processors.vendas_db_helpers import (
+from api.scanntech_api_vendas import enviar_vendas_lote
+from services.processors.vendas_db_helpers import (
     excluir_venda_da_fila,
     inserir_log_de_sucesso,
 )

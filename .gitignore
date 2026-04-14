@@ -1,0 +1,68 @@
+# --- Python ---
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+.Python
+build/
+develop-eggs/
+dist/
+downloads/
+eggs/
+.lib/
+lib/
+include/
+bin/
+local/
+share/
+lib64/
+parts/
+sdist/
+var/
+wheels/
+share/python-wheels/
+*.egg-info/
+.installed.cfg
+*.egg
+MANIFEST
+
+# --- Ambientes Virtuais (Essencial ignorar o venv) ---
+venv/
+.venv/
+ENV/
+env/
+ENV*/
+
+# --- PyInstaller (Arquivos gerados ao criar o .exe) ---
+# Se você quiser manter seu arquivo .spec no Git (recomendado), comente a linha abaixo:
+# *.spec
+
+# Pastas temporárias do PyInstaller
+build/
+dist/
+
+# --- Banco de Dados / Arquivos Locais ---
+# Ignore arquivos de banco de dados locais (SQLite) ou logs de erro
+*.db
+*.sqlite3
+*.log
+*.bak
+*.sql.gz
+
+# --- Configurações de IDE (VS Code, PyCharm) ---
+.vscode/
+.idea/
+*.swp
+*.swo
+
+# --- Arquivos do Windows / OneDrive ---
+Thumbs.db
+desktop.ini
+~$*
+.DS_Store
+
+# --- Variáveis de Ambiente ---
+# NUNCA envie senhas ou chaves de API para o Git
+.env
+secret.key
+config.ini

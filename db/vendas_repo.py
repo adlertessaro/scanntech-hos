@@ -21,27 +21,49 @@ def buscar_vendas_pendentes(empresa):
         conn.close()
 
 def marcar_vendas_para_reenvio(solicitacoes, empresa):
-    """Marca vendas como pendentes com base na solicitação da API."""
+    """Reinsere na fila (int_scanntech_vendas) os registros encontrados em int_scanntech_vendas_logs."""
     if not solicitacoes:
         return 0
+
     conn = conectar()
     cur = conn.cursor()
     total_marcado = 0
+
     for item in solicitacoes:
         data = item.get('fecha')
         caixa = item.get('codigoCaja')
-        if not data: continue
+        if not data:
+            continue
+
+        # Busca os registros já enviados na _logs para aquela data/caixa
         if caixa:
             cur.execute("""
-                UPDATE int_scanntech_vendas SET tentativas = 0, erro = 'Reenvio solicitado'
-                WHERE empresa = %s AND estacao = %s AND DATE(data_hora_inclusao) = %s
+                SELECT venda, empresa, estacao
+                FROM int_scanntech_vendas_logs
+                WHERE empresa = %s AND estacao = %s AND data_registro = %s
             """, (empresa, caixa, data))
         else:
             cur.execute("""
-                UPDATE int_scanntech_vendas SET tentativas = 0, erro = 'Reenvio solicitado'
-                WHERE empresa = %s AND DATE(data_hora_inclusao) = %s
+                SELECT venda, empresa, estacao
+                FROM int_scanntech_vendas_logs
+                WHERE empresa = %s AND data_registro = %s
             """, (empresa, data))
-        total_marcado += cur.rowcount
+
+        registros = cur.fetchall()
+
+        for (venda, emp, estacao) in registros:
+            # Evita duplicata se já estiver na fila por algum motivo
+            cur.execute("""
+                INSERT INTO int_scanntech_vendas
+                    (venda, empresa, estacao, tentativas, data_hora_inclusao, data_hora_tentativa, erro)
+                VALUES (%s, %s, %s, 0, NOW(), NULL, 'Reenvio solicitado')
+                ON CONFLICT (venda, empresa, estacao) DO UPDATE
+                    SET tentativas = 0,
+                        erro = 'Reenvio solicitado',
+                        data_hora_tentativa = NULL
+            """, (venda, emp, estacao))
+            total_marcado += 1
+
     conn.commit()
     cur.close()
     conn.close()

@@ -8,7 +8,7 @@ import unicodedata
 from urllib.parse import urljoin
 
 try:
-    from scanntech.utils.versao import obter_versao_exe
+    from utils.versao import obter_versao_exe
 except ImportError:
     from ..utils.versao import obter_versao_exe
 

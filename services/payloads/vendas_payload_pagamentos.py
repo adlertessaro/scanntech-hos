@@ -1,10 +1,5 @@
-# scanntech/services/payloads/vendas_payload_pagamentos.py
-"""
-Responsável por construir a lista de pagamentos (pagos) do payload de vendas.
-"""
-
 import logging
-from scanntech.services.payloads.vendas_payload_helpers import (
+from services.payloads.vendas_payload_helpers import (
     FINALIZADORAS,
     converter_para_float,
 )
@@ -127,7 +122,28 @@ def _adicionar_cartoes(cur, venda, empresa, pagamentos, finalizadoras_desc, soma
             rede_fmt = (rede or "").strip().upper()
 
             if rede_fmt == "PIX":
-                codigo_pgto = 1
+                codigo_pgto = 14
+                pagamento_pix = {
+                    "codigoTipoPago": 14,
+                    "importe": round(float(valor_cartao), 2),
+                    "codigoProveedorQR": 1,
+                    "codigoBanco": None,
+                    "descripcionBanco": None
+                }
+                key_pix = f"{codigo_pgto}_{pagamento_pix['importe']}"
+                if key_pix in cartoes_encontrados:
+                    if log_avancado:
+                        logging.info(
+                            f"      ⚠️  DUPLICATA: PIX R$ {pagamento_pix['importe']} (PULANDO)"
+                        )
+                    continue
+                cartoes_encontrados[key_pix] = True
+                pagamentos.append(pagamento_pix)
+                finalizadoras_desc.append(FINALIZADORAS.get(codigo_pgto, "PIX"))
+                soma += pagamento_pix['importe']
+                if log_avancado:
+                    logging.info(f"      ✓ PIX: R$ {pagamento_pix['importe']}")
+                continue
             elif tipo_cartao_fmt == "CREDITO":
                 codigo_pgto = 10
             elif tipo_cartao_fmt == "DEBITO":

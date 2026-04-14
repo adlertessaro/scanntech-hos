@@ -6,16 +6,16 @@ e construir os dicionários 'payloads' e 'vendas_enviadas' prontos para o envio.
 
 import logging
 
-from scanntech.services.processors.vendas_db_helpers import (
+from services.processors.vendas_db_helpers import (
     excluir_venda_da_fila,
     verificar_venda_ja_processada,
     verificar_duplicata_por_cupom,
 )
-from scanntech.services.processors.vendas_utils import (
+from services.processors.vendas_utils import (
     CODIGOS_ACEITOS,
     identificar_tipo_evento,
 )
-from scanntech.services.payloads.vendas_payload import montar_payload_da_venda
+from services.payloads.vendas_payload import montar_payload_da_venda
 
 
 def construir_lote(cur, conn, vendas, empresa_erp, estacao_original, estacao_limitada, config_completa_loja, data_inicio):
@@ -65,6 +65,28 @@ def construir_lote(cur, conn, vendas, empresa_erp, estacao_original, estacao_lim
 
             is_devolucao, is_venda, tipo_evento_log = identificar_tipo_evento(lancamen_str)
 
+            # ── Detecta venda cancelada pendente de reenvio ───────────────────────
+            # Quando o log tem tipo VENDA com id_lote nulo, mas o lancamen atual
+            # na caixa é CC, significa que essa venda foi cancelada após o envio
+            # original. No reenvio, deve ser mandada como venda positiva.
+            force_as_sale = False
+            if is_devolucao:
+                cur.execute("""
+                    SELECT COUNT(*) FROM int_scanntech_vendas_logs
+                    WHERE venda = %s AND empresa = %s
+                    AND tipo_evento = 'VENDA'
+                    AND id_lote IS NULL
+                """, (venda, empresa_erp))
+                reenvio_como_venda = cur.fetchone()[0] > 0
+                if reenvio_como_venda:
+                    is_devolucao = False
+                    force_as_sale = True
+                    tipo_evento_log = 'VENDA'
+                    logging.info(
+                        f"🔄 Venda {venda} (Cupom {cupom}): reenvio de venda original "
+                        f"que foi cancelada. Montando como venda positiva (force_as_sale)."
+                    )
+
             # ── Validação 1: ID de venda já processado ─────────────────────────
             if verificar_venda_ja_processada(cur, venda, empresa_erp, tipo_evento_log):
                 logging.info(
@@ -91,6 +113,7 @@ def construir_lote(cur, conn, vendas, empresa_erp, estacao_original, estacao_lim
                 config_completa_loja,
                 estacao_limitada,
                 is_devolucao=is_devolucao,
+                force_as_sale=force_as_sale,
                 cupom=cupom,
                 valor_total=valor,
                 debug_mode=False

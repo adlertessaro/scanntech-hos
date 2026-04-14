@@ -1,7 +1,7 @@
 from .conexao import conectar
 import logging
 from scanntech.api.scanntech_api_reenvio import consultar_solicitacoes_fechamentos
-from scanntech.services.processors.fechamentos_processor import enviar_fechamentos_lote
+from scanntech.services.processors.fechamentos_processor import processar_envio_fechamento
 
 def buscar_fechamentos_pendentes(empresa):
     """Busca fechamentos que ainda não possuem id_lote (pendentes)."""
@@ -72,5 +72,5 @@ def forcar_envio_fechamentos_com_verificacao(config):
         return "Nenhum fechamento pendente encontrado para enviar."
         
     logging.info(f"Encontrados {len(fechamentos_pendentes)} fechamentos pendentes. Enviando...")
-    enviar_fechamentos_lote(fechamentos_pendentes, config)
+    processar_envio_fechamento(fechamentos_pendentes, config)
     return f"Processo de envio de {len(fechamentos_pendentes)} fechamentos concluído."

@@ -1,5 +1,5 @@
 import json
-from scanntech.api import autenticacao
+from api import autenticacao
 
 def validar_codigo_caixa(id_caja):
     # Valida que o código do caixa é uma string de 5 dígitos. Se inválido, retorna valor padrão.

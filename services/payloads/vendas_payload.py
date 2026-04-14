@@ -1,30 +1,14 @@
-# scanntech/services/payloads/vendas_payload.py
-"""
-Ponto de entrada para a montagem do payload de vendas enviado à Scanntech.
-
-Responsabilidades deste arquivo:
-  - Buscar os dados principais da tabela caixa
-  - Montar o timestamp ISO
-  - Delegar pagamentos e detalhes para submódulos
-  - Montar e retornar o dict final do payload
-
-Submódulos:
-  vendas_payload_helpers.py    → constantes e funções puras
-  vendas_payload_pagamentos.py → construção da lista 'pagos'
-  vendas_payload_detalhes.py   → construção da lista 'detalles'
-"""
-
 import json
 import logging
 from datetime import datetime, timezone, timedelta
 
-from scanntech.db.conexao import conectar
-from scanntech.services.payloads.vendas_payload_helpers import (
+from db.conexao import conectar
+from services.payloads.vendas_payload_helpers import (
     CANAIS_VENDA,
     converter_para_float,
 )
-from scanntech.services.payloads.vendas_payload_pagamentos import construir_pagamentos
-from scanntech.services.payloads.vendas_payload_detalhes import construir_detalhes
+from services.payloads.vendas_payload_pagamentos import construir_pagamentos
+from services.payloads.vendas_payload_detalhes import construir_detalhes
 
 
 def buscar_venda_original(venda_dev, empresa, cupom):
@@ -177,7 +161,7 @@ def _resolver_canal_venda(cur, venda, empresa):
         row = cur.fetchone()
         if row and row[0]:
             modo = row[0].strip().upper()
-            return {'IFOOD': 3, 'ECOMMERCE': 2, 'WHATSAPP': 5, 'PADRAO': 1}.get(modo, 6)
+            return {'IFOOD': 3, 'ECOMMERCE': 2, 'RAPPI': 4, 'GLOVO': 8, 'PADRAO': 1}.get(modo, 6)
     except Exception:
         pass
     return 1

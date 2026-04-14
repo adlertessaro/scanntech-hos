@@ -28,7 +28,7 @@ def verificar_duplicata_por_cupom(cur, venda, empresa, cupom, valor, lancamen, o
     cupom + valor + lancamen + operador + estacao.
 
     Isso evita que registros com IDs distintos mas dados idênticos sejam enviados
-    em duplicidade para a Scanntech.
+    em duplicidade para a 
 
     Retorna True se houver duplicata (deve pular o envio), False caso contrário.
     """
