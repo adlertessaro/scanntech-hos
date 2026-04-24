@@ -5,7 +5,7 @@ incluindo toda a lógica de cancelamentos, devoluções e ajustes de diferença.
 """
 
 import logging
-from services.payloads.vendas_payload_helpers import (
+from scanntech.services.payloads.vendas_payload_helpers import (
     limpar_codigo_barras,
     remove_acentos,
 )
@@ -20,7 +20,9 @@ def construir_detalhes(cur, venda, empresa, is_devolucao, force_as_sale,
     if log_avancado:
         logging.info(f"\n   📦 CONSTRUINDO ITENS:")
 
-    if is_devolucao:
+    if is_devolucao or force_as_sale:
+        if force_as_sale and log_avancado:
+            logging.info(f"      🔄 Modo: RECONSTRUÇÃO (busca cancelados, envia como VENDA)")
         detalhes = _itens_cancelamento(cur, venda, empresa, force_as_sale, data_db, valor_total_cupom, log_avancado)
     else:
         detalhes = _itens_venda_normal(cur, venda, empresa, log_avancado)

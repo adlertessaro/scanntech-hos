@@ -2,13 +2,13 @@ import json
 import logging
 from datetime import datetime, timezone, timedelta
 
-from db.conexao import conectar
-from services.payloads.vendas_payload_helpers import (
+from scanntech.db.conexao import conectar
+from scanntech.services.payloads.vendas_payload_helpers import (
     CANAIS_VENDA,
     converter_para_float,
 )
-from services.payloads.vendas_payload_pagamentos import construir_pagamentos
-from services.payloads.vendas_payload_detalhes import construir_detalhes
+from scanntech.services.payloads.vendas_payload_pagamentos import construir_pagamentos
+from scanntech.services.payloads.vendas_payload_detalhes import construir_detalhes
 
 
 def buscar_venda_original(venda_dev, empresa, cupom):

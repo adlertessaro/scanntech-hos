@@ -1,4 +1,3 @@
-# scanntech/services/payloads/vendas_payload_helpers.py
 """
 Funções utilitárias puras usadas na montagem do payload de vendas.
 Sem acesso ao banco de dados.

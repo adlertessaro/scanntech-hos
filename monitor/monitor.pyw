@@ -15,6 +15,14 @@ from ttkbootstrap.scrolled import ScrolledText
 # DEFINIÇÃO DE CONSTANTES
 # ==============================================================================
 
+def get_asset(filename):
+    """Retorna o caminho correto do asset, dentro ou fora do exe"""
+    if getattr(sys, 'frozen', False):
+        base = Path(sys._MEIPASS)
+    else:
+        base = Path(__file__).parent
+    return base / filename
+
 def get_root_dir():
     """Retorna o diretório raiz do projeto"""
     if getattr(sys, 'frozen', False):
@@ -84,11 +92,19 @@ class MonitorApp:
     def _setup_paths(self):
         """Define os caminhos para os executáveis"""
         self.configurador_exe = ROOT_DIR / "Configurador.exe"
-        self.integrador_exe = ROOT_DIR / "Integrador.exe"
+        self.integrador_exe = ROOT_DIR / "IntegradorScanntech.exe"
 
     def _setup_gui(self):
         """Cria a interface gráfica"""
         self.root.title("Monitor do Integrador Scanntech")
+
+        try:
+            from PIL import Image, ImageTk
+            icon_image = ImageTk.PhotoImage(Image.open(str(ROOT_DIR / "logo.png")))
+            self.root.iconphoto(True, icon_image)
+        except Exception:
+            pass
+
         self.centralizar_janela(900, 650)
         
         # Área de texto para logs (SEM state aqui!)
@@ -132,9 +148,8 @@ class MonitorApp:
         log_thread.start()
 
     def _status_updater_thread(self):
-        """Atualiza o status a cada 3 segundos"""
         while self.is_running:
-            self._update_gui_status()
+            self.root.after(0, self._update_gui_status)  # agenda na thread principal
             time.sleep(3)
 
     def _update_gui_status(self):
@@ -175,7 +190,7 @@ class MonitorApp:
         self.text_area.text.configure(state='normal')
         self.text_area.delete('1.0', END)
         self.text_area.insert(END, f"\n\n{message}", tag)
-        self.text_area.configure(state='disabled')
+        self.text_area.text.configure(state='disabled')
 
     def _tail_log_thread(self):
         """Lê o arquivo de log em tempo real"""
@@ -222,7 +237,7 @@ class MonitorApp:
                                 self.text_area.insert(END, line + '\n', level_tag)
                         
                         self.text_area.see(END)
-                        self.text_area.configure(state='disabled')
+                        self.text_area.text.configure(state='disabled')
                         
                         # Atualizar posição
                         self.last_log_position = f.tell()
@@ -232,34 +247,31 @@ class MonitorApp:
                 time.sleep(2)
 
     def _toggle_integrador(self):
-        """Inicia ou para o integrador"""
         if is_integrador_really_running():
-            # Para o integrador
             try:
                 with open(PID_FILE, 'r') as f:
                     pid = int(f.read().strip())
-                
-                # Mata o processo usando ctypes (SEM abrir CMD!)
+
                 import ctypes
                 kernel32 = ctypes.windll.kernel32
-                
-                # PROCESS_TERMINATE = 0x0001
                 handle = kernel32.OpenProcess(0x0001, False, pid)
-                
                 if handle:
                     kernel32.TerminateProcess(handle, 0)
                     kernel32.CloseHandle(handle)
-                
-                # Remove o arquivo PID
+
                 if PID_FILE.exists():
                     PID_FILE.unlink()
-                
-                self.text_area.text.configure(state='normal')
-                self.text_area.insert(END, f"\n{datetime.now():%Y-%m-%d %H:%M:%S} - ⏹️ Integrador parado pelo usuário.\n", "warning")
-                self.text_area.configure(state='disabled')
-                
+
+                #  Agenda na thread principal
+                def atualizar_ui():
+                    self.text_area.text.configure(state='normal')
+                    self.text_area.insert(END, f"\n{datetime.now():%Y-%m-%d %H:%M:%S} - ⏹️ Integrador parado pelo usuário.\n", "warning")
+                    self.text_area.text.configure(state='disabled')
+
+                self.root.after(0, atualizar_ui)
+
             except Exception as e:
-                messagebox.showerror("Erro", f"Falha ao parar o integrador: {e}")
+                self.root.after(0, lambda: messagebox.showerror("Erro", f"Falha ao parar o integrador: {e}"))
         else:
             # Inicia o integrador
             if self.integrador_exe.exists():
@@ -282,6 +294,12 @@ class MonitorApp:
             subprocess.Popen([str(self.configurador_exe)])
         else:
             messagebox.showerror("Erro", "Configurador não encontrado.")
+        def atualizar_ui_inicio():
+            self.text_area.text.configure(state='normal')
+            self.text_area.insert(END, f"\n{datetime.now():%Y-%m-%d %H:%M:%S} - 🚀 Iniciando integrador...\n", "info")
+            self.text_area.text.configure(state='disabled')
+
+        self.root.after(0, atualizar_ui_inicio)
 
     def _open_log_file(self):
         """Abre o arquivo de log"""
@@ -313,4 +331,24 @@ class MonitorApp:
 if __name__ == '__main__':
     root = ttk.Window(themename="darkly")
     app = MonitorApp(root)
+
+    # ← Define ícone DEPOIS que tudo carregou
+    def set_icon():
+        try:
+            from PIL import Image, ImageTk
+            img = Image.open(str(ROOT_DIR / "monitor.png"))
+            icon = ImageTk.PhotoImage(img)
+            root.iconphoto(True, icon)
+            root._icon = icon  # evita garbage collector apagar
+        except Exception as e:
+            print(f"Erro ícone: {e}")
+
+    root.after(200, set_icon)
+
+    try:
+        import pyi_splash
+        pyi_splash.close()
+    except ImportError:
+        pass
+
     root.mainloop()

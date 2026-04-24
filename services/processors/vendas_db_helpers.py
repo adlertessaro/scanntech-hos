@@ -1,4 +1,3 @@
-# scanntech/services/processors/vendas_db_helpers.py
 """
 Funções auxiliares de acesso ao banco de dados para o processador de vendas.
 """
@@ -12,7 +11,7 @@ def verificar_venda_ja_processada(cur, venda, empresa, tipo_evento):
     try:
         cur.execute("""
             SELECT COUNT(*) FROM int_scanntech_vendas_logs
-            WHERE venda = %s AND empresa = %s AND tipo_evento = %s
+            WHERE venda = %s AND empresa = %s AND tipo_evento = %s AND id_lote IS NOT NULL
         """, (venda, empresa, tipo_evento))
         return cur.fetchone()[0] > 0
     except Exception as e:
@@ -28,7 +27,7 @@ def verificar_duplicata_por_cupom(cur, venda, empresa, cupom, valor, lancamen, o
     cupom + valor + lancamen + operador + estacao.
 
     Isso evita que registros com IDs distintos mas dados idênticos sejam enviados
-    em duplicidade para a 
+    em duplicidade para a mesma empresa.
 
     Retorna True se houver duplicata (deve pular o envio), False caso contrário.
     """

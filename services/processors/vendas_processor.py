@@ -17,15 +17,15 @@ Submódulos:
 import logging
 import time
 
-from db.conexao import conectar
-from config.settings import carregar_configuracoes
-from services.processors.vendas_utils import (
+from scanntech.db.conexao import conectar
+from scanntech.config.settings import carregar_configuracoes
+from scanntech.services.processors.vendas_utils import (
     limitar_codigo_estacao,
     resolver_data_inicio,
 )
-from services.processors.vendas_db_helpers import excluir_venda_da_fila
-from services.processors.vendas_lote_builder import construir_lote
-from services.processors.vendas_lote_sender import enviar_grupos
+from scanntech.services.processors.vendas_db_helpers import excluir_venda_da_fila
+from scanntech.services.processors.vendas_lote_builder import construir_lote
+from scanntech.services.processors.vendas_lote_sender import enviar_grupos
 
 
 def processar_envio_vendas():

@@ -16,7 +16,7 @@ LOG_DIR = ROOT_DIR / "logs"
 from scanntech.db.promo_repo import salvar_e_processar_promocoes
 from scanntech.config.settings import carregar_configuracoes, CONFIG_PATH
 from scanntech.models.gerar_fechamentos_pendentes import gerar_fechamentos_pendentes
-# from scanntech.services.promocoes_service import processar_promocoes
+from scanntech.services.promocoes_service import processar_promocoes
 from scanntech.db.vendas_repo import forcar_envio_vendas_com_verificacao
 from scanntech.db.fechamentos_repo import forcar_envio_fechamentos_com_verificacao
 from scanntech.config.setup_db import criar_tabelas_scanntech

@@ -1,4 +1,5 @@
 import ctypes
+from doctest import master
 import tkinter as tk
 from tkinter import BOTH, CENTER, LEFT, RIGHT, VERTICAL, X, Y, messagebox
 import ttkbootstrap as ttk
@@ -43,6 +44,13 @@ def validar_config_hos():
         messagebox.showerror("Erro", f"Falha ao ler o arquivo de configuração:\n{str(e)}")
         return False
     return True
+
+def get_asset(filename):
+    if getattr(sys, 'frozen', False):
+        base = Path(sys._MEIPASS) 
+    else:
+        base = ROOT_DIR
+    return base / filename
 
 #CLASSE PARA JANELA DE ESPERA ---
 class JanelaAguarde(ttk.Toplevel):
@@ -154,16 +162,17 @@ class ConfiguradorApp:
     def __init__(self, master):
         self.master = master
         master.title("Configurador Scanntech")
-        try:
-            # Reutiliza a mesma lógica do monitor para encontrar o ícone
-            caminho_icone = ROOT_DIR / "scanntech" / "core" / "logo.ico"
-            if caminho_icone.exists():
-                master.iconbitmap(caminho_icone)
-            else:
-                # O logging já está configurado neste arquivo, então vamos usá-lo
-                logging.warning(f"Arquivo de ícone não encontrado em: {caminho_icone}")
-        except Exception as e:
-            logging.warning(f"Não foi possível carregar o ícone. Erro: {e}")
+        def _set_icon():
+            try:
+                from PIL import Image, ImageTk
+                img = Image.open(str(get_asset("logo.png")))
+                icon = ImageTk.PhotoImage(img)
+                master.iconphoto(True, icon)
+                master._icon = icon
+            except Exception as e:
+                logging.warning(f"Ícone não carregado: {e}")
+
+        master.after(200, _set_icon)
 
         if sys.platform == 'win32':
             try:

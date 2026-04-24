@@ -9,22 +9,22 @@ BASE_DIR = os.path.abspath(os.path.join(os.path.dirname(__file__), '..'))
 if BASE_DIR not in sys.path:
     sys.path.insert(0, BASE_DIR)
 
-from config.settings import carregar_configuracoes
-from db.conexao import conectar
-from services.payloads.fechamentos_payload import montar_payload_do_fechamento
-import api.scanntech_api_fechamentos as api_module
-from services.processors.vendas_processor import limitar_codigo_estacao
+from scanntech.config.settings import carregar_configuracoes
+from scanntech.db.conexao import conectar
+from scanntech.services.payloads.fechamentos_payload import montar_payload_do_fechamento
+import scanntech.api.scanntech_api_fechamentos as api_module
+from scanntech.services.processors.vendas_processor import limitar_codigo_estacao
 
 logging.basicConfig(level=logging.INFO, format='%(asctime)s - %(levelname)s - %(message)s')
 
-# DATA_HOJE = date.today()
-DATA_HOJE = date(2026, 4, 8)
+DATA_HOJE = date.today()
+# DATA_HOJE = date(2026, 4, 8)
 
 # ============================================================
 # 🧪 MOCK — troca o envio real por um simulado
 # Para enviar de verdade: mude MODO_TESTE para False
 # ============================================================
-MODO_TESTE = True  # ATENÇÃO AQUI: se True, o script NÃO enviará dados à API e NÃO alterará o banco, apenas simulará o processo e mostrará os payloads que seriam enviados.
+MODO_TESTE = False  # ATENÇÃO AQUI: se True, o script NÃO enviará dados à API e NÃO alterará o banco, apenas simulará o processo e mostrará os payloads que seriam enviados.
 
 def mock_enviar_fechamentos_lote(config, estacao, payload):
     import json
@@ -36,7 +36,7 @@ def mock_enviar_fechamentos_lote(config, estacao, payload):
     }
 
 if MODO_TESTE:
-    import api.scanntech_api_fechamentos as api_module
+    import scanntech.api.scanntech_api_fechamentos as api_module
     api_module.enviar_fechamentos_lote = mock_enviar_fechamentos_lote
     logging.warning("⚠️  MODO TESTE ATIVO — nenhum dado será enviado à API.")
 # ============================================================

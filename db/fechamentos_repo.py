@@ -1,4 +1,4 @@
-from .conexao import conectar
+from scanntech.db.conexao import conectar
 import logging
 from scanntech.api.scanntech_api_reenvio import consultar_solicitacoes_fechamentos
 from scanntech.services.processors.fechamentos_processor import processar_envio_fechamento

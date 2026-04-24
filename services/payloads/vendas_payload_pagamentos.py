@@ -1,5 +1,5 @@
 import logging
-from services.payloads.vendas_payload_helpers import (
+from scanntech.services.payloads.vendas_payload_helpers import (
     FINALIZADORAS,
     converter_para_float,
 )

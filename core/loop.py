@@ -11,7 +11,7 @@ from scanntech.models.gerar_fechamentos_pendentes import gerar_fechamentos_pende
 from scanntech.db.promo_repo import salvar_e_processar_promocoes
 from scanntech.api.auditoria import consultar_solicitacoes_vendas, consultar_solicitacoes_fechamentos
 from scanntech.db.conexao import conectar
-from scanntech.services.processors.auditoria_processor import executar_auditoria_e_reset
+from scanntech.services.processors.auditoria_processor import executar_auditoria_e_reset, reinserir_cancelamentos_pendentes
 from scanntech.services.processors.fechamentos_processor import invalidar_fechamentos_desatualizados
 
 
@@ -30,20 +30,19 @@ class IntegradorLoop:
         self.ultimo_ciclo_auditoria = None
 
     def _ciclo_auditoria(self, agora: datetime):
-        # Regra: Consultar duas vezes ao dia (a cada 12 horas / 43200 segundos) [cite: 613]
         if self.ultimo_ciclo_auditoria and (agora - self.ultimo_ciclo_auditoria).total_seconds() < 43200:
-            return 
+            return
 
         logging.info("🕵️ Iniciando auditoria de reenvios (Ciclo 12h)...")
-        
+
         conn = None
+        houve_reenvio = False
         try:
             conn = conectar()
             cur = conn.cursor()
-            # Itera sobre as lojas conforme suas configs atuais
             for loja in self.configs.get('lojas', []):
                 config_loja = {**self.configs.get('geral', {}), **loja}
-                executar_auditoria_e_reset(cur, config_loja)
+                houve_reenvio |= executar_auditoria_e_reset(cur, config_loja)
             conn.commit()
             self.ultimo_ciclo_auditoria = agora
         except Exception as e:
@@ -51,6 +50,28 @@ class IntegradorLoop:
             if conn: conn.rollback()
         finally:
             if conn: conn.close()
+
+        if houve_reenvio:
+            logging.info("🔄 Reenvio detectado: enviando VENDAs pendentes...")
+            self._ciclo_vendas()
+
+            logging.info("🔄 Reinserindo cancelamentos pendentes na fila...")
+            conn = None
+            try:
+                conn = conectar()
+                cur = conn.cursor()
+                for loja in self.configs.get('lojas', []):
+                    config_loja = {**self.configs.get('geral', {}), **loja}
+                    reinserir_cancelamentos_pendentes(cur, config_loja)
+                conn.commit()
+            except Exception as e:
+                logging.error(f"❌ Erro ao reinserir cancelamentos: {e}")
+                if conn: conn.rollback()
+            finally:
+                if conn: conn.close()
+
+            logging.info("🔄 Enviando cancelamentos pendentes...")
+            self._ciclo_vendas()
 
     def _carregar_e_validar_configs(self):
         """Carrega as configurações e verifica se a integração está ativa."""
@@ -125,8 +146,7 @@ class IntegradorLoop:
                 salvar_e_processar_promocoes(promocoes_para_salvar)
             else:
                 logging.info("✅ Nenhuma promoção nova encontrada.")
-            
-            self.ultimo_ciclo_promocoes = datetime.now()
+
         except Exception as e:
             logging.error(f"❌ Erro geral ao processar promoções: {e}")
 
@@ -200,6 +220,9 @@ class IntegradorLoop:
     def iniciar(self):
         """O ponto de entrada principal que executa o loop infinito."""
         logging.info("--- Iniciando Integrador Scanntech ---")
+
+        if not self._carregar_e_validar_configs():
+            return
         if not self._carregar_e_validar_configs():
             return
 
@@ -214,6 +237,16 @@ class IntegradorLoop:
 
         # Loop principal
         while not self.parar_evento.is_set():
+
+            # 🔒 VERIFICAÇÃO DE LICENÇA
+            from scanntech.api.license import is_blocked
+            if is_blocked():
+                logging.warning("🚫 Sistema não liberado. Entre em contato com o administrador.")
+                self.parar_evento.wait(self.intervalo)  # Espera o intervalo antes de verificar novamente
+                continue
+            else:
+                logging.info("✅ Licença verificada: sistema autorizado para operar.")
+
             agora = datetime.now()
             self._ciclo_auditoria(agora)
             self._ciclo_promocoes(agora)

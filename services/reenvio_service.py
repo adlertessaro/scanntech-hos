@@ -1,5 +1,3 @@
-# scanntech/services/reenvio_service.py
-
 from scanntech.api.scanntech_api_reenvio import consultar_solicitacoes_vendas, consultar_solicitacoes_fechamentos
 from scanntech.db.vendas_repo import marcar_vendas_para_reenvio
 from scanntech.db.fechamentos_repo import marcar_fechamentos_para_reenvio

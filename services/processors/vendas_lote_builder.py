@@ -6,16 +6,16 @@ e construir os dicionários 'payloads' e 'vendas_enviadas' prontos para o envio.
 
 import logging
 
-from services.processors.vendas_db_helpers import (
+from scanntech.services.processors.vendas_db_helpers import (
     excluir_venda_da_fila,
     verificar_venda_ja_processada,
     verificar_duplicata_por_cupom,
 )
-from services.processors.vendas_utils import (
+from scanntech.services.processors.vendas_utils import (
     CODIGOS_ACEITOS,
     identificar_tipo_evento,
 )
-from services.payloads.vendas_payload import montar_payload_da_venda
+from scanntech.services.payloads.vendas_payload import montar_payload_da_venda
 
 
 def construir_lote(cur, conn, vendas, empresa_erp, estacao_original, estacao_limitada, config_completa_loja, data_inicio):

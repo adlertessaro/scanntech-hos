@@ -23,7 +23,7 @@ def criar_arquivo_pid():
         import os
         with open(PID_FILE, 'w') as f:
             f.write(str(os.getpid()))
-        logging.info(f"✅ Arquivo PID criado: {PID_FILE}")
+        logging.debug(f"✅ Arquivo PID criado: {PID_FILE}")
     except Exception as e:
         logging.error(f"❌ Erro ao criar arquivo PID: {e}")
 
@@ -32,7 +32,7 @@ def remover_arquivo_pid():
     try:
         if PID_FILE.exists():
             PID_FILE.unlink()
-            logging.info("✅ Arquivo PID removido")
+            logging.debug("✅ Arquivo PID removido")
     except Exception as e:
         logging.error(f"❌ Erro ao remover arquivo PID: {e}")
 
@@ -88,7 +88,7 @@ if __name__ == "__main__":
         
         logging.info("🎨 Carregando imagem para o ícone da bandeja...")
         # Esta linha agora funcionará, pois ROOT_DIR estará correto
-        image_path = ROOT_DIR / "logo.png"
+        image_path = ROOT_DIR / "img/logo.ico"
         imagem_icone = Image.open(image_path)
 
         menu = Menu(
